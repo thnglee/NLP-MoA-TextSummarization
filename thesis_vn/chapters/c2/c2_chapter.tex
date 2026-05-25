@@ -1,0 +1,176 @@
+% !TEX root = ../../thesis.tex
+\chapter{Cơ sở lý thuyết}
+
+Chương này xây dựng nền tảng lý thuyết cho toàn bộ hệ thống được triển khai trong Chương~3 và các thực nghiệm đánh giá trong Chương~4. Mục~2.1 trình bày kiến trúc Transformer cùng ba dòng mô hình ngôn ngữ lớn
+và liệt kê cụ thể các mô hình được sử dụng trong hệ thống. 
+Mục~2.2 là phần trọng tâm lý thuyết của chương, trình bày chi tiết ba trục đánh giá chất lượng tóm tắt.
+ Mỗi khái niệm lý thuyết được gắn trực tiếp với một lựa chọn thiết kế cụ thể trong hệ thống.
+
+\section{Các mô hình ngôn ngữ lớn}
+
+\subsection{Kiến trúc Transformer}
+
+Kiến trúc Transformer \cite{Vaswani2017} thay thế các mô hình chuỗi hồi quy và tích chập cho các bài toán ngôn ngữ tự nhiên dựa trên cơ chế chú ý. Với truy vấn $Q$, khóa $K$ và giá trị $V$, chú ý tích vô hướng có tỷ lệ được định nghĩa như sau:
+
+\[
+\text{Attention}(Q,K,V) \;=\; \text{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}}\right) V,
+\]
+
+\noindent trong đó $d_k$ là chiều của khóa. Chú ý \textit{đa đầu} chiếu $Q, K, V$ vào $h$ không gian con, chạy chú ý trong từng không gian, và nối kết quả lại, cho phép mô hình chú ý đến các quan hệ vị trí khác nhau cùng lúc.
+
+Các LLM hiện đại thuộc ba dòng kiến trúc như sau: 
+\begin{itemize}
+  \item Các mô hình chỉ bộ mã hóa (encoder-only) như BERT và PhoBERT \cite{Nguyen2020} tạo ra các embedding ngữ cảnh cho các token đầu vào; chúng được sử dụng trong khóa luận này như xương sống embedding cho BERTScore (Mục~2.2.3).
+  \item Các mô hình chỉ bộ giải mã (decoder-only) như GPT, Claude và Gemini tạo văn bản theo hướng tự hồi quy và được sử dụng làm tác nhân đề xuất và tác nhân tổng hợp của pipeline MoA (Chương~3).
+  \item Các mô hình bộ mã hóa--bộ giải mã (encoder-decoder) như T5 và ViT5 \cite{Nguyen2022} mã hóa đầu vào và điều kiện hóa việc tạo của bộ giải mã trên đó; ViT5 được sử dụng làm phương án dự phòng định tuyến cho các đầu vào tiếng Việt ngắn.
+\end{itemize}
+
+\subsection{Các mô hình được sử dụng}
+Hệ thống của khoá luận hiện tại đang sử dụng các mô hình sau: 
+\begin{itemize}
+  \item \textbf{GPT-4o} (OpenAI, phiên bản 2024-08-06) --- tác nhân tổng hợp trong pipeline MoA và mô hình đơn lẻ cơ sở mạnh nhất trong phạm vi khoá luận.
+  \item \textbf{GPT-4o-mini} (OpenAI, phiên bản 2024-07-18) --- tác nhân đề xuất và mô hình giám khảo; LLM-Judge mặc định trong Trục~B.
+  \item \textbf{Claude Haiku 4.5} (Anthropic) --- tác nhân đề xuất; được đưa vào để mở rộng nhóm tác nhân đề xuất ra ngoài OpenAI.
+  \item \textbf{Gemini 2.5 Flash} (Google) --- tác nhân đề xuất; dòng thứ ba được sử dụng trong MoA.
+  \item \textbf{ViT5-large} (VinAI) --- phương án dự phòng định tuyến cho các đầu vào tiếng Việt ngắn trong lớp định tuyến dựa trên độ phức tạp.
+  \item \textbf{PhoBERT-base} (VinAI) --- bộ mã hóa ngữ cảnh cho BERTScore.
+\end{itemize}
+
+Tất cả mô hình trên khi gọi qua giao diện API đều được thiết lập ở các thông số cấu hình mặc định của nhà cung cấp. Chi tiết các thông số mặc định cụ thể cho từng mô hình được tổng hợp trong Bảng~\ref{tab:model_parameters}.
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.3} % Tăng khoảng cách chiều dọc giữa các hàng cho thoáng mắt
+\caption{Thông số cấu hình mặc định của các mô hình được sử dụng}
+\label{tab:model_parameters}
+% Sử dụng tabularx với chiều rộng bằng đúng chiều rộng văn bản (\textwidth)
+% Cột 1 căn trái (l), Cột 2 dùng kiểu (X) để tự động co giãn và xuống dòng
+\begin{tabularx}{\textwidth}{l X}
+\hline
+\textbf{Mô hình} & \textbf{Thông số cấu hình mặc định} \\ \hline
+GPT-4o & Temperature = 1.0, Top-$p$ = 1.0, Frequency Penalty = 0.0, Presence Penalty = 0.0 \\
+GPT-4o-mini & Temperature = 1.0, Top-$p$ = 1.0, Frequency Penalty = 0.0, Presence Penalty = 0.0 \\
+Claude Haiku 4.5 & Temperature = 1.0, Top-$p$ = 1.0 \\
+Gemini 2.5 Flash & Temperature = 1.0, Top-$p$ = 0.95 \\
+ViT5-large & Chiến lược giải mã mặc định (Greedy decoding) \\
+PhoBERT-base & Không áp dụng (N/A --- Trích xuất embedding làm vector đặc trưng) \\ \hline
+\end{tabularx}
+\end{table}
+
+Bên cạnh các mô hình chính, các mô hình khác được tinh chỉnh suy luận như OpenAI \texttt{o1-mini} đòi hỏi cơ chế xử lý đặc thù: các tham số temperature, top-$p$ và penalty không được hỗ trợ, và giao thức streaming khác với các mô hình chat-completion thông thường. Tầng dịch vụ trong Chương~3 sẽ trừu tượng hóa các khác biệt này để tất cả 14 mô hình được hỗ trợ có thể được chọn hoán đổi cho nhau trong quá trình thực thi.
+
+\section{Cơ sở đánh giá chất lượng tóm tắt}
+
+\subsection{Độ phủ nội dung (Trục A)}
+
+\begin{enumerate}[label=(\alph*), leftmargin=*]
+
+    \item \textbf{ROUGE} \\
+    ROUGE \cite{Lin2004} (Recall-Oriented Understudy for Gisting Evaluation) đo độ overlap $n$-gram và chuỗi con chung dài nhất giữa bản tóm tắt ứng viên $C$ và tham chiếu $R$. Gọi $g_n$ là tập hợp các $n$-gram:
+    
+    \begin{align*}
+\text{ROUGE-}n_{\text{recall}} \;&=\; \frac{|g_n(C) \cap g_n(R)|}{|g_n(R)|}, \\
+\text{ROUGE-}n_{\text{prec}} \;&=\; \frac{|g_n(C) \cap g_n(R)|}{|g_n(C)|},
+\end{align*}
+    
+    \noindent và ROUGE-$n_{F1}$ là trung bình điều hòa của hai giá trị trên. ROUGE-1 và ROUGE-2 sử dụng đơn gram và hai gram tương ứng; ROUGE-L dựa trên chuỗi con chung dài nhất và thưởng cho độ overlap theo thứ tự.
+    
+    ROUGE được tính trên các token phân tách bằng khoảng trắng. Một từ tiếng Việt như \textit{kiểm chứng} là hai token, và một cách diễn đạt lại dùng từ \textit{thẩm định} để thay thế sẽ không được tính điểm, mặc dù ý nghĩa hoàn toàn tương đương. Đây là một lưu ý khi sử dụng ROUGE cho nghiên cứu tiếng Việt.
+
+    \item \textbf{BLEU} \\
+    BLEU \cite{papineni2002bleu} là hệ số thiên về độ chính xác, ban đầu được thiết kế cho dịch máy. Với một tập $n$-gram, độ chính xác có hiệu chỉnh $p_n$ cắt bớt số đếm ở số đếm tham chiếu tối đa; BLEU kết hợp $p_1, \ldots, p_4$ như một trung bình nhân có trọng số và nhân với hệ số phạt ngắn $BP$:
+    
+    $$\text{BLEU} \;=\; BP \cdot \exp\!\left(\sum_{n=1}^{4} w_n \log p_n \right),
+    \qquad
+    BP \;=\; \min\!\left(1, \exp\!\left(1 - \tfrac{r}{c}\right)\right),$$
+    
+    \noindent trong đó $r$ là độ dài tham chiếu, $c$ là độ dài ứng viên và $w_n = 1/4$. Tương tự ROUGE, BLEU cũng mắc điểm yếu về sự thiếu ổn định trong việc phân tách token khi áp dụng với tiếng Việt.
+
+    \item \textbf{BERTScore (với PhoBERT)} \\
+    BERTScore \cite{Zhang2020} thay thế khớp $n$-gram bằng độ tương đồng cosine giữa các nhúng ngữ cảnh. Với mỗi token $c_i$ trong ứng viên, token khớp tốt nhất $r_j$ trong tham chiếu đóng góp một giá trị $\cos(\mathbf{e}(c_i), \mathbf{e}(r_j))$ vào điểm Precision của BERTScore; điểm Recall được định nghĩa đối xứng. Điểm cuối cùng $F_{\text{BERT}}$ là trung bình điều hòa của hai giá trị này.
+    
+    Trong khóa luận này, mô hình embedding được sử dụng là \texttt{vinai/}\allowbreak\texttt{phobert-}\allowbreak\texttt{base} với đầu vào được cắt ngắn xuống còn $256$ token trước khi tính điểm, vừa phù hợp cửa sổ ngữ cảnh của mô hình vừa chuẩn hóa chi phí một lần gọi đánh giá. BERTScore nắm bắt được sự tương đồng ngữ nghĩa mà các hệ số overlap bỏ sót, nhưng vẫn chấm điểm so với bài báo gốc, do đó nó kế thừa cùng một ý nghĩa về khả năng lưu trữ nội dung tương tự như ROUGE và BLEU.
+
+    \item \textbf{Tỷ lệ nén} \\
+    Tỷ lệ nén là $|S| / |D|$ biểu thị theo phần trăm, trong đó $|S|$ và $|D|$ là số token của bản tóm tắt và bài gốc. Đây không phải hệ số chất lượng, nhưng nó giải thích \textit{tại sao} các hệ số overlap hoạt động như vậy: một bản tóm tắt được tạo ra với tỷ lệ nén $30\%$ có ít từ, cụm từ để khớp hơn một bản tóm tắt chắp vá ở mức $50\%$, và do đó điểm trùng khớp sẽ giảm xuống ngay cả khi chất lượng thực tế của bản tóm tắt tăng lên.
+
+\end{enumerate}
+
+Lưu ý quan trọng nhất của khóa luận này, được phát biểu lại chính thức như sau: ROUGE, BLEU và BERTScore được tính so với bài báo gốc đo khả năng giữ lại nội dung, không đo chất lượng tóm tắt. Khi hệ thống được phép (hoặc khuyến khích) diễn giải lại, một bản tóm tắt được biên tập kỹ lưỡng nhằm cải thiện độ mạch lạc sẽ có khả năng làm giảm độ trùng khớp token. Wang et al.\ \cite{Wang2024} bỏ qua vấn đề này bằng cách sử dụng LLM-Judge làm tiêu chuẩn đánh giá; lựa chọn tương tự được thực hiện trong Trục~B của khóa luận này.
+
+\subsection{Phương pháp luận LLM-Judge (Trục B)}
+
+\begin{enumerate}[label=(\alph*), leftmargin=*]
+
+    \item \textbf{Đánh giá rubric (theo FLASK)} \\
+    Một LLM-Judge rubric chấm điểm bản tóm tắt theo nhiều chiều có tên trên thang điểm nguyên. Theo FLASK \cite{Ye2023}, khóa luận này sử dụng năm chiều trên thang 1--5: \textit{tính trung thực (faithfulness)}, \textit{độ bao phủ (coverage)}, \textit{độ trôi chảy (fluency)}, \textit{tính súc tích (conciseness)} và \textit{tổng thể (overall)}. LLM-Judge được yêu cầu trả về kết quả dưới định dạng JSON bao gồm năm điểm số kèm theo một câu giải thích cho từng tiêu chí.
+
+    \item \textbf{Chấm điểm tuyệt đối (theo MT-Bench)} \\
+    Giao thức MT-Bench \cite{Zheng2023} yêu cầu LLM-Judge cho một điểm số tổng thể nguyên duy nhất trong $\{1,2,\ldots,10\}$. Cách này nhanh hơn rubric tuy nhiên lại không đánh giá chi tiết kết quả; vì thế được sử dụng bổ trợ cho rubric.
+
+    \item \textbf{So sánh từng cặp (theo AlpacaEval)} \\
+    Một LLM-Judge được hiển thị hai bản tóm tắt ứng viên $A$ và $B$ cho cùng bài gốc và được yêu cầu chọn bên thắng (hoặc hòa). Kết quả thực nghiệm của chính khoá luận này được trình bày dưới dạng so sánh cặp, bởi vì độ đồng thuận trong phương pháp đánh giá từng cặp cao hơn so với phương pháp chấm điểm tuyệt đối. Hai chi tiết giao thức quan trọng:
+
+    \begin{itemize}
+        \item Ngẫu nhiên hóa vị trí: Các LLM-Judge có xu hướng thiên vị đối với ứng viên trình bày đầu tiên. Do đó, mỗi lần gọi từng cặp gán ngẫu nhiên hai bản tóm tắt vào vị trí $A$ và $B$, và ánh xạ vị trí được ghi lại để ứng viên thắng được ghi nhận chính xác.
+        \item Ý nghĩa thống kê kiểm định dấu: Với $w$ thắng trên $n$ phán quyết quyết định (loại trừ hòa), giá trị $p$ của kiểm định dấu hai chiều là
+
+        $$p \;=\; 2 \cdot \Pr\!\left[\,X \geq \max(w, n - w) \;\mid\; X \sim \text{Bin}(n, 0{,}5)\right],$$
+
+        \noindent là xác suất của một kết quả ít nhất cực đoan như kết quả quan sát được dưới $H_0: P(\text{A thắng}) = 0{,}5$. Trong toàn bộ khóa luận này, $p < 0{,}05$ được coi là ngưỡng ``khó có thể là ngẫu nhiên''.
+    \end{itemize}
+
+    \item \textbf{Tỷ lệ thắng có kiểm soát độ dài (Dubois 2024)} \\
+    Các LLM-Judge có xu hướng thiên vị các phản hồi dài hơn \cite{Dubois2024}. Để kiểm soát điều này, các phán quyết từng cặp được phân nhóm theo tỷ lệ độ dài $|A|/|B|$:
+
+    \begin{itemize}
+        \item $|A|/|B| < 0{,}85$ --- $A$ ngắn hơn nhiều;
+        \item $0{,}85 \leq |A|/|B| \leq 1{,}15$ --- độ dài tương đương;
+        \item $|A|/|B| > 1{,}15$ --- $A$ dài hơn nhiều.
+    \end{itemize}
+
+    \noindent Tỷ lệ thắng phân nhóm theo độ dài lấy trung bình các tỷ lệ thắng trong từng nhóm thỏa mãn số đếm tối thiểu ($\text{MIN\_BUCKET\_N} = 5$). Nếu tỷ lệ thô và tỷ lệ phân nhóm đồng ý với nhau, thiên kiến độ dài của LLM-Judge bị bác bỏ và không ảnh hưởng đến kết quả.
+
+    \item \textbf{Đánh giá tính xác thực} \\
+    Tính xác thực được xử lý như một bài toán nhị phân trên từng mệnh đề. Cho một bản tóm tắt $S$ và bài gốc $D$, quá trình đánh giá tính xác thực đi qua các công đoạn:
+
+    \begin{itemize}
+        \item Phân tách mệnh đề: Phân rã $S$ thành các mệnh đề nhỏ $\{c_1, \ldots, c_k\}$ thông qua một lần gọi LLM có đầu ra có cấu trúc.
+        \item Phân loại chấp thuận: Phân loại mỗi $c_j$ thành \{\textit{được xác nhận}, \textit{bị bác bỏ}, \textit{không đề cập}\} so với $D$, sử dụng \texttt{gpt-4o-mini} với lược đồ JSON ràng buộc.
+        \item Tổng hợp: Báo cáo tỷ lệ xác nhận $|\{c_j : \text{được xác nhận}\}| / k$, số lượng mệnh đề bị bác bỏ (ảo giác thông tin), và lưu trữ các mệnh đề mâu thuẫn nguyên văn để kiểm tra thủ công.
+    \end{itemize}
+
+    Một bản tóm tắt với tỷ lệ chính xác $> 95\%$ và không có ảo giác thông tin được coi là trung thực ở cấp độ mệnh đề; thực nghiệm trong Chương~4 báo cáo cả giá trị trung bình và trường hợp xấu nhất cho từng phương pháp tiếp cận.
+
+\end{enumerate}
+
+\subsection{Đánh giá bởi con người (Trục C)}
+
+\begin{enumerate}[label=(\alph*), leftmargin=*]
+
+    \item \textbf{Xếp hạng mù $K$ chiều} \\
+    Trục~C sử dụng xếp hạng ẩn danh $K$ lựa chọn. Với mỗi bài báo, $K = 3$ bản tóm tắt ứng viên (bản dung hợp, GPT-4o đơn lẻ và một bản thảo tác nhân đề xuất) được trình bày cho người đánh giá dưới dạng \textit{Bản A, Bản B, Bản C}, với danh tính mô hình bị ẩn. Người đánh giá kéo thả các ứng viên vào thứ tự từ tốt nhất đến kém nhất và viết một câu giải thích bằng tiếng Việt cho mỗi ứng viên.
+
+    \item \textbf{Fleiss' Kappa} \\
+    Fleiss' $\kappa$ \cite{Landis1977} mở rộng Cohen's $\kappa$ cho $\geq 3$ người đánh giá. Với $N$ mẫu, $n$ người đánh giá mỗi mẫu và $k$ danh mục, $\kappa = (P - P_e) / (1 - P_e)$, trong đó $P$ là mức đồng thuận trung bình theo từng mẫu (trên các cặp người đánh giá) và $P_e$ là mức đồng thuận kỳ vọng ngẫu nhiên kỳ vọng dựa trên tần suất biên của các nhãn.
+
+    Các mức phân giải Landis--Koch được sử dụng trong khóa luận này:
+
+    \begin{center}
+    \begin{tabular}{ll}
+    $\kappa < 0$       & tệ hơn ngẫu nhiên \\
+    $0{,}00$--$0{,}20$ & đồng thuận rất ít \\
+    $0{,}21$--$0{,}40$ & đồng thuận vừa phải \\
+    $0{,}41$--$0{,}60$ & đồng thuận trung bình \\
+    $0{,}61$--$0{,}80$ & đồng thuận đáng kể \\
+    $0{,}81$--$1{,}00$ & đồng thuận gần như tuyệt đối \\
+    \end{tabular}
+    \end{center}
+
+    Với dữ liệu xếp hạng, $\kappa$ được tính trên các nhãn theo vị trí: với mỗi cặp (mục, hạng), ``nhãn phân loại'' được gán bởi một người đánh giá là ứng viên nhận hạng đó.
+
+\end{enumerate}
+
+\section{Tổng kết chương}
+
+Chương này đã cung cấp toàn bộ nền tảng lý thuyết cần thiết để hiểu và đánh giá hệ thống Fiber. Về mặt mô hình, chương đã trình bày kiến trúc Transformer và ba dòng LLM, trong đó các mô hình decoder-only (GPT-4o, Claude Haiku~4.5, Gemini~2.5~Flash) đóng vai trò tác nhân đề xuất và tổng hợp, còn PhoBERT (encoder-only) và ViT5 (encoder-decoder) phục vụ lần lượt cho tính toán BERTScore và phương án dự phòng định tuyến. Về mặt đánh giá, chương đã xây dựng hệ thống lý thuyết cho ba trục đo lường: Trục~A với các hệ số overlap (ROUGE, BLEU, BERTScore), Trục~B với phương pháp luận LLM-Judge (rubric theo FLASK, chấm điểm theo MT-Bench, so sánh cặp theo AlpacaEval, và đánh giá tính xác thực ở cấp mệnh đề), cùng Trục~C với xếp hạng mù và hệ số Fleiss'~$\kappa$. Luận điểm lý thuyết then chốt nhất của chương --- các hệ số overlap được tính so với bài báo gốc đo khả năng giữ lại nội dung chứ không đo chất lượng tóm tắt --- chính là cơ sở lý luận cho việc thiết kế khung đánh giá đa trục thay vì phụ thuộc vào một trục duy nhất. Chương~3 sẽ trình bày cách các lý thuyết này được hiện thực hóa trong thiết kế và xây dựng hệ thống.

@@ -1,0 +1,128 @@
+% !TEX root = ../thesis.tex
+\chapter*{MỞ ĐẦU}
+\addcontentsline{toc}{chapter}{MỞ ĐẦU}
+
+\section*{Tính cấp thiết của đề tài}
+
+Tin tức trực tuyến tiếng Việt đã trở thành phương tiện truyền thông thông tin công cộng
+chủ yếu, với hàng chục triệu bài báo được đăng tải mỗi năm trên các tờ báo lớn như
+\textit{tuoitre.vn}, \textit{thanhnien.vn}, \textit{tienphong.vn},
+\textit{vietnamnet.vn} và nhiều tờ khác. Khối lượng thông tin khổng lồ này tạo ra hai
+nhu cầu song song cho người đọc. Nhu cầu đầu tiên là nén thông tin: một bản tóm
+tắt súc tích, đáng tin cậy giúp người đọc có thể nắm bắt nội dung bài báo dài chỉ trong
+vài giây. Nhu cầu thứ hai là xác thực thông tin: kiểm tra xem các mệnh đề chính
+trong bài báo có được các nguồn uy tín khác xác nhận hay không, đặc biệt trong bối cảnh
+tin giả, tiêu đề giật gân và các bài viết chỉ phản ánh một phần sự thật lan truyền song
+song cùng các bài báo chính xác.
+
+Hiện nay, các hệ thống tóm tắt tiếng Việt xây dựng dựa trên một Mô hình ngôn ngữ lớn đơn lẻ vẫn cho ra kết quả không ổn định --- đôi khi quá dài, đôi khi quá sát từ
+ngữ gốc, thậm chí đôi khi bịa đặt thông tin. Một hướng nghiên cứu gần đây,
+Mixture-of-Agents (MoA) của Wang et al.\ \cite{Wang2024}, lập luận rằng
+nhiều LLM có thể được kết hợp trong một kiến trúc phân cấp tác nhân gồm nhiều tác nhân đề xuất và tổng hợp
+để tạo ra kết quả vượt trội so với bất kỳ mô hình đơn lẻ nào trên các thang đánh giá.
+Tuy nhiên, liệu phương pháp này có thể áp dụng với bài toán tóm tắt tiếng Việt
+có neo ngữ cảnh gốc --- nơi hệ thống phải trung thực với bài báo nguồn thay
+vì trả lời tự do --- hay không, vẫn là câu hỏi chưa được giải đáp trong các nghiên
+cứu xử lý ngôn ngữ tự nhiên tiếng Việt.
+
+Một vấn đề sâu hơn thúc đẩy khóa luận này: các hệ số đo lường phổ biến nhất trong
+nghiên cứu tóm tắt tiếng Việt --- ROUGE \cite{Lin2004}, BLEU \cite{papineni2002bleu} và BERTScore
+\cite{Zhang2020} được tính toán dựa vào đối chiếu so với bài báo gốc --- đo độ trùng lặp, không đo chất lượng.
+Các thang điểm này đánh giá cao các bản tóm tắt tái sử dụng cụm từ từ bài gốc và chấm điểm thấp các bản tóm tắt
+diễn giải lại hoặc rút gọn mạnh. Một tác nhân tổng hợp trong pipeline MoA nếu được triển
+khai đúng cách sẽ tổng
+hợp các bản thảo từ các tác nhân đề xuất thành bản tóm tắt hoàn chỉnh, về nguyên lý sẽ đạt điểm thấp
+hơn trên các hệ số này so với bản tóm tắt sao chép cụm từ đơn thuần. Nếu nghiên cứu tóm
+tắt tiếng Việt muốn áp dụng các hệ thống đa tác nhân đề xuất và tổng hợp, lĩnh vực này cần
+một phương pháp luận đánh giá không có thiên kiến cấu trúc bất lợi cho các hệ thống đó.
+
+\section*{Ý nghĩa khoa học và thực tiễn}
+
+Khóa luận đóng góp ý nghĩa khoa học bằng việc phát triển một \textit{khung đánh giá ba trục} kết hợp: (i)~các hệ số độ phủ
+nội dung so với bài gốc, (ii)~đánh giá chất lượng bởi LLM và xếp hạng theo
+cặp, và (iii)~xếp hạng mù bởi con người với chỉ số đồng thuận giữa các người đánh giá.
+Khóa luận sử dụng khung đó để chỉ ra, bằng chứng thực nghiệm trên dữ liệu tiếng
+Việt, một hạn chế cấu trúc của các hệ số độ phủ đối với bài toán tóm tắt kiểu tổng
+hợp. Hạn chế này đã được đề cập gián tiếp trong các nghiên cứu tiếng Anh
+\cite{Wang2024,Zheng2023} nhưng chưa được nghiên cứu tường minh cho tiếng Việt.
+
+Đối với khía cạnh thực tiễn, khóa luận cung cấp một sản phẩm tiện ích trình duyệt hoàn chỉnh có tên Fiber, mà bất
+kỳ người đọc báo Việt Nam nào cũng có thể cài đặt trên trình duyệt dựa trên Chromium.
+Fiber nhúng một thanh sidebar tự động xuất hiện khi người đọc báo truy cập bảy tên miền báo chí tiếng Việt lớn, tóm tắt bài
+báo theo thời gian thực bằng một LLM do người dùng chọn (hoặc pipeline MoA dung hợp),
+bên cạnh đó là chức năng hộp kiểm chứng thông tin so với bằng chứng từ web trực tiếp thông qua API tìm kiếm
+Tavily. Toàn bộ hệ thống --- một backend Next.js, một tiện ích mở rộng trình duyệt
+Plasmo, và một dịch vụ BERTScore Python --- đều được phát hành nguồn mở.
+
+\section*{Mục tiêu nghiên cứu}
+
+Khóa luận này hướng tới ba mục tiêu song song, bao trùm cả chiều rộng của hệ thống (từ giao diện đến hạ tầng) và chiều sâu học thuật (từ thiết kế pipeline đến đánh giá hệ số):
+
+\begin{itemize}
+  \item Thiết kế và xây dựng hệ thống tiện ích mở rộng trình duyệt đầu-cuối hoàn
+        chỉnh, có khả năng tóm tắt và kiểm chứng bài báo tiếng Việt theo thời gian
+        thực, hỗ trợ nhiều nhà cung cấp LLM (OpenAI, Anthropic, Google) và nhiều cơ chế
+        phân loại định tuyến.
+  \item Áp dụng pipeline Mixture-of-Agents của Wang et al.\ (2024) cho bài toán
+        tóm tắt tiếng Việt có neo ngữ cảnh gốc, bao gồm một kết nối phần dư bài
+        viết nguồn vào câu lệnh của tác nhân tổng hợp.
+  \item Đề xuất và kiểm chứng một khung đánh giá ba trục --- khả năng giữ lại nội dung
+        (Trục~A), chất lượng kết quả tóm tắt đánh giá bởi LLM (Trục~B), và xếp hạng
+        con người với chỉ số đồng thuận (Trục~C) --- đồng thời sử dụng khung đó
+        để so sánh dung hợp MoA với các mô hình đơn lẻ cơ sở trên tập dữ liệu
+        tiếng Việt cân bằng chủ đề.
+\end{itemize}
+
+\section*{Đối tượng và phạm vi nghiên cứu}
+
+Đối tượng nghiên cứu của khoá luận tập trung vào:
+\begin{itemize}
+  \item Bài toán tóm tắt tự động văn bản (Text Summarization), cụ thể là xử lý và tổng hợp tin tức báo chí tiếng Việt.
+  \item Kiến trúc hệ thống đa tác nhân (Multi-Agent System) ứng dụng các mô hình ngôn ngữ lớn (LLM) thương mại và các mô hình ngôn ngữ đặc thù cho tiếng Việt trong việc phân loại, định tuyến và đánh giá ngữ nghĩa văn bản.
+\end{itemize}
+
+Phạm vi nghiên cứu của khoá luận được giới hạn trong các biên giới cụ thể sau:
+\begin{itemize}
+  \item Phạm vi dữ liệu: Thực nghiệm đánh giá hệ thống được giới hạn trên tập dữ liệu gồm 154 bài báo tiếng Việt được thu thập từ trang tin điện tử \textit{tienphong.vn}, phân bổ cân bằng theo 5 chủ đề: thời sự, pháp luật, kinh tế, giáo dục và văn hóa. Các nguồn báo khác bao gồm \textit{tuoitre.vn}, \textit{thanhnien.vn}, \textit{vietnamnet.vn}, \textit{laodong.vn}, \textit{vtv.vn} và \textit{nld.com.vn} chỉ được sử dụng trong giai đoạn khảo sát, phân tích dữ liệu ban đầu.
+  \item Phạm vi công nghệ và giới hạn kỹ thuật: Đề tài giới hạn ở việc khai thác, phối hợp năng lực của các LLM thương mại trên đám mây làm tác nhân đề xuất (GPT-4o-mini, Claude Haiku 4.5, Gemini 2.5 Flash) và tác nhân tổng hợp (GPT-4o), kết hợp các mô hình tiếng Việt có sẵn (ViT5 \cite{Nguyen2022}, PhoBERT \cite{Nguyen2020}) để định tuyến và đánh giá. Khoá luận không thực hiện huấn luyện lại hoặc tinh chỉnh sâu các mô hình nền tảng từ đầu.
+\end{itemize}
+
+\section*{Phương pháp nghiên cứu}
+
+Khóa luận áp dụng phương pháp thực nghiệm so sánh. Cùng một tập 154 bài báo được tóm
+tắt bởi năm phương pháp (ba tác nhân đề xuất riêng lẻ, đầu ra dung hợp MoA, và mô hình
+đơn lẻ cơ sở lựa chọn bản thảo tốt nhất), và 770 bản tóm tắt thu được được đánh giá
+theo ba trục. Trục~A sử dụng ROUGE-1/2/L, BLEU, BERTScore (với PhoBERT) và tỷ lệ nén;
+Trục~B sử dụng rubric 5 chiều theo FLASK \cite{Ye2023}, điểm tuyệt đối kiểu MT-Bench
+\cite{Zheng2023}, đánh giá so sánh từng cặp kiểu AlpacaEval có ngẫu nhiên hóa vị trí
+\cite{Dubois2024}, và bộ phân loại tính xác thực ở cấp độ mệnh đề; Trục~C sử dụng giao
+diện xếp hạng mù $K = 3$ để tổ chức các bài đánh giá và thu thập dữ liệu. Các kiểm định thống kê bao gồm kiểm định dấu hai chiều (loại trừ hòa) cho tỷ
+lệ thắng từng cặp và Fleiss' $\kappa$ \cite{Landis1977} cho đồng thuận giữa các người
+đánh giá; thiên kiến độ dài được kiểm soát bằng phương pháp phân nhóm đơn giản hóa của
+Dubois et al.\ \cite{Dubois2024}.
+
+\section*{Bố cục khóa luận}
+
+Khoá luận được tổ chức như sau:
+
+\textbf{Chương 1 --- Tổng quan:} Giới thiệu bài toán tóm tắt và kiểm chứng tin tức,
+kỹ thuật Mixture-of-Agents, và các công trình liên quan trong nghiên cứu tiếng Việt
+cũng như quốc tế, từ đó xác định khoảng trống mà khoá luận sẽ khai thác.
+
+\textbf{Chương 2 --- Cơ sở lý thuyết:} Trình bày các kiến trúc LLM được sử dụng
+trong hệ thống, ba dòng hệ số đánh giá (độ phủ, LLM-Judge, xếp hạng con người),
+phương pháp luận tính xác thực, và các công nghệ để xây dựng tiện ích mở rộng trình
+duyệt cùng các dịch vụ backend.
+
+\textbf{Chương 3 --- Thiết kế và xây dựng hệ thống:} Trình bày phân tích yêu cầu,
+kiến trúc ba dịch vụ, lớp trừu tượng hóa LLM đa nhà cung cấp, pipeline MoA (đóng
+góp kỹ thuật), khung đánh giá ba trục (đóng góp phương pháp luận), lược đồ cơ sở
+dữ liệu, và giao diện người dùng.
+
+\textbf{Chương 4 --- Thực nghiệm và đánh giá:} Báo cáo kết quả theo ba trục trên
+tập dữ liệu 154 bài báo, bao gồm kết quả từng cặp nổi bật nhất, phân tích theo chủ đề, diễn giải nghiên cứu
+con người, tam giác hóa đa trục và nêu lên các hạn chế của phương pháp luận.
+
+\textbf{Chương 5 --- Kết luận và định hướng:} tóm tắt các đóng góp, hạn chế và hướng phát triển tương lai;
+ba phụ lục trình bày ví dụ minh họa, thử nghiệm câu lệnh của tác nhân tổng hợp và
+pipeline kiểm chứng thông tin.

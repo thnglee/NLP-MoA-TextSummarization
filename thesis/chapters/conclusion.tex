@@ -1,133 +1,103 @@
-\begin{center}
-  \textbf{\fontsize{20}{24}\selectfont Conclusion}
-\end{center}
+\chapter{Conclusion}
+\label{ch:conclusion}
 
-\addcontentsline{toc}{chapter}{Conclusion}
+\section{Summary of Contributions}
 
-This thesis has addressed the challenge of specifying and verifying temporal 
-properties in UML/OCL models without requiring specialized temporal verification 
-tools. By extending OCL with temporal operators and event constructs, and providing 
-a transformation mechanism to standard OCL, we have created an approach that enables 
-modelers to verify complex behavioral properties while remaining within familiar 
-modeling environments.
+This thesis set out to study whether Mixture-of-Agents (MoA) helps
+Vietnamese news summarization and, more deeply, whether the
+evaluation metrics commonly used for Vietnamese summarization are
+even capable of detecting the help if it is there. Three contributions
+were made.
 
-Our work has made several significant contributions to the field of model verification.
-First, we introduced TOCL+ (Temporal OCL+), an extension of OCL that incorporates 
-temporal operators and event constructs that enable expressing complex temporal 
-properties in a concise and intuitive way. Second, we developed a transformation 
-approach that converts TOCL+ expressions into equivalent standard OCL constraints 
-that can be verified over filmstrip models, leveraging existing OCL tools without 
-requiring specialized temporal logic model checkers.
+\textbf{1. An end-to-end production system (Fiber).} A browser
+extension built with Plasmo, a Next.js back-end implementing the
+multi-provider LLM abstraction (fourteen models across OpenAI,
+Anthropic, and Google), a Python BERTScore microservice on Hugging
+Face Spaces, and a Supabase PostgreSQL persistence layer
+collectively deliver real-time summarization
+and search-augmented fact-checking on seven major Vietnamese news
+domains.
 
-Third, we implemented our approach as a plugin for the USE tool, demonstrating its 
-practical applicability. The plugin uses ANTLR4 for parsing TOCL+ expressions and 
-employs a listener-based approach to generate the corresponding OCL constraints.
-Fourth, we validated our approach through a detailed case study of a Software System 
-model, verifying various types of temporal properties including safety and liveness 
-constraints.
+\textbf{2. A grounded-summarization adaptation of MoA.} The two-layer
+proposer-aggregator architecture of Wang et al.\ \cite{Wang2024} was
+re-instantiated for Vietnamese with a single, principled
+modification: the source article is injected into the aggregator
+prompt as a \textit{residual connection}, paralleling Equation~1 of
+the paper but extending it from prompt-only to source-grounded.
+Empirically (Section~4.2), the residual connection is the single
+decisive design choice: without it, the aggregator stitches drafts;
+with it, the aggregator synthesises editorially.
 
-The significance of our work lies in making temporal verification accessible within 
-standard modeling environments. Our approach enables comprehensive model verification 
-without requiring modelers to learn specialized temporal logics or verification tools.
-This is particularly valuable for verifying behavioral properties that cannot be 
-expressed in standard OCL, such as correct operational sequencing, eventual progress, 
-and bounded existence constraints.
+\textbf{3. A three-axis evaluation framework, and its empirical
+critique of one-axis evaluation.} Content-retention metrics (Axis~A),
+LLM-as-judge quality and pairwise preference (Axis~B), and blind
+human ranking with inter-rater agreement statistics (Axis~C) were
+combined into a single framework. On $154$ \textit{tienphong.vn}
+articles, fusion beats the strongest single-model baseline on every axis: ROUGE-1
+$+0.062$, BERTScore $+0.051$, rubric Overall $+0.08$, LLM-judge
+pairwise vs best draft $68.9\%$, and human pairwise $40.9\%$ plurality.
+The agreement on direction across three structurally-different
+lenses supports a confident recommendation; the
+$28$-percentage-point gap between LLM-judge magnitude ($68.9\%$) and
+human magnitude ($40.9\%$), together with the topic-conditional
+reversal on bureaucratic content (humans pick the shortest draft),
+is the methodological finding the framework was built to surface.
 
-Several directions for future work will build upon the foundation established in this 
-research. We plan to define formal transformation rules for converting TOCL+ to OCL, 
-providing rigorous mathematical underpinnings for our approach. Additionally, we intend 
-to develop formal verification techniques for the translation process to ensure semantic 
-preservation between the original specifications and their OCL translations. To further 
-validate our approach, we will apply the method to more diverse and complex case studies 
-across different application domains. We also aim to address current limitations of the 
-filmstrip model, particularly related to performance and scalability for larger systems. 
-Finally, we plan to integrate formal property specification patterns to reduce the effort 
-required to specify common temporal properties, making our approach even more accessible 
-to practitioners.
-% As discussed in Chapter 3, while our approach has proven effective in practice, 
-% several limitations exist and various directions for future research have been 
-% identified. These include developing formal proofs for our transformation rules, 
-% exploring optimization strategies, and extending support for real-time properties.
+\section{Limitations}
 
-% In conclusion, our TOCL+ approach successfully bridges the gap between standard 
-% UML/OCL modeling and temporal verification, enabling modelers to specify and verify 
-% complex behavioral properties without specialized temporal verification tools. 
-% The approach provides a practical solution to an important problem in model verification, 
-% with room for future improvements that can build upon the foundation established in 
-% this work.
-% \begin{center}
-%   \textbf{\fontsize{20}{24}\selectfont Conclusion}
-% \end{center}
+The thesis carries three limitations that bound the strength of its
+claims, all acknowledged in Chapter~4 and consolidated here.
 
-% \addcontentsline{toc}{chapter}{Conclusion}
+\begin{enumerate}
+  \item \textbf{Weakest MoA configuration.} One layer, three
+        proposers. \cite{Wang2024} Tables~3--4 show monotone
+        improvement with deeper layer stacks and wider proposer
+        pools.
+  \item \textbf{Human study scale and rater dynamics.} The study 
+        involved $17$ independent raters. While sufficient for 
+        identifying trends, the reliance on random participants 
+        introduces potential noise from preferential engagement 
+        (topical taste) and cognitive fatigue over long rating 
+        sessions, which may impact the granularity of preference 
+        metrics.
+  \item \textbf{Overlap metrics against the source.} ROUGE / BLEU /
+        BERTScore are computed against the source article, not a
+        human reference summary, because no Vietnamese benchmark with
+        human reference summaries at this scale exists. The
+        cross-axis triangulation is the empirical safeguard against
+        over-interpreting Axis~A.
+\end{enumerate}
 
-% This thesis has addressed the challenge of specifying and verifying temporal 
-% properties in UML/OCL models without requiring specialized temporal verification 
-% tools. By extending OCL with temporal operators and event constructs, and providing 
-% a transformation mechanism to standard OCL, we have created an approach that enables 
-% modelers to verify complex behavioral properties while remaining within familiar 
-% modeling environments.
+\section{Future Work}
 
-% Our work has made several significant contributions to the field of model verification.
-% First, we introduced TOCL+ (Temporal OCL+), an extension of OCL that incorporates 
-% temporal operators (such as "always," "eventually," and "until") and event constructs 
-% (like "becomesTrue" and "isCalled"). This extension enables modelers to express 
-% complex temporal properties in a concise and intuitive way, addressing a significant 
-% limitation of standard OCL. Second, we developed a transformation approach that converts 
-% TOCL+ expressions into equivalent standard OCL constraints that can be verified over 
-% filmstrip models. This approach leverages existing OCL tools for temporal verification 
-% without requiring specialized temporal logic model checkers. The transformation 
-% systematically maps temporal operators and event constructs to structural navigations 
-% through snapshots, handling the complexities of object identity and state transitions.
+One near-term and two long-term directions follow from the
+limitations.
 
-% Third, we implemented our approach as a plugin for the USE tool, demonstrating its 
-% practical applicability. The plugin uses ANTLR4 for parsing TOCL+ expressions and 
-% employs a listener-based approach to generate the corresponding OCL constraints. 
-% This implementation bridges the gap between the theoretical foundations and practical 
-% verification tasks. Fourth, we validated our approach through a detailed case study 
-% of a Software System model, verifying various types of temporal properties including 
-% safety, uniqueness, and liveness constraints. The experimental results confirmed that 
-% our transformation approach correctly preserves the semantics of temporal properties 
-% while remaining practical for real-world modeling scenarios.
+\textbf{Near term.}
 
-% The significance of our work lies in making temporal verification accessible within 
-% standard modeling environments. By allowing modelers to specify temporal properties 
-% at a high level of abstraction while handling the verification complexity behind 
-% the scenes, we enable more comprehensive model verification without requiring 
-% modelers to learn specialized temporal logics or verification tools. Our approach 
-% is particularly valuable for verifying behavioral properties that cannot 
-% be expressed in standard OCL, such as correct operational sequencing, eventual 
-% progress, and bounded existence constraints. These properties are essential for 
-% ensuring the correctness of dynamic system behavior, especially in domains where 
-% operational sequences and timing constraints are critical.
+\begin{itemize}
+  \item \textit{Large-scale Axis~C extension.} Recruit a larger rater pool
+        to expand the current $17$-rater baseline across the full article
+        database. The infrastructure is ready
+        to support this expansion and further refine the inter-rater
+        agreement metrics and rater-fatigue controls.
+\end{itemize}
 
-% While our approach has proven effective in practice, several limitations should be 
-% acknowledged. Most notably, we have not formally defined the transformation from TOCL+ 
-% to OCL, nor have we provided a metamodel for the TOCL+ language extension. These would 
-% provide a more rigorous foundation for our approach and enable formal analysis of the 
-% language itself. Similarly, we have not formally proven the correctness of our 
-% transformation rules mathematically. Although empirical evidence from our experiments 
-% supports their correctness, a formal proof would provide stronger guarantees about 
-% the preservation of temporal semantics. Additionally, the OCL constraints generated by 
-% our transformation can be complex and potentially impact verification performance for 
-% large models with numerous temporal properties. The constraints involve intricate 
-% navigation through snapshots and careful handling of object identity, which may affect 
-% scalability for very large systems.
+\textbf{Long term.}
 
-% Several directions for future research emerge from our work. Developing formal proofs 
-% for the correctness of our transformation rules would strengthen the theoretical 
-% foundations of our approach. Exploring optimization strategies to reduce the complexity 
-% of generated OCL constraints could improve verification performance for large models. 
-% Creating a library of common temporal verification patterns with optimized translations 
-% would make the approach more accessible to practitioners. Extending our approach to 
-% other UML modeling tools beyond USE would broaden its applicability. Incorporating 
-% quantitative time constraints would enable verification of real-time properties, 
-% extending the approach to time-critical systems. Enhancing the plugin to provide 
-% more intuitive visualizations of counterexamples when temporal properties are 
-% violated would improve usability.
+\begin{itemize}
+  \item \textit{Deeper MoA stacks.} Add a second aggregator layer
+        and / or widen the proposer pool to five or six diverse
+        models. Validate the monotone-improvement claim of
+        \cite{Wang2024} on Vietnamese.
+  \item \textit{RAG-augmented proposers.} Each proposer could
+        independently retrieve background context (cross-article,
+        same-day, same-topic) via Tavily; the aggregator would then
+        synthesize summaries that include relevant prior context
+        without leaving the article.
+\end{itemize}
 
-% In conclusion, our TOCL+ approach successfully bridges the gap between standard 
-% UML/OCL modeling and temporal verification, enabling modelers to specify and verify 
-% complex behavioral properties without specialized temporal verification tools. While 
-% there remain opportunities for improvement and extension, the approach provides a 
-% practical solution to an important problem in model verification.
+\vspace{0.6em}
+\noindent The methodological lesson of the thesis is also its
+shortest sentence: \textit{a single evaluation axis is not enough}.
+The framework presented here makes that lesson actionable.

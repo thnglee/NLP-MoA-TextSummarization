@@ -1,0 +1,503 @@
+% !TEX root = ../../thesis.tex
+\chapter{Thiết kế và xây dựng hệ thống}
+
+Chương này hiện thực hóa các nền tảng lý thuyết đã được trình bày trong Chương~2 thành một hệ thống phần mềm hoàn chỉnh mang tên Fiber --- một tiện ích trình duyệt hỗ trợ tóm tắt tự động và kiểm chứng tin tức tiếng Việt. Nội dung chương được tổ chức theo trình tự từ phân tích yêu cầu đến triển khai: Mục~3.1 phân tích các yêu cầu chức năng và phi chức năng; Mục~3.2 giới thiệu kiến trúc tổng quan gồm ba dịch vụ; Mục~3.3 trình bày module tóm tắt văn bản với lớp trừu tượng hóa đa nhà cung cấp LLM và cơ chế định tuyến dựa trên độ phức tạp; Mục~3.4 mô tả pipeline dung hợp đa tác nhân MoA --- đóng góp kỹ thuật cốt lõi của khóa luận; Mục~3.5 trình bày module kiểm chứng tin tức; Mục~3.6 chi tiết khung đánh giá ba trục --- đóng góp chính về mặt phương pháp luận; Mục~3.7 mô tả thiết kế lược đồ cơ sở dữ liệu; và Mục~3.8 giới thiệu giao diện người dùng của hệ thống.
+
+\section{Phân tích yêu cầu hệ thống}
+
+\subsection{Yêu cầu chức năng}
+
+Hệ thống được thiết kế với bảy yêu cầu chức năng chính: 
+
+\begin{itemize}
+  \item Tóm tắt văn bản: Nhận đầu vào là một đường dẫn tin tức tiếng Việt, 
+        trả về một bản tóm tắt tóm lược $S$ sao cho $|S| \leq 0{,}5 \cdot |D|$ (độ dài bản tóm tắt không quá một nửa độ dài văn bản gốc).
+  \item Truyền dữ liệu dạng luồng (Streaming): Truyền bản tóm tắt theo từng token
+        qua kênh SSE (Server-Sent-Events) để đạt thời gian phản hồi dưới ba giây đối với token đầu tiên, tối ưu hóa trải nghiệm người dùng.
+  \item Kiểm chứng thông tin: Theo yêu cầu của người dùng, phân tách bản tóm tắt thành các 
+        mệnh đề nhỏ, truy xuất các minh chứng trên web cho từng mệnh đề, và hiển thị điểm độ tin cậy cùng danh sách nguồn tham chiếu tương ứng.
+  \item Chuyển đổi đa mô hình: Cho phép người dùng lựa chọn giữa các mô hình ngôn ngữ lớn 
+        được hỗ trợ tại thời điểm chạy; đồng thời lưu giữ lựa chọn cấu hình này qua các phiên làm việc.
+  \item Hệ đo lường đánh giá: Sau mỗi lượt tóm tắt, tự động tính toán các chỉ số 
+        ROUGE-1/2/L, BLEU, BERTScore, tỷ lệ nén, các điểm số LLM-Judge, so sánh và ghi nhận kết quả vào cơ sở dữ liệu.
+  \item Dung hợp đa tác nhân: Cung cấp chế độ định tuyến dung hợp, 
+        chạy song song ba tác nhân đề xuất và kết hợp kết quả thông qua một tác nhân tổng hợp.
+  \item Quản trị đánh giá người dùng: Cho phép xây dựng các 
+        tác vụ xếp hạng ẩn danh $K$ chiều với danh tính các mô hình bị ẩn và theo dõi các số liệu thống kê tổng hợp thuộc Trục~C.
+\end{itemize}
+
+\subsection{Yêu cầu phi chức năng}
+
+Hệ thống có khả năng đáp ứng bốn yêu cầu phi chức năng quan trọng: 
+
+\begin{itemize}
+  \item Độ trễ: Thời gian phản hồi token đầu tiên dưới 3 giây đối với 
+        tác vụ tóm tắt dạng luồng trên kết nối mạng băng thông rộng; hoàn thành toàn bộ bản tóm tắt 
+        dưới 10 giây đối với bài báo có độ dài $\leq 1000$ từ.
+  \item Khả năng mở rộng  : Giao diện lập trình ứng dụng  phía backend không lưu trạng thái
+        và có khả năng mở rộng ngang thông qua Vercel; module BERTScore được triển khai dưới dạng một microservice độc lập trên Hugging Face Spaces.
+  \item Bảo mật khóa API: Tất cả các khóa nhà cung cấp dịch vụ LLM đều được lưu trữ an toàn phía máy chủ; 
+        tiện ích mở rộng không bao giờ tiếp cận các khóa API này.
+  \item Tương thích đa trình duyệt: Sử dụng chuẩn Manifest V3, được kiểm thử và xác thực hoạt động ổn định trên Google Chrome và Microsoft Edge.
+  \item Theo dõi chi phí: Mỗi lượt gọi API tới LLM đều ghi lại chi phí thực tế theo đơn vị USD 
+        vào bảng số liệu đo lường để phục vụ mục đích kiểm soát ngân sách.
+\end{itemize}
+
+\section{Kiến trúc tổng quan hệ thống}
+
+Kiến trúc của hệ thống Fiber bao gồm ba dịch vụ chính hoạt động phối hợp chặt chẽ (Hình~\ref{fig:architecture_updated}). 
+Tiện ích trình duyệt giao tiếp với backend Next.js thông qua các giao thức REST và SSE; 
+backend chịu trách nhiệm tương tác với các nhà cung cấp LLM và microservice BERTScore; 
+toàn bộ trạng thái dữ liệu được quản lý bởi cơ sở dữ liệu PostgreSQL trên nền tảng Supabase.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/architecture_updated.png}
+  \caption{Kiến trúc hệ thống ba dịch vụ của Fiber.}
+  \label{fig:architecture_updated}
+\end{figure}
+
+\subsection{Tiện ích mở rộng trình duyệt}
+
+Tiện ích mở rộng được phát triển bằng ngôn ngữ TypeScript sử dụng khung phát triển Plasmo và React. Hệ thống vận hành dựa trên hai ngữ cảnh thực thi chuyên biệt:
+
+\begin{itemize}
+  \item Content script: Chạy trực tiếp trong ngữ cảnh trang web người dùng đang truy cập; có nhiệm vụ trích xuất nội dung bài viết thông qua thư viện Mozilla Readability, nhúng một thanh bên được cô lập bằng cơ chế Shadow DOM nhằm tránh xung đột CSS của trang gốc, và chuyển tiếp các tương tác của người dùng tới service worker nền.
+  \item Background service worker: Điều phối các yêu cầu của người dùng tới hệ thống backend, quản lý luồng dữ liệu SSE, và lưu giữ trạng thái phiên làm việc thông qua API \texttt{chrome.storage}.
+\end{itemize}
+
+\subsection{Backend API (Next.js 14)}
+
+Hệ thống backend được xây dựng trên mô hình Next.js App Router. Mỗi endpoint (route) API dạng \texttt{/api/...} 
+đều thực hiện xác thực nghiêm ngặt dữ liệu đầu vào bằng lược đồ Zod, 
+sau đó ủy thác xử lý cho dịch vụ nghiệp vụ tương ứng, 
+và trả về phản hồi JSON hoặc SSE. Lược đồ Zod đóng vai trò là dữ liệu nguồn duy nhất giữa máy khách và máy chủ, loại bỏ hoàn toàn các lỗi tích hợp dữ liệu tiềm ẩn.
+
+Các API chính bao gồm:
+
+\begin{itemize}
+  \item \texttt{/api/summarize} --- Thực hiện tóm tắt văn bản bằng LLM, hỗ trợ chế độ dạng luồng hoặc chế độ hàng loạt.
+  \item \texttt{/api/fact-check} --- Thực hiện kiểm chứng tính xác thực thông tin được tăng cường tìm kiếm.
+  \item \texttt{/api/metrics} --- Các thao tác CRUD trên các bản ghi đo lường chất lượng.
+  \item \texttt{/api/human-eval/*} --- Các endpoint tiếp nhận tác vụ và phản hồi của người đánh giá thuộc Trục~C.
+  \item \texttt{/api/settings/*} --- Cấu hình các thiết lập định tuyến, mô hình đánh giá và lựa chọn mô hình.
+  \item \texttt{/api/logs/stream} --- Kênh SSE truyền thông tin thời gian thực phục vụ quá trình phát triển.
+\end{itemize}
+
+
+\subsection{Microservice BERTScore}
+
+Chỉ số BERTScore được tính toán bằng Python thông qua thư viện \texttt{bert\_score} chính thức, 
+sử dụng mô hình ngôn ngữ tiếng Việt PhoBERT làm nền tảng (\texttt{vinai/}\allowbreak\texttt{phobert-}\allowbreak\texttt{base}). Microservice này cung cấp một 
+endpoint \texttt{POST} \texttt{/calculate-score} duy nhất và được đóng gói Docker triển khai trên Hugging Face Spaces. 
+Văn bản đầu vào được cắt ngắn còn tối đa 256 token trước khi tính điểm; quá trình cắt ngắn này được thực hiện ở phía microservice 
+để backend Next.js chỉ cần gửi trực tiếp hai chuỗi văn bản cần so sánh mà không cần xử lý token phức tạp ở Node.js.
+
+\section{Module tóm tắt văn bản}
+
+Module tóm tắt văn bản được thiết kế độc lập với mô hình và hoạt động ổn định trước nhiều độ dài đầu vào khác nhau. 
+Quy trình tóm tắt tuân theo một luồng công việc hệ thống từ khâu trích xuất nội dung cho đến bước đánh giá.
+
+\subsection{Quy trình tóm tắt văn bản}
+
+Quy trình tóm tắt được điều phối nhịp nhàng thông qua cơ chế phân tách trách nhiệm rõ ràng 
+giữa tiện ích trình duyệt phía client và API Next.js phía máy chủ. 
+Như minh họa trong Hình~\ref{fig:summarization_flow}, tác vụ tóm tắt có thể được kích hoạt qua hai cơ chế: 
+(1) Thanh bên tự động, tự động nhận diện trang bài báo khi tải để cung cấp bản tóm tắt toàn diện, 
+và (2) Khung hội thoại kiểm chứng, trong đó người dùng bôi đen các phân đoạn văn bản cụ thể để kích hoạt một tooltip tóm tắt theo nhu cầu. 
+Các yêu cầu này được gửi tới endpoint \texttt{/api/summarize} ở backend, nơi \texttt{Summarize Service} tương tác với LLM và xác thực kết quả đầu ra qua thư viện Zod trước khi gửi lại kết quả cho giao diện người dùng tiện ích mở rộng.
+
+Quy trình tóm tắt từ đầu đến cuối gồm năm giai đoạn chính:
+
+\begin{itemize}
+    \item Trích xuất: Khi trang web tải xong, tập kịch bản nội dung sử dụng thư viện Mozilla Readability để phân tích cú pháp DOM, loại bỏ các phần rác như quảng cáo, menu điều hướng để cô lập phần tiêu đề và nội dung chính của bài báo.
+    \item Quyết định định tuyến: Hệ thống ước lượng số lượng token và kiểm tra chế độ định tuyến hiện hoạt của người dùng (Tự động - Auto, Bắt buộc - Forced, hoặc Dung hợp - Fusion). Điều này xác định nhà cung cấp dịch vụ LLM hoặc pipeline xử lý nào (ví dụ: MoA) sẽ được gọi.
+    \item Kỹ thuật câu lệnh: Một câu lệnh gợi ý được cấu trúc động chứa văn bản gốc và các chỉ dẫn cụ thể cho tác vụ tóm tắt ý nghĩa bằng tiếng Việt được gửi tới mô hình đã chọn.
+    \item Thực thi và truyền luồng: Mô hình tạo ra kết quả. Nếu chế độ truyền luồng được bật, các token được truyền trực tiếp qua kênh SSE để hiển thị thời gian thực trên giao diện. Ngược lại, toàn bộ văn bản tóm tắt sẽ được gửi về dưới dạng một khối hoàn chỉnh.
+    \item Xác thực và hậu xử lý: Bản tóm tắt thô từ LLM được xác thực đối chiếu với một lược đồ Zod. Ngay sau khi phản hồi được gửi thành công cho người dùng, hệ thống sẽ kích hoạt một tác vụ đánh giá không đồng bộ ở chế độ nền để tính toán các chỉ số Trục~A mà không gây nghẽn giao diện người dùng.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth,height=0.95\textheight,keepaspectratio]{figures/sum_updated.png}
+  \caption{Nguyên lý hoạt động của dịch vụ tóm tắt văn bản.}
+  \label{fig:summarization_flow}
+\end{figure}
+
+\subsection{Trừu tượng hóa đa nhà cung cấp LLM}
+
+Hệ thống hỗ trợ mười bốn mô hình ngôn ngữ lớn khác nhau thuộc ba nhà cung cấp LLM 
+(OpenAI, Google, Anthropic). 
+Module \texttt{llm.}\allowbreak\texttt{service.}\allowbreak\texttt{ts} cung cấp một hàm \texttt{summarize} duy nhất chịu trách nhiệm điều phối các yêu cầu đến từng nhà cung cấp và xử lý các đặc thù kỹ thuật riêng biệt của từng API:
+
+\begin{itemize}
+  \item Các mô hình suy luận sâu (\texttt{o4-mini}) bỏ qua các tham số temperature, top-$p$, và frequency-penalty.
+  \item Các mô hình của Anthropic giới hạn temperature trong khoảng $[0, 1]$ và không hỗ trợ cấu hình hạt giống ngẫu nhiên (seed).
+  \item Các mô hình Gemini dùng cấu hình (\texttt{response}\allowbreak\texttt{MimeType:}\allowbreak{} \texttt{"application/}\allowbreak\texttt{json"}) để bắt buộc trả về cấu trúc dữ liệu JSON định hình sẵn.
+\end{itemize}
+
+Chi phí cho mỗi lượt gọi API được tính toán dựa trên bảng giá niêm yết của từng nhà cung cấp dịch vụ và lưu trữ trực tiếp vào cột \texttt{cost\_usd} của bảng \texttt{evaluation\_metrics}. 
+Tại mỗi thời điểm, chỉ một mô hình duy nhất được cấu hình hoạt động để đảm bảo tính nhất quán, điều này được ràng buộc bằng chỉ mục duy nhất một phần (partial unique index) trong bảng \texttt{model\_configurations}.
+
+\subsection{Định tuyến dựa trên độ phức tạp văn bản}
+
+Đối với các bài viết tiếng Việt ngắn, việc sử dụng các mô hình nội địa tối ưu hóa cho tiếng Việt mang lại hiệu quả chi phí cao hơn và giữ ngôn ngữ tự nhiên hơn so với việc gọi các mô hình thương mại quốc tế đắt đỏ. 
+Module định tuyến ước lượng độ dài đầu vào theo công thức $\lceil |D|_{\text{chars}} / 4 \rceil$ token và phân bổ xử lý như sau:
+
+\begin{itemize}
+  \item $\leq 400$ token $\Rightarrow$ Sử dụng mô hình tiếng Việt chuyên dụng ViT5-large.
+  \item $400$--$2000$ token $\Rightarrow$ Định tuyến mặc định tới GPT-4o-mini.
+  \item $> 2000$ token $\Rightarrow$ Sử dụng GPT-4o-mini kết hợp cơ chế phân nhỏ ngữ cảnh (chunked context).
+\end{itemize}
+
+Hệ thống cung cấp ba chế độ định tuyến chính cho người dùng:
+
+\begin{itemize}
+  \item \texttt{auto} --- Tự động định tuyến dựa trên độ phức tạp và độ dài văn bản như mô tả ở trên.
+  \item \texttt{forced} --- Bắt buộc luôn luôn sử dụng mô hình do người dùng chọn thủ công.
+  \item \texttt{fusion} --- Sử dụng pipeline dung hợp đa tác nhân MoA (Mục~3.4).
+\end{itemize}
+
+\section{Pipeline dung hợp đa tác nhân (MoA)}
+
+Pipeline MoA (Mixture-of-Agents) đại diện cho đóng góp kỹ thuật cốt lõi của khóa luận. 
+Đây là một sự triển khai chính xác dựa trên công trình của Wang và các cộng sự \cite{Wang2024} kết hợp với một cải tiến thiết kế quan trọng: 
+nhúng bài viết gốc trực tiếp vào câu lệnh gợi ý của tác nhân tổng hợp. 
+Cải tiến này là bắt buộc vì nhiệm vụ của hệ thống là tóm tắt dựa trên ngữ cảnh thực tế thay vì chỉ tuân thủ các chỉ dẫn tự do không ràng buộc.
+
+\subsection{Thiết kế hệ thống hai lớp}
+
+Lớp~1 (các tác nhân đề xuất) gồm ba mô hình: \{\texttt{gpt-4o-}\allowbreak\texttt{mini}, \allowbreak\texttt{claude-}\allowbreak\texttt{haiku-}\allowbreak\texttt{4.5}, \allowbreak\texttt{gemini-}\allowbreak\texttt{2.5-}\allowbreak\texttt{flash}\}. 
+Mỗi tác nhân đề xuất nhận chung một câu lệnh đầu vào: ``tóm tắt bài báo tiếng Việt này trong khoảng từ 5 đến 7 câu'' 
+và độc lập tạo ra bản thảo sơ bộ $d_i$ ở chế độ song song. 
+Lớp~2 là tác nhân tổng hợp sử dụng mô hình \texttt{gpt-4o}. Tác nhân này tiếp nhận đồng thời cả văn bản bài viết gốc $D$ 
+và danh sách các bản thảo sơ bộ $\{d_1, d_2, d_3\}$ để dung hợp và biên tập ra bản tóm tắt cuối cùng $S^{\star}$ (Hình~\ref{fig:moa}).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/moa_updated.png}
+  \caption{Kiến trúc pipeline hai lớp MoA tích hợp kết nối phần dư.}
+  \label{fig:moa}
+\end{figure}
+
+\subsection{Lớp đề xuất}
+
+Ba tác nhân đề xuất được tuyển chọn từ ba họ mô hình ngôn ngữ lớn thương mại đám mây khác nhau (OpenAI, Anthropic, Google) 
+nhằm đảm bảo tính đa dạng trong tư duy ngôn ngữ của mô hình với chi phí vận hành cực kỳ tối ưu (cả ba đều thuộc phân khúc mô hình nhỏ gọn: \textit{mini}/\textit{haiku}/\textit{flash} của các hãng). 
+Cơ chế xử lý lỗi ngoại lệ: nếu bất kỳ một tác nhân đề xuất nào bị quá thời hạn phản hồi hoặc trả về lỗi API, 
+quá trình dung hợp vẫn tiếp tục với các bản thảo còn lại; nếu hai hoặc cả ba tác nhân đề xuất đều gặp sự cố, hệ thống sẽ trả trực tiếp bản thảo sống sót duy nhất (nếu có) và ghi lại một cảnh báo lỗi vào tệp nhật ký hệ thống.
+
+\subsection{Lớp tổng hợp}
+
+Câu lệnh gợi ý cho tác nhân tổng hợp là cấu thành quan trọng nhất của hệ thống triển khai thực tế; 
+nó quyết định việc tác nhân tổng hợp sẽ thực hiện biên dịch chi tiết hay chỉ đơn thuần chắp vá cơ học các bản thảo lại với nhau. 
+Trong kiến trúc hiện tại, mô hình \texttt{gpt-4o} được sử dụng làm tác nhân tổng hợp. 
+Câu lệnh gợi ý, sau khi được tinh chỉnh vào ngày 08-05-2026 (thay đổi cuối cùng đem lại kết quả vượt trội), chỉ dẫn mô hình thực hiện:
+\begin{itemize}
+  \item Đánh giá các bản thảo đề xuất một cách phản biện thay vì sao chép nguyên văn;
+  \item Duy trì giọng văn báo chí tiếng Việt chuẩn mực, khách quan và trung lập;
+  \item Đảm bảo bản tóm tắt hoàn toàn nhất quán với bài viết gốc;
+  \item \textit{Không} được sử dụng cụm từ ``cô đọng'' (tương đương với các chỉ dẫn ``condense / concise''), cụm từ mà các kết quả thực nghiệm thực tế chỉ ra rằng thường hướng mô hình tới việc tạo ra các bản tóm tắt bị cắt cụt cục bộ và thiếu tính liên kết.
+\end{itemize}
+
+\subsection{Kết nối phần dư bài viết gốc}
+
+Phương trình~1 của nghiên cứu gốc \cite{Wang2024} chỉ thực hiện nối chuỗi câu lệnh gợi ý đầu vào với danh sách các bản thảo đề xuất. 
+Đối với bài toán tóm tắt có ràng buộc thông tin thực tế, chỉ sử dụng câu lệnh gợi ý là không đủ — tác nhân tổng hợp cần bài viết gốc làm neo tham chiếu để xác thực và tổng hợp thông tin. 
+Sự triển khai của công trình của khoá luận nhúng trực tiếp toàn văn bài viết gốc vào ngữ cảnh hệ thống của tác nhân tổng hợp như một nguồn đầu vào bổ sung song song với danh sách bản thảo. 
+
+Đường kết nối phần dư này mang lại hiệu quả thực nghiệm mang tính quyết định. 
+Nếu không có bài viết gốc, tác nhân tổng hợp rơi vào trạng thái chắp vá bản thảo (độ dài bản tóm tắt tăng $\approx 22\%$ so với độ dài bản thảo trung bình, chỉ số ROUGE-1 so với nguồn đạt $\approx 0{,}34$); 
+khi có sự hiện diện của bài viết gốc, tác nhân tổng hợp chuyển sang trạng thái tổng hợp biên tập thực sự (độ dài ngắn hơn $\approx 17\%$, chỉ số ROUGE-1 giảm xuống còn $\approx 0{,}24$ do tính chất diễn đạt lại linh hoạt nhưng điểm đánh giá toàn diện Rubric tăng mạnh). 
+Chi tiết các thực nghiệm cô lập này được báo cáo tại Mục~4.2.
+
+\subsection{Thực nghiệm kỹ thuật câu lệnh đối với mô hình tổng hợp}
+
+Ba biến thể của câu lệnh gợi ý dành cho tác nhân tổng hợp đã được thử nghiệm trên tập dữ liệu gồm 50 bài báo từ trang \textit{tienphong.vn}:
+
+\begin{itemize}
+  \item Baseline --- Câu lệnh trước khi tinh chỉnh; không đưa bài viết gốc vào ngữ cảnh của tác nhân tổng hợp.
+  \item v1 - Strict source (Nguồn nghiêm ngặt) --- Có đưa bài viết gốc vào ngữ cảnh, áp dụng quy tắc kiểm soát nghiêm ngặt ``không được tự ý sáng tạo thông tin''.
+  \item v2 - Soft source (Nguồn linh hoạt) --- Có đưa bài viết gốc vào ngữ cảnh, sử dụng các diễn đạt linh hoạt hơn như ``sử dụng bài viết như tài liệu tham chiếu tin cậy''.
+\end{itemize}
+
+Bảng đối chiếu chi tiết các phiên bản câu lệnh gợi ý này cùng các đoạn văn bản sửa đổi cụ thể được trình bày trong Phụ lục~C.
+
+Kết luận nổi bật nhất (được trình bày chi tiết tại Mục~4.2) chỉ ra rằng chỉ riêng sự xuất hiện của văn bản bài viết gốc trong ngữ cảnh tổng hợp đã làm thay đổi hoàn toàn hành vi của mô hình; 
+trong khi các diễn đạt câu chữ chi tiết xung quanh quy tắc đó không tạo ra sự khác biệt quá lớn. 
+Phiên bản câu lệnh được tích hợp chính thức vào hệ thống là v2 cùng với việc loại bỏ từ khóa ``cô đọng'' theo cập nhật vào ngày 08-05-2026.
+
+\section{Module kiểm chứng tin tức}
+
+Module kiểm chứng tin tức được thiết kế dưới dạng một kiến trúc RAG độc lập được điều phối trực tiếp bởi mô hình ngôn ngữ lớn. 
+Quy trình kiểm chứng thông tin (Hình~\ref{fig:fact_check_flow}) được kích hoạt khi người dùng bôi đen và chọn một phân đoạn văn bản cụ thể cần xác thực. 
+Giao diện \texttt{Fact-check Modal} gửi yêu cầu tới endpoint API \texttt{/api/fact-check}. 
+Tại backend, \texttt{Fact-check Service} trước tiên thực hiện truy xuất minh chứng trực tuyến thông qua công cụ tìm kiếm Tavily Search 
+trước khi gửi truy vấn đến LLM để đưa ra phán quyết cuối cùng. Phản hồi sau đó được gửi về máy khách và kết xuất trên giao diện khung hội thoại.
+
+Quy trình xử lý tuân theo một logic tìm kiếm và xác thực hệ thống:
+
+\begin{itemize}
+  \item Phân đoạn văn bản tóm tắt (hoặc bất kỳ đoạn văn bản tự do nào do người dùng nhập vào) được gửi tới công cụ Tavily dưới dạng một truy vấn tìm kiếm trực tuyến.
+  \item Hệ thống Tavily trả về sáu kết quả tìm kiếm chất lượng cao nhất, mỗi kết quả là một bộ ba thông tin gồm \texttt{(tiêu đề bài báo, đường dẫn URL, đoạn văn bản trích dẫn)}.
+  \item Các đoạn trích dẫn này, kết hợp cùng văn bản mệnh đề ban đầu của người dùng, được chuyển đến mô hình GPT-4o-mini. Mô hình phân tích và trả về một cấu trúc dữ liệu JSON gồm các trường thông tin: \texttt{trust\_score} (điểm độ tin cậy từ $0$--$100$), \texttt{verified} (biến logic xác định mệnh đề đúng hay sai), và \texttt{sources} (danh sách các đường dẫn nguồn minh chứng).
+  \item Tiện ích mở rộng tiếp nhận dữ liệu này và hiển thị trực quan trong khung hội thoại kiểm chứng ngay phía dưới bản tóm tắt.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth, height=0.8\textheight, keepaspectratio]{figures/factcheck-updated.png}
+  \caption{Nguyên lý hoạt động của dịch vụ kiểm chứng thông tin được tăng cường tìm kiếm.}
+  \label{fig:fact_check_flow}
+\end{figure}
+
+Việc lựa chọn mô hình GPT-4o-mini cho bước đưa ra phán quyết cuối cùng là một quyết định kỹ thuật có tính toán thực tế: 
+mô hình này có chi phí vận hành rẻ hơn mười lần so với GPT-4o trong khi không ghi nhận bất kỳ sự giảm sút nào về mặt chất lượng phán quyết trên tập kiểm tra thử nghiệm gồm 50 mệnh đề thực tế.
+
+\section{Khung đánh giá ba trục}
+
+Mục này mô tả đóng góp về mặt phương pháp luận chính của khóa luận: một khung đánh giá tích hợp đồng thời ba khía cạnh độc lập bao gồm các số liệu đo lường khả năng giữ lại nội dung (Trục~A), đánh giá chất lượng bằng LLM-Judge (Trục~B) và xếp hạng của con người (Trục~C). 
+Quyết định xây dựng cấu trúc đánh giá ba trục xuất phát từ sau quan sát và phân tích: bất kỳ một trục đơn lẻ nào cũng tự bản thân nó mang những thiên kiến cấu trúc nội tại; chỉ khi kết hợp cả ba trục lại với nhau mới tạo ra một phương pháp định vị đa chiều đáng tin cậy để đo lường chất lượng hệ thống.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/3axis_updated.png}
+  \caption{Khung đánh giá ba trục được sử dụng để định vị đa chiều chất lượng hệ thống.}
+  \label{fig:evaluation_framework}
+\end{figure}
+
+\subsection{Trục A --- Khả năng giữ lại nội dung}
+
+Các số liệu thuộc Trục~A được tính toán tự động ngay sau khi mỗi bản tóm tắt được tạo ra. 
+Chỉ số ROUGE-1/2/L và BLEU được xử lý trực tiếp bằng các thư viện JavaScript \texttt{rouge} và \texttt{sacrebleu}. 
+Chỉ số BERTScore được xử lý bởi microservice viết bằng Python. 
+Cả bốn chỉ số đánh giá chất lượng này đều được tính toán đối chiếu trực tiếp với văn bản bài viết gốc, thay vì so sánh với bản tóm tắt mẫu do con người viết. Tỷ lệ nén được tính bằng công thức ký tự $|S|/|D|$.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1.03\linewidth]{figures/Acal_updated.png}
+  \caption{Sơ đồ luồng tính toán các chỉ số thuộc Trục A (Khả năng giữ lại nội dung).}
+  \label{fig:axis_a_calc}
+\end{figure}
+
+\subsection{Trục B --- Chất lượng và Mức độ ưu tiên}
+
+Trục~B đóng vai trò là trục trọng tâm của khóa luận. Module 
+\texttt{llm-}\allowbreak\texttt{judge.}\allowbreak\texttt{service.}\allowbreak\texttt{ts} cung cấp bốn hàm chức năng chính với khản năng đánh giá toàn diện chất lượng văn bản tóm tắt bằng LLM-Judge:
+
+\begin{itemize}
+  \item \texttt{judgeRubric} --- Bộ tiêu chuẩn đánh giá 5 chiều phát triển từ FLASK trên thang điểm từ 1--5.
+  \item \texttt{judgeAbsolute} --- Điểm số đánh giá toàn diện trên thang điểm 1--10 theo phong cách MT-Bench.
+  \item \texttt{judgePairwise} --- Đánh giá so sánh cặp A so với B tích hợp cơ chế ngẫu nhiên hóa vị trí.
+  \item \texttt{scoreFactuality} (nằm trong \texttt{factuality.}\allowbreak\texttt{service.}\allowbreak\texttt{ts}) --- Phân tách mệnh đề kết hợp phân loại chấp thuận.
+\end{itemize}
+
+Hai quy trình xử lý bậc cao hơn được vận hành riêng cho đầu ra của pipeline dung hợp MoA:
+
+\begin{itemize}
+  \item \texttt{runFusionPairwiseJudge} --- So sánh bản tóm tắt dung hợp với bản thảo tốt nhất của tác nhân đề xuất.
+  \item \texttt{runFusionVsAllDraftsJudge} --- So sánh bản tóm tắt dung hợp với từng bản thảo đề xuất đơn lẻ.
+  \item Phép so sánh thứ ba, ``dung hợp MoA so với bản tóm tắt chạy trực tiếp trên \texttt{gpt-4o} đơn lẻ'' (\texttt{vs\_single\_aggregator}), được thực thi thông qua một script ngoại tuyến được mô tả tại Mục~4.3.4; đây là phép so sánh mang tính chất quyết định đối với toàn bộ khóa luận vì cả hai đối tượng so sánh đều là sản phẩm đầu ra của cùng một mô hình \texttt{gpt-4o}, nhờ đó triệt tiêu hoàn toàn thiên kiến thiên vị "cùng họ" của LLM-Judge.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=0.9\textheight,keepaspectratio]{figures/Bcal_updated.png}
+  \caption{Sơ đồ luồng xử lý đánh giá bằng LLM-Judge thuộc Trục B (Chất lượng và Mức độ ưu tiên).}
+  \label{fig:axis_b_calc}
+\end{figure}
+
+\subsection{Trục C --- Đánh giá bởi con người}
+
+Trục~C sử dụng chính giao diện web của hệ thống để tổ chức các tác vụ xếp hạng mù dành cho người đánh giá.
+
+\begin{itemize}
+  \item Người thực hiện nghiên cứu tạo một tác vụ đánh giá tại đường dẫn quản trị \texttt{/evaluate/}\allowbreak\texttt{admin}. Mỗi tác vụ tương ứng với một bài báo gốc và ba bản tóm tắt ứng viên (bản dịch dung hợp MoA, bản tóm tắt GPT-4o đơn lẻ, và bản thảo GPT-4o-mini) với danh tính mô hình đã được ẩn giấu hoàn toàn. Các ứng viên được gán nhãn trung lập là \textit{Bản A, Bản B, Bản C}.
+  \item Người đánh giá truy cập đường dẫn \texttt{/evaluate?}\allowbreak\texttt{task=}\allowbreak\texttt{<uuid>}, nhập mã nhận diện định danh duy nhất (rater code), thực hiện thao tác kéo thả để xếp hạng vị trí của ba ứng viên, và viết một câu nhận xét ngắn bằng tiếng Việt giải thích lý do lựa chọn cho mỗi bản tóm tắt.
+  \item Các phản hồi được ghi nhận vào bảng cơ sở dữ liệu \texttt{human\_eval\_responses}; một chỉ mục duy nhất một phần được thiết lập trên tổ hợp trường \texttt{(task\_id,}\allowbreak{} \texttt{rater\_id)} để ngăn chặn hành vi gửi phản hồi hai lần của cùng một người đánh giá trên một tác vụ.
+  \item API \texttt{/api/}\allowbreak\texttt{human-}\allowbreak\texttt{eval/}\allowbreak\texttt{report} chịu trách nhiệm tính toán tổng hợp thứ hạng trung bình của từng mô hình, tỷ lệ thắng tương ứng, và hệ số độ đồng thuận Fleiss'~$\kappa$.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/Ccal_updated.png}
+  \caption{Sơ đồ luồng xử lý và tổng hợp số liệu thống kê thuộc Trục C (Đánh giá của con người).}
+  \label{fig:axis_c_calc}
+\end{figure}
+
+\subsection{Phân tích thống kê}
+
+Để đảm bảo các kết quả thực nghiệm thu được đạt độ tin cậy khoa học cao nhất, hệ thống tích hợp một thư viện xử lý thống kê chuyên biệt (\texttt{backend/}\allowbreak\texttt{output-fusion/}\allowbreak\texttt{scripts/}\allowbreak\texttt{stats.ts}). 
+Quá trình triển khai tập trung xử lý bốn nhóm tác vụ cốt lõi nhằm đảm bảo các số liệu đo lường được báo cáo trong các chương tiếp theo đạt tính chính xác và khả năng tái lập cao:
+
+\begin{itemize}
+  \item Kiểm định ý nghĩa thống kê (Trục A/B): Hệ thống sử dụng phương pháp tính giá trị p-value nhị thức hai chiều chính xác thông qua hàm \texttt{signTestPValue}. Để xử lý các bài toán có kích thước mẫu thực nghiệm lớn mà không gây lỗi tràn số bộ nhớ, một bộ đệm lưu log-giai thừa được thiết kế để thực hiện toàn bộ phép tính trong không gian logarit, giúp triệt tiêu hoàn toàn hiện tượng tràn số dấu phẩy động thường gặp khi tính toán các tổ hợp lớn $C(n, k)$.
+  \item Hiệu chỉnh thiên kiến độ dài (Trục B): Do các mô hình ngôn ngữ lớn làm giám khảo thường có xu hướng ưu tiên các văn bản đầu ra có độ dài lớn hơn \cite{Dubois2024}, hệ thống đã triển khai giải thuật \texttt{length}\allowbreak\texttt{Bucketed}\allowbreak\texttt{WinRate}. Bằng cách phân chia các phán quyết vào ba nhóm dựa trên tỷ lệ độ dài tương ứng $L_{\text{A}}/L_{\text{B}}$ ($<0.85$, $0.85$--$1.15$, và $>1.15$), hệ thống có thể tính toán một tỷ lệ thắng cân bằng và khách quan hơn, không còn bị chi phối bởi độ dài văn bản.
+  \item Độ đồng thuận giữa các người đánh giá (Trục C): Để đo lường mức độ thống nhất trong các quyết định xếp hạng của những người đánh giá con người độc lập, hệ thống tính toán hệ số Fleiss' $\kappa$ thông qua hàm \texttt{fleiss}\allowbreak\texttt{Kappa}\allowbreak\texttt{From}\allowbreak\texttt{Rankings}. Khoá luận áp dụng bộ khung diễn giải tiêu chuẩn của Landis và Koch \cite{Landis1977} để đánh giá các chỉ số này, hướng tới việc đạt hệ số đồng thuận ở mức ít nhất là "trung bình" ($\kappa > 0.4$) để đảm bảo nghiên cứu khảo sát đạt độ giá trị khoa học cần thiết.
+  \item Tổng hợp số liệu cặp: Đối với các chỉ số đo lường khả năng giữ lại nội dung ở Trục A, hàm \texttt{paired}\allowbreak\texttt{Metric}\allowbreak\texttt{Stats} chịu trách nhiệm tự động tính toán giá trị trung bình, độ lệch chuẩn và sai lệch cặp thực nghiệm. Giải thuật được thiết kế để tự động loại bỏ các dữ liệu khuyết thiếu (missing data) và tính toán p-value kiểm định dấu (sign-test) cho các phép so sánh đối đầu trực tiếp, cung cấp một phương thức chuẩn hóa để báo cáo số liệu trên toàn bộ Trục A.
+\end{itemize}
+
+\subsection{Dung hợp MoA so với GPT-4o đơn lẻ}
+
+Phép so sánh mang tính chất quyết định này loại bỏ hoàn toàn một yếu tố gây nhiễu thường xuất hiện trong các so sánh giữa bản tóm tắt dung hợp và bản tóm tắt tốt nhất: 
+bản tóm tắt tốt nhất vốn được tạo ra bởi một mô hình có năng lực yếu hơn tác nhân tổng hợp, do đó bất kỳ chiến thắng nào của bản tóm tắt dung hợp cũng có thể bị quy kết một cách phiến diện là do ``GPT-4o mạnh hơn Claude Haiku''. 
+Bằng cách so sánh trực tiếp bản tóm tắt dung hợp MoA (sử dụng GPT-4o làm tác nhân tổng hợp) chống lại chính mô hình GPT-4o chạy độc lập ở chế độ câu lệnh không dữ liệu mẫu trên cùng một bài báo gốc, cả hai ứng viên so tài đều là sản phẩm đầu ra của cùng một mô hình GPT-4o. 
+Do đó, bất kỳ sự vượt trội nào ghi nhận được cũng chỉ có thể được giải thích một cách duy nhất là do hiệu quả của quá trình dung hợp và tổng hợp thông tin — khi tác nhân tổng hợp được cung cấp thêm ngữ cảnh là nhiều bản thảo đề xuất đa dạng từ các họ mô hình khác nhau — chứ không phải do sự chênh lệch về năng lực cốt lõi của bản thân mô hình nền tảng. 
+Quy trình thực nghiệm này được triển khai bằng cách sử dụng các script theo kịch bản so sánh \texttt{scripts/run-single-baseline.ts} và \texttt{scripts/compare-fused-vs-single.ts}; toàn bộ các kết quả thực nghiệm chi tiết sẽ được trình bày tại Mục~4.3.4.
+
+\section{Thiết kế cơ sở dữ liệu}
+
+Cơ sở dữ liệu PostgreSQL trên nền tảng Supabase được triển khai thông qua 25 migration. 
+Lược đồ cơ sở dữ liệu được phân chia mạch lạc thành ba nhóm chức năng chính: các số liệu đo lường chất lượng trên mỗi lượt tóm tắt, dữ liệu đặc thù phục vụ cấu trúc MoA, và hồ sơ lưu trữ các tác vụ đánh giá bởi con người. 
+Các mối liên kết logic giữa ba nhóm chức năng này được minh họa chi tiết thông qua sơ đồ Thực thể - Quan hệ (ER) trong Hình~\ref{fig:database_schema}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/database_schema.png}
+  \caption{Lược đồ cơ sở dữ liệu Fiber mô tả các bảng chính và mối quan hệ giữa chúng.}
+  \label{fig:database_schema}
+\end{figure}
+
+\subsection{Các chỉ số đo lường trên từng bản tóm tắt và quyết định định tuyến}
+
+Nhóm bảng này chịu trách nhiệm theo dõi toàn bộ vòng đời của mỗi yêu cầu tóm tắt được gửi tới hệ thống, bắt đầu từ logic định tuyến ban đầu cho đến các kết quả đo lường chất lượng được tính toán sau đó.
+
+\begin{table}[H]
+\centering
+\caption{Lược đồ cho các bảng chi số đo lường và định tuyến.}
+\begin{tabularx}{\linewidth}{llX}
+\hline
+\textbf{Bảng / Cột} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả chi tiết} \\ \hline
+\textit{evaluation\_metrics} & & \\
+\texttt{summary\_text} & text & Nội dung chi tiết của bản tóm tắt được tạo ra. \\
+\texttt{rouge\_1/2/L} & float8 & Trục A: Điểm số ROUGE F1-score tương ứng. \\
+\texttt{bert\_score} & float8 & Trục A: Điểm số tương đồng ngữ nghĩa BERTScore. \\
+\texttt{latency} & int4 & Tổng thời gian xử lý yêu cầu (ms). \\
+\texttt{judge\_rubric} & jsonb & Trục B: Kết quả đánh giá Rubric đa chiều dưới dạng JSON. \\
+\texttt{factuality\_ratio} & numeric & Trục B: Tỷ lệ các mệnh đề được chấp thuận logic từ nguồn. \\ \hline
+\textit{routing\_decisions} & & \\
+\texttt{article\_tokens} & int4 & Số lượng token ước tính của văn bản đầu vào. \\
+\texttt{complexity} & text & Mức độ phức tạp được phân loại (Thấp/Trung bình/Cao). \\
+\texttt{routing\_mode} & text & Chế độ định tuyến hiện hoạt (auto, forced, hoặc fusion). \\
+\texttt{selected\_model} & text & Mô hình cụ thể được bộ định tuyến phân bổ xử lý. \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsection{Cấu trúc dữ liệu đặc thù MoA}
+
+Các bảng này chịu trách nhiệm lưu trữ các bản thảo sơ bộ ở lớp trung gian và kết quả dung hợp cuối cùng của pipeline đa tác nhân MoA, kết hợp cùng các phán quyết đánh giá so sánh cặp của giám khảo LLM.
+
+\begin{table}[H]
+\centering
+\caption{Lược đồ cho các bảng đặc thù phục vụ cấu trúc MoA.}
+\begin{tabularx}{\linewidth}{llX}
+\hline
+\textbf{Bảng / Cột} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả chi tiết} \\ \hline
+\textit{moa\_fusion\_results} & & \\
+\texttt{fused\_summary} & text & Bản tóm tắt dung hợp cuối cùng. \\
+\texttt{aggregator\_model} & text & Tên mô hình tổng hợp được sử dụng (ví dụ: GPT-4o). \\
+\texttt{total\_cost\_usd} & float4 & Tổng chi phí tích lũy của toàn bộ lượt gọi LLM trong phiên. \\ \hline
+\textit{moa\_draft\_results} & & \\
+\texttt{model\_name} & text & Tên nhận diện của mô hình đề xuất (proposer). \\
+\texttt{summary} & text & Nội dung bản thảo sơ bộ được tạo bởi mô hình đề xuất tương ứng. \\ \hline
+\textit{llm\_judge\_pairwise} & & \\
+\texttt{winner} & text & Kết quả phán quyết so sánh cặp (Bản A, Bản B, hoặc Hòa - Tie). \\
+\texttt{comparison\_type} & text & Loại so sánh (so với bản thảo tốt nhất, so với từng bản thảo lẻ, v.v.). \\
+\texttt{justification} & text & Đoạn giải thích lý do phán quyết của LLM-Judge. \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsection{Lưu trữ đánh giá của con người}
+
+Nhóm bảng này chịu trách nhiệm quản lý và lưu giữ thông tin liên quan đến các tác vụ xếp hạng dành cho những người tham gia đánh giá.
+
+\begin{table}[H]
+\centering
+\caption{Lược đồ cho các bảng phục vụ đánh giá của con người.}
+\begin{tabularx}{\linewidth}{llX}
+\hline
+\textbf{Bảng / Cột} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả chi tiết} \\ \hline
+\textit{human\_eval\_tasks} & & \\
+\texttt{article\_url} & text & Đường dẫn URL bài báo gốc dùng làm tham chiếu. \\
+\texttt{summaries} & jsonb & Danh sách các bản tóm tắt ứng viên đã ẩn danh mô hình. \\ \hline
+\textit{human\_eval\_responses} & & \\
+\texttt{ranking} & jsonb & Danh sách xếp hạng thứ tự ưu tiên do người đánh giá quyết định. \\
+\texttt{rationale} & jsonb & Các nhận xét giải thích chi tiết cho từng bản tóm tắt tương ứng. \\ \hline
+\end{tabularx}
+\end{table}
+
+\section{Giao diện người dùng}
+
+\subsection{Thanh bên của tiện ích mở rộng}
+
+Thanh bên của tiện ích mở rộng là bề mặt tương tác chính của người dùng với hệ thống (Hình~\ref{fig:sidebar}). 
+Khi nhấn vào biểu tượng của tiện ích trên thanh công cụ, một bảng điều khiển sẽ được nhúng trực tiếp vào mép phải của trang web hiện tại; bảng này được thiết kế chuyên biệt và tối giản hóa, chỉ hiển thị khu vực tóm tắt dạng luồng thời gian thực. 
+Khác với giao diện popup hay các bảng điều khiển dạng hộp thoại khác, thanh bên này hoàn toàn không có thêm các nút bấm hay trình điều khiển phức tạp nào, đóng vai trò là một không gian đọc tập trung dành riêng cho bản tóm tắt tin tức.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/sidebar.png}
+  \caption{Thanh bên của tiện ích mở rộng Fiber.}
+  \label{fig:sidebar}
+\end{figure}
+
+\subsection{Khung hội thoại kiểm chứng}
+
+Khung hội thoại kiểm chứng (Hình~\ref{fig:fact_check_modal}) cung cấp một giao diện hiển thị kết quả kiểm chứng chi tiết cùng với trạng thái phân loại màu sắc trực quan (màu xanh lá tương ứng với đã được xác thực, màu vàng tương ứng với xác thực một phần, và màu đỏ tương ứng với thông tin cần cẩn trọng). 
+Đi kèm với đó là nhận định chi tiết của LLM về tính xác thực của thông tin.
+Người dùng có thể nhấn vào các đường dẫn nguồn minh chứng được liệt kê để đối chiếu và kiểm tra thông tin trực tiếp một cách nhanh chóng.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/fact_check_modal.png}
+  \caption{Khung hội thoại kiểm chứng.}
+  \label{fig:fact_check_modal}
+\end{figure}
+
+\subsection{Trang báo cáo số liệu đo lường}
+
+Trang báo cáo số liệu đo lường (Hình~\ref{fig:metrics_dashboard}) chịu trách nhiệm hiển thị toàn bộ nội dung của bảng \texttt{evaluation\_metrics} 
+thông qua hai chế độ xem linh hoạt (\textit{thu gọn}, và \textit{đầy đủ}), tích hợp các bộ lọc tìm kiếm theo chế độ định tuyến và loại mô hình sử dụng. 
+Trang được thiết kế trực quan với ba biểu đồ nhúng thời gian thực: biểu đồ radar năm trục thể hiện chất lượng Rubric, các hộp hiển thị kết quả đánh giá so sánh cặp giữa MoA dung hợp so với bản thảo tốt nhất, và hộp hiển thị tính xác thực kết quả của MoA.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/metrics_dashboard.png}
+  \caption{Trang tổng quan số liệu đo lường.}
+  \label{fig:metrics_dashboard}
+\end{figure}
+
+\subsection{Giao diện đánh giá của con người}
+
+Giao diện khảo sát người đánh giá con người (Hình~\ref{fig:human_eval}) phục vụ song song cho người thực hiện nghiên cứu và những người tham gia đánh giá. 
+Thẻ quản trị cho phép người thực hiện nghiên cứu lựa chọn bài báo gốc và các bản tóm tắt ứng viên tương ứng để thiết lập các tác vụ xếp hạng mù ẩn danh $K$ chiều. 
+Trong khi đó, giao diện dành cho người đánh giá trình bày các ứng viên này dưới dạng các thẻ kéo thả trực quan được gán nhãn trung lập \textit{Bản A, Bản B, Bản C} phục vụ việc xếp hạng ẩn danh. 
+Kết quả thu được sau đó sẽ được hệ thống tự động tổng hợp thành thứ hạng trung bình, tỷ lệ thắng tương ứng kèm theo các kiểm định ý nghĩa thống kê chính xác.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/human_eval.png}
+  \caption{Giao diện khảo sát đánh giá của con người.}
+  \label{fig:human_eval}
+\end{figure}
+
+\subsection{Trang thiết lập cấu hình}
+
+Trang cài đặt cấu hình hệ thống (Hình~\ref{fig:settings}) cung cấp ba thẻ tùy chỉnh chuyên biệt:
+
+\begin{itemize}
+  \item Định tuyến: Tùy chọn thay đổi chế độ định tuyến (\texttt{auto} / \texttt{forced} / \texttt{fusion}) và trình chọn mô hình bắt buộc tương ứng.
+  \item LLM-Judge: Thiết lập chế độ chạy (\texttt{metrics\_only} - chỉ tính toán Trục A, \texttt{judge\_only} - chỉ gọi LLM-Judge Trục B, hoặc \texttt{both} - chạy cả hai), chọn mô hình LLM-Judge mặc định, phong cách chấm điểm (Rubric hoặc điểm tổng hợp Absolute), và nút chuyển đổi bật tắt chế độ kiểm chứng xác thực.
+  \item Khóa nhà cung cấp: Hiển thị danh sách trạng thái cấu hình của các khóa API từ các nhà cung cấp dịch vụ LLM khác nhau ở chế độ chỉ đọc; toàn bộ nội dung của các khóa này được bảo mật an toàn phía máy chủ và không bao giờ được gửi về phía trình duyệt máy khách.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/settings_page.png}
+  \caption{Giao diện thiết lập các tùy chọn hệ thống.}
+  \label{fig:settings}
+\end{figure}
+
+\section{Tổng kết chương}
+
+Chương này đã trình bày toàn bộ quá trình thiết kế và xây dựng hệ thống Fiber, bao phủ từ phân tích yêu cầu đến giao diện người dùng cuối cùng. Về mặt kiến trúc, hệ thống được tổ chức thành ba dịch vụ phối hợp chặt chẽ: tiện ích trình duyệt Plasmo chịu trách nhiệm trích xuất nội dung và hiển thị, backend Next.js~14 đóng vai trò điều phối trung tâm với xác thực dữ liệu bằng Zod, và microservice BERTScore dựa trên PhoBERT để tính toán tương đồng ngữ nghĩa. Về mặt kỹ thuật, pipeline MoA hai lớp với ba tác nhân đề xuất đa nhà cung cấp và một tác nhân tổng hợp GPT-4o đã được triển khai trên cơ sở nghiên cứu gốc của Wang et al.\ \cite{Wang2024}, kết hợp với cải tiến quan trọng là nhúng trực tiếp bài viết gốc vào ngữ cảnh tổng hợp thông qua kết nối phần dư --- biến tác nhân tổng hợp từ chế độ chắp vá bản thảo sang chế độ tổng hợp biên tập thực sự. Về mặt phương pháp luận, khung đánh giá ba trục tích hợp đồng thời các hệ số overlap tự động (Trục~A), đánh giá chất lượng bằng LLM-Judge (Trục~B) và xếp hạng mù bởi con người (Trục~C), đảm bảo rằng mọi kết luận khoa học đều được kiểm chứng từ ba góc nhìn độc lập. Toàn bộ thiết kế này sẽ được kiểm chứng thực nghiệm trên tập dữ liệu 154 bài báo tiếng Việt trong Chương~4.

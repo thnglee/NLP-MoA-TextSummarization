@@ -1,31 +1,679 @@
-\chapter{Implementation and Experiment}
+\chapter{System Design and Implementation}
 
-\input{chapters/c3/c3_introduction}
-\input{chapters/c3/c3_plugin}
-\input{chapters/c3/c3_case_study}
-\input{chapters/c3/c3_discussion}
-\input{chapters/c3/c3_summary}
+This chapter presents the design and implementation of \textbf{Fiber}, the
+end-to-end system that summarizes and fact-checks Vietnamese news. After a
+requirements analysis (Section~3.1), Section~3.2 introduces the three-service
+architecture; Sections~3.3--3.5 describe the summarization and
+fact-checking modules; Section~3.6 details the three-axis evaluation
+framework that is the methodological contribution of the thesis;
+Section~3.7 covers the database schema; and Section~3.8 walks through the
+user interface.
 
-% 1. Introduction
-% Brief overview of the chapter's objectives
-% Connection to the theoretical foundation established in Chapter 2
-% Outline of what follows in the chapter
+\section{Requirement Analysis}
 
-% 2. Plugin Implementation
-% Architecture and design of the TOCL+ plugin
-% Implementation of the TOCL+ parser (generated from ANTLR4 grammar)
-% Translation mechanisms for converting TOCL+ to OCL
-% Technical details of the id attribute and object identity handling
-% Integration with the USE environment
+\subsection{Functional Requirements}
 
-% 3. Software System Case Study
-% Detailed description of the Software System model
-% Specification of temporal properties using TOCL+
-% Step-by-step verification walkthrough
-% Results and analysis of verification outcomes
-% Demonstration of how various temporal property types are verified
+\begin{enumerate}
+  \item \textbf{Summarization.} Given a Vietnamese news URL, return an
+        abstractive summary $S$ such that $|S| \leq 0.5 \cdot |D|$.
+  \item \textbf{Streaming.} Stream the summary token-by-token over a
+        Server-Sent-Events (SSE) channel for a sub-second time-to-first-token
+        user experience.
+  \item \textbf{Fact-checking.} On user request, decompose the summary into
+        atomic claims, retrieve web evidence per claim, and render a trust
+        score and source list.
+  \item \textbf{Multi-model switching.} Allow the user to select one of
+        fourteen supported LLMs at runtime; persist the selection across
+        sessions.
+  \item \textbf{Evaluation metrics (Axis~A).} After every summary, compute
+        ROUGE-1/2/L, BLEU, BERTScore, compression rate, and write a row to
+        the \url{evaluation_metrics} table.
+  \item \textbf{MoA fusion.} Provide a \textit{fusion} routing mode that
+        runs three proposers in parallel and combines them through a
+        GPT-4o aggregator.
+  \item \textbf{Human-eval admin.} Allow the researcher to build $K$-way
+        ranking tasks (model identities hidden) and to view aggregated
+        Axis~C statistics.
+\end{enumerate}
 
-% 4. Summary
-% Key findings from the implementation and experiment
-% Assessment of the approach's effectiveness
-% Implementation challenges and solutions
+\subsection{Non-functional Requirements}
+
+\begin{itemize}
+  \item \textbf{Latency.} Time-to-first-token under 3 seconds for
+        streaming summarization on a fibre connection; full summary in
+        under 10 seconds for an article of $\leq 1000$ words.
+  \item \textbf{Scalability.} Stateless backend with horizontal scaling
+        via Vercel; BERTScore microservice deployable on Hugging Face
+        Spaces.
+  \item \textbf{API-key security.} All provider keys live on the server;
+        the extension never sees an API key.
+  \item \textbf{Cross-browser compatibility.} Manifest V3, validated on
+        Chrome and Edge.
+  \item \textbf{Cost tracking.} Every LLM call records its cost in USD
+        to the metrics table for budget accounting.
+\end{itemize}
+
+\section{System Architecture}
+
+Fiber is a three-service architecture (Figure~\ref{fig:architecture}).
+The browser extension communicates with a Next.js backend over REST and
+SSE; the backend talks to commercial LLM providers and the BERTScore
+microservice; all persistent state lives in Supabase PostgreSQL.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{figures/architecture.png}
+  \caption{Fiber three-service architecture.}
+  \label{fig:architecture}
+\end{figure}
+
+\subsection{Browser Extension (Plasmo)}
+
+The extension is implemented in TypeScript with Plasmo and React. Three
+runtime contexts are involved:
+
+\begin{itemize}
+  \item \textit{Content script.} Runs in the page world; extracts the
+        article via Mozilla Readability, injects a Shadow-DOM-isolated
+        sidebar, and forwards user actions to the background.
+  \item \textit{Popup.} Compact UI for model switching, settings, and
+        history.
+  \item \textit{Background service worker.} Routes user actions to the
+        backend, manages the SSE stream, and persists session state via
+        \url{chrome.storage}.
+\end{itemize}
+
+\subsection{Backend API (Next.js 14)}
+
+The backend uses the Next.js App Router. Each \url{/api/...} route
+validates input with a Zod schema (\texttt{backend/domain/}\allowbreak\texttt{schemas.ts}),
+delegates to a service in \texttt{backend/}\allowbreak\texttt{services/}, and returns a
+strictly-typed JSON or SSE response. The Zod schemas are
+single-source-of-truth contracts for both client and server, eliminating
+a class of integration bugs.
+
+Major routes:
+
+\begin{itemize}
+  \item \url{/api/summarize} --- LLM summarization, streaming or batch.
+  \item \url{/api/fact-check} --- search-augmented verification.
+  \item \url{/api/metrics} --- CRUD on evaluation rows.
+  \item \url{/api/human-eval/*} --- Axis~C task and response endpoints.
+  \item \url{/api/settings/*} --- routing, judge, and model configuration.
+  \item \url{/api/logs/stream} --- SSE debug feed for development.
+\end{itemize}
+
+
+\subsection{BERTScore Microservice (FastAPI)}
+
+BERTScore is computed in Python via the official \url{bert_score}
+library backed by \url{vinai/phobert-base}. The microservice exposes a
+single \texttt{POST} \url{/calculate-score} endpoint and is deployed on
+Hugging Face Spaces with a Docker container. Inputs are truncated to
+256 tokens before scoring; the truncation is performed server-side so
+that the Node backend only needs to send the two input strings.
+
+\section{Text Summarization Module}
+
+The summarization module is designed to be model-agnostic and robust to varying
+input lengths. The process follows a systematic workflow from content
+extraction to asynchronous evaluation.
+
+\subsection{Summarization Workflow}
+
+The summarization process is orchestrated through a clear separation of concerns
+between the client-side browser extension and the server-side Next.js API.
+As illustrated in Figure~\ref{fig:summarization_flow}, summarization can be triggered 
+via two mechanisms: (1) the \textbf{Auto Sidebar}, which automatically detects article 
+pages on load to provide a full summary, and (2) the \textbf{Fact-check Modal} system, 
+where users select specific text snippets to trigger a tooltip for on-demand 
+summarization. These requests are dispatched to the backend \url{/api/summarize} 
+route, where the \texttt{Summarize Service} interacts with the LLM and validates 
+the output via Zod before returning it to the extension UI.
+
+The end-to-end summarization pipeline consists of five primary stages:
+
+\begin{enumerate}
+    \item \textbf{Extraction:} Upon page load, the content script utilizes
+          the Mozilla Readability library to parse the DOM, stripping away
+          boilerplate (ads, navigation) to isolate the article title and body.
+    \item \textbf{Routing Decision:} The system estimates the token count
+          and checks the user's active routing mode (Auto, Forced, or Fusion).
+          This determines which LLM provider or pipeline (e.g., MoA) will
+          be invoked.
+    \item \textbf{Prompt Engineering:} A dynamically constructed prompt
+          is sent to the selected model. This prompt includes the source
+          text and specific instructions for abstractive summarization in
+          Vietnamese.
+    \item \textbf{Execution and Streaming:} The model generates the output.
+          If streaming is enabled, tokens are piped through an SSE channel
+          for real-time rendering. Otherwise, the full text is returned
+          as a single block.
+    \item \textbf{Validation and Post-processing:} The raw LLM output is
+          validated against a Zod schema. Once the response is sent to the
+          user, the system triggers an asynchronous evaluation task to
+          compute Axis~A metrics without blocking the UI.
+\end{enumerate}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth,height=0.8\textheight,keepaspectratio]{figures/summarization_flow.png}
+  \caption{Operating principle for the text summarization service.}
+  \label{fig:summarization_flow}
+\end{figure}
+
+\subsection{Multi-Provider LLM Abstraction}
+
+Fourteen models are supported across three providers
+(\texttt{openai}, \texttt{@google/}\allowbreak\texttt{generative-ai},
+\texttt{@anthropic-ai/}\allowbreak\texttt{sdk}). The \texttt{llm.}\allowbreak\texttt{service.ts} module exposes a
+single \texttt{summarize} function that dispatches on provider and
+applies provider-specific quirks:
+
+\begin{itemize}
+  \item Reasoning models (\texttt{o4-mini}) skip
+        temperature, top-$p$, and \allowbreak{frequency-penalty} 
+        parameters.
+  \item Anthropic temperature is clamped to $[0, 1]$; no seed support.
+  \item Gemini uses \texttt{responseMimeType:} \texttt{"application/json"} for
+        structured output.
+\end{itemize}
+
+Per-call cost is computed from the provider's published price list and
+stored in the \url{cost_usd} column of \url{evaluation_metrics}.
+Only one model can be selected and active at a time, enforced by a partial unique
+index in \url{model_configurations}.
+
+\subsection{Complexity-Based Routing}
+
+For short Vietnamese inputs, an in-house Vietnamese model is cheaper and
+more native than calling a frontier LLM. The routing layer estimates
+input length as $\lceil |D|_{\text{chars}} / 4 \rceil$ tokens and dispatches
+as follows:
+
+\begin{itemize}
+  \item $\leq 400$ tokens $\Rightarrow$ ViT5-large.
+  \item $400$--$2000$ tokens $\Rightarrow$ GPT-4o-mini (default).
+  \item $> 2000$ tokens $\Rightarrow$ GPT-4o-mini with chunked context.
+\end{itemize}
+
+Three \textit{routing modes} are exposed:
+
+\begin{itemize}
+  \item \texttt{auto} --- complexity-based dispatch as above.
+  \item \texttt{forced} --- the user-selected model is always used.
+  \item \texttt{fusion} --- the MoA pipeline (Section~3.4) is used.
+\end{itemize}
+
+\subsection{Streaming vs.\ Batch}
+
+The streaming path uses Server-Sent Events. The backend opens an SSE
+connection and forwards provider stream chunks as \url{data:} frames;
+the extension renders tokens as they arrive.
+Evaluation-metrics computation (ROUGE, BLEU, and BERTScore) is dispatched
+\textit{after} the response stream closes, in a fire-and-forget Promise
+that writes to Supabase asynchronously; this keeps user-facing latency
+independent of evaluation cost.
+
+\section{MoA Output Fusion Pipeline}
+
+The MoA pipeline is the main technical contribution of the thesis. It is
+a faithful instantiation of Wang et al.\ \cite{Wang2024} with one
+deliberate adaptation: a \textit{source-article residual connection}
+into the aggregator prompt, which is necessary because the task is
+grounded summarization rather than open-ended instruction-following.
+
+\subsection{Two-Layer Design}
+
+Layer~1 (proposers) is the set \{\url{gpt-4o-mini},
+\url{claude-haiku-4.5}, \url{gemini-2.5-flash}\}. Each proposer
+receives the same prompt --- ``summarize this Vietnamese news article in
+five to seven sentences'' --- and produces a draft $d_i$ independently
+(in parallel via \texttt{Promise.all}). Layer~2 is the aggregator
+\texttt{gpt-4o}, which receives the source $D$ and the draft list
+$\{d_1, d_2, d_3\}$ and produces the fused summary $S^{\star}$.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{figures/moa_pipeline.png}
+  \caption{MoA two-layer pipeline with source-article residual
+  connection.}
+  \label{fig:moa}
+\end{figure}
+
+\subsection{Proposer Layer}
+
+The three proposers are commercial cloud LLMs from three different
+families (OpenAI, Anthropic, Google) to ensure model diversity at low
+unit cost (all three are the \textit{mini}/\textit{haiku}/\textit{flash}
+tier of their families). Failure handling: if any one proposer times out
+or returns an error, the remaining drafts are still fused; if two or
+three proposers fail, the pipeline returns the surviving draft directly
+and logs a warning.
+
+\subsection{Aggregator Layer}
+
+The aggregator prompt is the most important single artefact of the
+implementation; it determines whether the aggregator merely stitches
+drafts or actually synthesizes. In the current implementation, \texttt{gpt-4o} 
+is used as the aggregator model. The prompt, after the
+2026-05-08 fix (the change is documented in commit \texttt{afac46e}), instructs the model to
+\begin{itemize}
+  \item evaluate the drafts critically rather than copy them verbatim;
+  \item maintain a neutral Vietnamese journalistic register;
+  \item produce a summary consistent with the source article;
+  \item \textit{not} include the phrase ``cô đọng''
+        (``condense / concise''), which empirically pushed the model
+        toward truncated, draft-like outputs.
+\end{itemize}
+
+\subsection{Source-Article Residual Connection}
+
+Equation~1 of \cite{Wang2024} concatenates the prompt with the
+draft list. For grounded summarization, the prompt alone is insufficient
+--- the aggregator needs the article to ground its synthesis. The
+implementation injects the source article into the aggregator's system
+context as an additional input, alongside the draft list. This is the
+sole \textit{domain adaptation} of the paper's recipe.
+
+The residual connection is empirically decisive. Without the article,
+the aggregator falls back to stitching tokens from the drafts (compression
+$\approx 22\%$ longer than average draft length, ROUGE-1 against the
+source $\approx 0.34$); with the article, it produces editorial
+synthesis ($\approx 17\%$ shorter, ROUGE-1 falls to $\approx 0.24$ on
+strict prompts but holistic rubric scores rise). The full ablation is
+reported in Section~4.2.
+
+\subsection{Aggregator Prompt Ablation}
+
+Three prompt variants were tested on 50 \textit{tienphong.vn} articles:
+
+\begin{itemize}
+  \item \textbf{Baseline} --- pre-fix prompt; no source in aggregator
+        context.
+  \item \textbf{v1 (strict source)} --- source injected, strict
+        ``do not invent'' rules.
+  \item \textbf{v2 (soft source)} --- source injected, softer
+        ``use as reference'' wording.
+\end{itemize}
+
+A detailed side-by-side comparison of these prompt versions and their specific textual adaptations is provided in Appendix~C.
+
+The headline finding (reported in detail in Section~4.2) is that the
+mere \textit{presence} of the source article in the aggregator's context
+flips behavior; the precise wording of the rules around it does not.
+The shipped prompt is v2 with the post-\texttt{afac46e} removal of the
+``cô đọng'' phrase.
+
+\section{Fact-Checking Module}
+
+The fact-check module is a single LLM-orchestrated RAG instance. The 
+fact-checking flow (Figure~\ref{fig:fact_check_flow}) is triggered when a
+user selects a specific snippet for verification. The \texttt{Fact-check Modal}
+dispatches the request to \url{/api/fact-check}. The \texttt{Fact-check Service}
+first performs evidence retrieval via Tavily Search before querying the LLM
+for a verdict. The strictly-typed response is then rendered in the client-side
+modal.
+
+The process follows a systematic search-and-verify logic:
+
+\begin{enumerate}
+  \item The summary (or an arbitrary user-pasted snippet) is sent to
+        Tavily as a search query.
+  \item Tavily returns six results, each a
+        \texttt{(title, url, snippet)} triple.
+  \item The snippets, together with the original claim text, are passed
+        to GPT-4o-mini, which returns a JSON object with
+        \url{trust_score} ($0$--$100$), \url{verified} (boolean),
+        and \url{sources} (list of URLs).
+  \item The extension renders this in a modal beneath the summary.
+\end{enumerate}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth,height=0.8\textheight,keepaspectratio]{figures/fact_check_flow.png}
+  \caption{Operating principle for the search-augmented fact-checking service.}
+  \label{fig:fact_check_flow}
+\end{figure}
+
+The choice of GPT-4o-mini for the verdict step is deliberate: it is
+ten times cheaper than GPT-4o and shows no measurable drop in
+verdict quality on a $50$-claim spot-check.
+
+\section{Three-Axis Evaluation Framework}
+
+This section describes the methodological contribution: a single
+evaluation framework that combines content-retention metrics
+(Axis~A), LLM-judge quality (Axis~B), and blind human ranking
+(Axis~C). The choice of three axes follows from the analysis in
+Section~2.2.5: any one axis alone is structurally biased; together
+they triangulate.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{figures/3-axis_framework.png}
+  \caption{The three-axis evaluation framework used to triangulate system quality.}
+  \label{fig:evaluation_framework}
+\end{figure}
+
+\subsection{Axis A --- Content Retention}
+
+Axis~A is computed in
+\url{backend/services/evaluation.service.ts} for every summary.
+ROUGE-1/2/L and BLEU use the \url{rouge} and \url{sacrebleu}
+JavaScript ports. BERTScore is delegated to the Python microservice
+(\url{bert.service.ts}). All four metrics are computed against the
+\textit{source article}, not a human reference summary; this is
+documented in the unified report as a methodology caveat. The
+compression rate is $|S|/|D|$ in characters.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/A_calculation.png}
+  \caption{Logic for Axis A (Content Retention) metrics calculation.}
+  \label{fig:axis_a_calc}
+\end{figure}
+
+
+\subsection{Axis B --- Quality and Preference}
+
+Axis~B is the headline axis of the thesis. The
+\url{llm-judge.service.ts} module exposes four functions:
+
+\begin{itemize}
+  \item \url{judgeRubric} --- FLASK-derived 5-dimension rubric on a
+        1--5 scale.
+  \item \url{judgeAbsolute} --- MT-Bench-style 1--10 holistic score.
+  \item \url{judgePairwise} --- A vs.\ B with position randomization.
+  \item \url{scoreFactuality} (in \url{factuality.service.ts})
+        --- claim split + entailment classification.
+\end{itemize}
+
+Two higher-level routines operate on MoA fusion outputs:
+
+\begin{itemize}
+  \item \url{runFusionPairwiseJudge} --- fused vs.\ best-draft
+        (\url{comparison_type} = \url{vs_best_draft}).
+  \item \url{runFusionVsAllDraftsJudge} --- fused vs.\ each
+        individual proposer (\url{comparison_type} = \url{vs_individual_draft}).
+  \item A third comparison, ``fused vs.\ \texttt{gpt-4o} running
+        alone'' (\url{vs_single_aggregator}), is generated by an
+        offline script described in Section~4.3.2; this is the
+        thesis-decisive comparison because both candidates are
+        \texttt{gpt-4o} output and the same-family judge bias cancels.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=0.6\textheight,keepaspectratio]{figures/B_calculation.png}
+  \caption{Logic for Axis B (Quality and Preference) LLM-judge workflow.}
+  \label{fig:axis_b_calc}
+\end{figure}
+
+\subsection{Axis C --- Human Validation}
+
+Axis~C uses the same extension's web UI to administer blind
+ranking tasks.
+
+\begin{itemize}
+  \item The researcher creates a task at \texttt{/evaluate/admin}.
+        Each task references one article and three candidate summaries
+        (fused, GPT-4o-alone, GPT-4o-mini draft) with model identities
+        hidden. The candidates are presented as
+        \textit{Bản A, Bản B, Bản C}.
+  \item A rater opens \texttt{/evaluate?task=<uuid>}, types a stable
+        identifier (the ``rater code''), drag-ranks the three
+        candidates, and writes a one-sentence Vietnamese rationale per
+        candidate.
+  \item Responses are written to \url{human_eval_responses}; a
+        partial unique index on \url{(task_id, rater_id)}
+        prevents double-submission.
+  \item \texttt{/api/human-eval/report} aggregates per-approach
+        average rank, per-approach win rate, and Fleiss'~$\kappa$.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/C_calculation.png}
+  \caption{Logic for Axis C (Human Validation) statistical aggregation.}
+  \label{fig:axis_c_calc}
+\end{figure}
+
+
+\subsection{Statistical Analysis}
+
+To ensure the evaluation results are statistically sound, the system 
+includes a dedicated library of primitives (\texttt{backend/}\allowbreak\texttt{output-fusion/}\allowbreak\texttt{scripts/}\allowbreak\texttt{stats.ts}). 
+The implementation focuses on four key areas to make sure the metrics reported 
+in the following chapters are both accurate and reproducible:
+
+\begin{itemize}
+  \item \textbf{Significance Testing (Axis A/B):} I used an exact two-sided 
+        binomial p-value via \texttt{signTestPValue} to determine if 
+        model performance gaps are meaningful. To handle larger sample sizes 
+        without numerical errors, I implemented a \textit{log-factorial cache}. 
+        This allows the system to work in log-space, preventing the 
+        floating-point overflow that typically occurs when calculating 
+        large combinations $C(n, k)$.
+  \item \textbf{Verbosity-Bias Correction (Axis B):} Since LLM judges can be 
+        biased toward longer outputs \cite{Dubois2024}, I implemented 
+        \texttt{length}\allowbreak\texttt{Bucketed}\allowbreak\texttt{WinRate}. 
+        By grouping verdicts into three buckets based on the length ratio 
+        $L_{\text{A}}/L_{\text{B}}$ ($<0.85$, $0.85$--$1.15$, and $>1.15$), 
+        the system can calculate a more balanced win rate that doesn't 
+        simply reward models for being wordy.
+  \item \textbf{Inter-Rater Agreement (Axis C):} To measure how consistently 
+        human raters ranked the summaries, the system calculates Fleiss' $\kappa$ 
+        using \texttt{fleiss}\allowbreak\texttt{Kappa}\allowbreak\texttt{From}\allowbreak\texttt{Rankings}. 
+        I follow the Landis and Koch \cite{Landis1977} convention to interpret these 
+        scores, aiming for at least "moderate" agreement ($\kappa > 0.4$) to 
+        validate the human study results.
+  \item \textbf{Paired Metric Aggregation:} For content retention metrics, 
+        \texttt{paired}\allowbreak\texttt{Metric}\allowbreak\texttt{Stats} handles 
+        the calculation of means, standard deviations, and paired differences. 
+        It is designed to automatically filter out missing data and compute 
+        sign-test p-values for head-to-head comparisons, providing a 
+        standardized way to report performance across Axis A.
+\end{itemize}
+
+\subsection{Fused vs.\ GPT-4o-Alone (Thesis-Decisive)}
+
+The decisive comparison removes a confound that plagues fused
+vs.\ \textit{best-proposer} comparisons: the best proposer is a
+weaker model than the aggregator, so any fused-vs-best win could be
+attributed to ``GPT-4o is better than Haiku''. By comparing
+fused (which uses GPT-4o as aggregator) against GPT-4o running alone
+(zero-shot, same single article), both candidates are GPT-4o output.
+A win is therefore attributable to the act of
+\textit{synthesis} --- giving the aggregator multiple drafts as
+context --- not to model-capability gap. The implementation is
+\texttt{scripts/run-single-baseline.ts} +
+\texttt{scripts/compare-fused-vs-single.ts}; results in Section~4.3.2.
+
+\section{Database Design}
+
+The Supabase PostgreSQL database holds twenty-five migrations. The schema is 
+organised into three functional groups: per-summary metrics, MoA-specific data, 
+and human evaluation records. The logical relationships 
+between these functional groups are illustrated in the Entity-Relationship (ER) 
+diagram in Figure~\ref{fig:database_schema}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/database_schema.png}
+  \caption{Fiber database schema (Supabase PostgreSQL) showing major tables and relationships.}
+  \label{fig:database_schema}
+\end{figure}
+
+\subsection{Per-summary Metrics and Decisions}
+
+This group tracks the lifecycle of each summarization request, from the 
+initial routing logic to the final computed evaluation scores.
+
+\begin{table}[H]
+\centering
+\caption{Schema for \texttt{evaluation\_metrics} and \texttt{routing\_decisions} tables.}
+\begin{tabular}{lll}
+\hline
+\textbf{Table / Column} & \textbf{Type} & \textbf{Description} \\ \hline
+\textit{evaluation\_metrics} & & \\
+\texttt{summary\_text} & text & The generated summary content. \\
+\texttt{rouge\_1/2/L} & float8 & Axis A: ROUGE F1-scores. \\
+\texttt{bert\_score} & float8 & Axis A: Semantic similarity score. \\
+\texttt{latency} & int4 & End-to-end processing time in ms. \\
+\texttt{judge\_rubric} & jsonb & Axis B: Multi-dimension rubric results. \\
+\texttt{factuality\_ratio} & numeric & Axis B: Proportion of entailed claims. \\ \hline
+\textit{routing\_decisions} & & \\
+\texttt{article\_tokens} & int4 & Estimated input token count. \\
+\texttt{complexity} & text & Classified complexity (Low/Med/High). \\
+\texttt{routing\_mode} & text & auto, forced, or fusion. \\
+\texttt{selected\_model} & text & The model dispatched by the router. \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{MoA-Specific Data Structures}
+
+These tables store the intermediate drafts and final fused results of the 
+Mixture-of-Agents pipeline, alongside the pairwise LLM-judge verdicts.
+
+\begin{table}[H]
+\centering
+\caption{Schema for MoA-specific tables.}
+\begin{tabular}{lll}
+\hline
+\textbf{Table / Column} & \textbf{Type} & \textbf{Description} \\ \hline
+\textit{moa\_fusion\_results} & & \\
+\texttt{fused\_summary} & text & Final synthesized summary. \\
+\texttt{aggregator\_model} & text & The model used for synthesis (e.g., GPT-4o). \\
+\texttt{total\_cost\_usd} & float4 & Cumulative cost of all LLM calls in the run. \\ \hline
+\textit{moa\_draft\_results} & & \\
+\texttt{model\_name} & text & Identity of the proposer model. \\
+\texttt{summary} & text & The individual draft generated by the proposer. \\ \hline
+\textit{llm\_judge\_pairwise} & & \\
+\texttt{winner} & text & Verdict (A, B, or tie). \\
+\texttt{comparison\_type} & text & vs\_best\_draft, vs\_individual, etc. \\
+\texttt{justification} & text & Natural language rationale from the judge. \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Human Evaluation Records}
+
+The final group manages the blind ranking tasks for human raters.
+
+\begin{table}[H]
+\centering
+\caption{Schema for human evaluation tables.}
+\begin{tabular}{lll}
+\hline
+\textbf{Table / Column} & \textbf{Type} & \textbf{Description} \\ \hline
+\textit{human\_eval\_tasks} & & \\
+\texttt{article\_url} & text & Source article link for reference. \\
+\texttt{summaries} & jsonb & Model-anonymized candidate summaries. \\ \hline
+\textit{human\_eval\_responses} & & \\
+\texttt{ranking} & jsonb & Rater's ordered list of candidates. \\
+\texttt{rationale} & jsonb & Per-candidate justification from the rater. \\ \hline
+\end{tabular}
+\end{table}
+
+\section{User Interface}
+
+\subsection{Extension Sidebar}
+
+The extension sidebar is the primary user surface
+(Figure~\ref{fig:sidebar}). Tapping the toolbar icon injects a
+right-edge panel into the current page; the panel is dedicated
+exclusively to the streaming-summary area, which displays the
+generated content in real-time. Unlike the popup or modal interfaces,
+the sidebar contains no additional interactive buttons or controls,
+serving as a focused reading space for the news summary.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{figures/sidebar.png}
+  \caption{The Fiber extension sidebar.}
+  \label{fig:sidebar}
+\end{figure}
+
+\subsection{Fact-checking Modal}
+
+The fact-checking modal (Figure~\ref{fig:fact_check_modal}) provides a
+granular breakdown of the verification process. It decomposes the
+summary into atomic claims and renders each with a trust score and
+color-coded status (verified, partially verified, or hallucinated).
+Clickable source links allow the user to verify the evidence
+directly.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{figures/fact_check_modal.png}
+  \caption{The fact-checking modal showing granular claim verification.}
+  \label{fig:fact_check_modal}
+\end{figure}
+
+\subsection{Metrics Page (\texttt{/metrics})}
+
+The metrics page (Figure~\ref{fig:metrics_dashboard}) renders the
+\url{evaluation_metrics} table with two view modes (\textit{compact},
+\textit{full}), filters for routing mode and model, and three inline
+widgets: a five-axis rubric radar, a fused-vs-best-draft pairwise
+badge, and a factuality entailment ring.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{figures/metrics_dashboard.png}
+  \caption{The metrics dashboard with five-axis radar chart and performance trends.}
+  \label{fig:metrics_dashboard}
+\end{figure}
+
+\subsection{Human Evaluation Interface}
+
+The human evaluation interface (Figure~\ref{fig:human_eval}) serves
+both the researcher and the raters. The admin tab allows picking
+source articles and candidates to build blind $K$-way ranking tasks.
+The rater view presents these candidates as draggable cards labelled
+\textit{Bản A, Bản B, Bản C} for blind ranking. Results are
+automatically aggregated into average ranks and win rates with
+statistical significance tests.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{figures/human_eval.png}
+  \caption{The human evaluation interface for blind A/B/C ranking.}
+  \label{fig:human_eval}
+\end{figure}
+
+\subsection{Settings (\texttt{/settings})}
+
+The settings page (Figure~\ref{fig:settings}) exposes three
+configuration cards:
+
+\begin{itemize}
+  \item \textbf{Routing.} Mode (\texttt{auto} / \texttt{forced} /
+        \texttt{fusion}) and forced-model selector.
+  \item \textbf{Judge.} Mode (\url{metrics_only} /
+        \url{judge_only} / \texttt{both}), default judge model,
+        default style (rubric / absolute), and a factuality toggle.
+  \item \textbf{Provider keys (read-only).} Reports which provider
+        API keys are configured server-side; the keys themselves
+        never reach the client.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{figures/settings_page.png}
+  \caption{The system settings and provider configuration interface.}
+  \label{fig:settings}
+\end{figure}
+
+\section{Summary}
+
+This chapter described the design and implementation of Fiber along
+three threads: the production system (extension + Next.js backend +
+BERTScore service), the MoA fusion pipeline (the technical
+contribution), and the three-axis evaluation framework (the
+methodological contribution). The pipeline is faithful to
+\cite{Wang2024} apart from the source-article residual connection,
+which is necessary for grounded summarization. The three-axis
+framework reads measurements through three structurally-different
+lenses, so that any conclusion supported by all three is unlikely to
+be an artefact of any single metric.
