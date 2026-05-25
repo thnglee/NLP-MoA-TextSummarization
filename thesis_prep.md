@@ -66,15 +66,15 @@ Dùng tienphong.vn dataset có sẵn ở `metrics_reports/dataset/` (5 topics ×
    B.2c "Synthesis vs Ranker" section sẽ render "(comparison not run)" — fine, methodology chapter giải thích lý do drop.
 
 ### Acceptance criteria
-- [ ] `llm_judge_pairwise` có ≥ 200 row mới sau step-3 timestamp (50 `vs_best_draft` + ~150 `vs_individual_draft`).
-- [ ] Sign-test p-value reportable cho `vs_best_draft` và mỗi proposer trong `vs_individual_draft`.
-- [ ] Tổng OpenAI cost ≤ $5 (expected ≈$0.71).
+- [x] `llm_judge_pairwise` có ≥ 200 row mới sau step-3 timestamp (50 `vs_best_draft` + ~150 `vs_individual_draft`).
+- [x] Sign-test p-value reportable cho `vs_best_draft` và mỗi proposer trong `vs_individual_draft`.
+- [x] Tổng OpenAI cost ≤ $5 (expected ≈$0.71).
 
 ### Effort: ~25 phút chạy batch + 10 phút verify report ≈ **45 phút**.
 
 ---
 
-## Task M-H: 20-article human peer study (Axis C)
+## Task M-H: 20-article human peer study (Axis C) — ✅ DONE 2026-05-25
 
 ### Vấn đề
 Three-axis evaluation cần human validation, không chỉ LLM-judge preference. Target Fleiss κ ≥ 0.4 ("moderate agreement" theo Landis-Koch). Hiện 0 response trong `human_eval_responses`.
@@ -91,8 +91,8 @@ Three-axis evaluation cần human validation, không chỉ LLM-judge preference.
 6. Re-run `npm run report:unified` — Axis C section sẽ populate.
 
 ### Acceptance criteria
-- [ ] ≥ 2 rater per task trên ≥ 20 task (≥ 40 row trong `human_eval_responses`).
-- [ ] Fleiss κ ≥ 0.4 trên pool (hoặc nếu thấp hơn, document diagnosis lý do disagreement).
+- [x] ≥ 2 rater per task trên ≥ 20 task (≥ 40 row trong `human_eval_responses`).
+- [x] Fleiss κ ≥ 0.4 trên pool (hoặc nếu thấp hơn, document diagnosis lý do disagreement).
 
 ### Effort: 1-2 giờ build task + thời gian chờ rater respond.
 
