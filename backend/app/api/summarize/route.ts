@@ -203,7 +203,7 @@ export async function POST(request: NextRequest) {
               fusionResult.judge_pairwise = judgePairwiseResult
 
               // 4. Pairwise judge comparing fused vs each individual draft (optional)
-              let judgeVsDrafts: any[] = []
+              let judgeVsDrafts: import('@/output-fusion/moa.types').MoAJudgePairwiseResult[] = []
               if (moaConfig.judgeVsAllDrafts && fusionResult.pipeline.successful_proposers > 0) {
                 judgeVsDrafts = await runFusionVsAllDraftsJudge({
                   fusedSummary: fusionResult.fused.summary,
