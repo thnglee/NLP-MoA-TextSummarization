@@ -176,11 +176,22 @@ export async function POST(request: NextRequest) {
 
             const { saveEvaluationMetrics } = await import('@/services/evaluation.service')
             const { runJudgeForSummary } = await import('@/services/llm-judge.runner')
-            const judgeFields = await runJudgeForSummary(
-              fusionResult.fused.summary,
-              articleText,
-              judgeConfigOverride,
-            )
+            const { runFactualityForSummary } = await import('@/services/factuality.runner')
+            const [judgeFields, factualityFields] = await Promise.all([
+              runJudgeForSummary(
+                fusionResult.fused.summary,
+                articleText,
+                judgeConfigOverride,
+              ),
+              runFactualityForSummary(
+                fusionResult.fused.summary,
+                articleText,
+                judgeConfigOverride ? {
+                  factuality_enabled: (judgeConfigOverride as any).factuality_enabled,
+                  factuality_model: (judgeConfigOverride as any).factuality_model,
+                } : undefined,
+              ),
+            ])
             await saveEvaluationMetrics({
               summary: fusionResult.fused.summary,
               original: articleText,
@@ -201,6 +212,7 @@ export async function POST(request: NextRequest) {
               completionTokens: fusionResult.aggregator.completion_tokens ?? undefined,
               estimatedCostUsd: fusionResult.pipeline.total_cost_usd ?? undefined,
               judge: judgeFields,
+              factuality: factualityFields,
             }).catch(err =>
               console.error('[Summarize Fusion] Failed to save evaluation metrics:', err)
             )
@@ -656,11 +668,16 @@ export async function POST(request: NextRequest) {
                   waitUntil(
                     (async () => {
                       const { runJudgeForSummary } = await import('@/services/llm-judge.runner')
-                      // Run lexical metrics + BERTScore + judge in parallel
-                      const [metrics, bertScore, judgeFields] = await Promise.all([
+                      const { runFactualityForSummary } = await import('@/services/factuality.runner')
+                      // Run lexical metrics + BERTScore + judge + factuality in parallel
+                      const [metrics, bertScore, judgeFields, factualityFields] = await Promise.all([
                         Promise.resolve(calculateLexicalMetrics(summaryText, originalContent)),
                         calculateBertScore(originalContent, summaryText),
                         runJudgeForSummary(summaryText, originalContent, judgeConfigOverride),
+                        runFactualityForSummary(summaryText, originalContent, judgeConfigOverride ? {
+                          factuality_enabled: (judgeConfigOverride as any).factuality_enabled,
+                          factuality_model: (judgeConfigOverride as any).factuality_model,
+                        } : undefined),
                       ])
 
                       // Calculate compression rate (token-based)
@@ -693,6 +710,7 @@ export async function POST(request: NextRequest) {
                             + ((finalUsage?.completion_tokens ?? 0) / 1_000_000 * (modelConfig.output_cost_per_1m ?? 0))
                           : undefined,
                         judge: judgeFields,
+                        factuality: factualityFields,
                       })
                       console.log('[Summarize Stream] ✅ Evaluation metrics saved successfully!')
                     })().catch((err) => {

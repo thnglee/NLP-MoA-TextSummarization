@@ -190,7 +190,10 @@ export async function performSummarize(request: SummarizeRequest, modelConfig?: 
         Promise.resolve(calculateLexicalMetrics(response.summary, extractedContent)),
         calculateBertScore(extractedContent, response.summary),
         runJudgeForSummary(response.summary, extractedContent, judgeConfigOverride),
-        runFactualityForSummary(response.summary, extractedContent),
+        runFactualityForSummary(response.summary, extractedContent, judgeConfigOverride ? {
+          factuality_enabled: (judgeConfigOverride as any).factuality_enabled,
+          factuality_model: (judgeConfigOverride as any).factuality_model,
+        } : undefined),
       ]);
 
       // Calculate compression rate (token-based)

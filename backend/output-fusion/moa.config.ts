@@ -37,7 +37,7 @@ const PLACEHOLDER_MODELS: ModelAvailability[] = [
     display_name: "Vistral 7B Chat (planned)",
     provider: "huggingface",
     is_available: false,
-    unavailable_reason: "Chưa triển khai — đang có kế hoạch tích hợp.",
+    unavailable_reason: "Không triển khai",
     can_be_proposer: false,
     can_be_aggregator: false,
   },
