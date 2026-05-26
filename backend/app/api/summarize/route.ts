@@ -68,18 +68,32 @@ export async function POST(request: NextRequest) {
 
     // Check if streaming is requested
     const { searchParams } = new URL(request.url)
-    const isStreaming = searchParams.get('stream') === 'true'
+    let isStreaming = searchParams.get('stream') === 'true'
+
+    // Fetch global routing config from DB to use as defaults
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let globalRoutingConfig: any = {}
+    try {
+      const { getSupabaseAdmin } = await import('@/lib/supabase')
+      const { data: row } = await getSupabaseAdmin()
+        .from('app_settings')
+        .select('value')
+        .eq('key', 'routing_config')
+        .single()
+      globalRoutingConfig = row?.value || {}
+    } catch (err) {
+      console.error('[Summarize] Failed to fetch global routing config', err)
+    }
+
+    if ((routingMode === 'fusion' || routingMode === 'evaluation') && isStreaming) {
+      console.log(`[Summarize] Silently disabling stream for ${routingMode} mode`)
+      isStreaming = false
+    }
 
     // ============================================================================
     // FUSION MODE — MoA pipeline (N proposers → aggregator)
     // ============================================================================
     if (routingMode === 'fusion') {
-      if (isStreaming) {
-        return NextResponse.json(
-          { error: 'Streaming is not supported in fusion mode' },
-          { status: 400, headers: getCorsHeaders() }
-        )
-      }
 
       // Resolve article text (reuse client-provided content when possible)
       let articleText = content || ''
@@ -103,7 +117,8 @@ export async function POST(request: NextRequest) {
 
       let moaConfig
       try {
-        moaConfig = await buildMoAConfig(fusionConfigOverride)
+        const finalFusionConfig = fusionConfigOverride || globalRoutingConfig.fusion_config
+        moaConfig = await buildMoAConfig(finalFusionConfig)
         moaConfig.judgeOverride = judgeConfigOverride
         moaConfig.judgeVsAllDrafts = judgeConfigOverride?.judge_vs_all_drafts === true
       } catch (configErr) {
@@ -124,7 +139,7 @@ export async function POST(request: NextRequest) {
 
         // Save routing decision + persist fusion detail + evaluation row (fire-and-forget)
         const { saveRoutingDecision, estimateTokenCount, classifyComplexity } = await import('@/services/routing.service')
-        const complexity = classifyComplexity(articleText)
+        const complexity = classifyComplexity(articleText, globalRoutingConfig.complexity_thresholds)
 
         waitUntil(
           (async () => {
@@ -285,12 +300,6 @@ export async function POST(request: NextRequest) {
     // EVALUATION MODE — run all models in parallel, pick best
     // ============================================================================
     if (routingMode === 'evaluation') {
-      if (isStreaming) {
-        return NextResponse.json(
-          { error: 'Streaming is not supported in evaluation mode' },
-          { status: 400, headers: getCorsHeaders() }
-        )
-      }
 
       // Get the article text (extract from URL if needed)
       let articleText = content || ''
@@ -307,13 +316,7 @@ export async function POST(request: NextRequest) {
       // Falls back to the original ViT5+GPT-4o pair when no selection is persisted.
       let candidateConfigs: ModelConfig[] = []
       try {
-        const { getSupabaseAdmin } = await import('@/lib/supabase')
-        const { data: row } = await getSupabaseAdmin()
-          .from('app_settings')
-          .select('value')
-          .eq('key', 'routing_config')
-          .single()
-        const selected: string[] | undefined = row?.value?.evaluation_config?.models
+        const selected: string[] | undefined = globalRoutingConfig.evaluation_config?.models
         if (selected && selected.length > 0) {
           const { getAllModelConfigs } = await import('@/services/model-config.service')
           const all = await getAllModelConfigs()
@@ -335,7 +338,7 @@ export async function POST(request: NextRequest) {
       }
 
       const fusionResult = await runFusedSummarization(articleText, website, candidateConfigs)
-      const complexity = classifyComplexity(articleText)
+      const complexity = classifyComplexity(articleText, globalRoutingConfig.complexity_thresholds)
 
       // Find the winner's full response to get category/readingTime
       const winnerCandidate = fusionResult.candidates.find(c => c.selected)
@@ -396,7 +399,7 @@ export async function POST(request: NextRequest) {
       }
 
       const { selectModel, getModelConfigByName, getFallbackModel, saveRoutingDecision, estimateTokenCount, classifyComplexity } = await import('@/services/routing.service')
-      const selection = selectModel(articleText)
+      const selection = selectModel(articleText, undefined, globalRoutingConfig.complexity_thresholds)
       const autoModelConfig = await getModelConfigByName(selection.model)
 
       if (autoModelConfig) {
@@ -446,7 +449,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Save routing decision to DB (fire-and-forget)
-        const complexity = classifyComplexity(articleText)
+        const complexity = classifyComplexity(articleText, globalRoutingConfig.complexity_thresholds)
         waitUntil(
           saveRoutingDecision({
             article_length: articleText.length,
