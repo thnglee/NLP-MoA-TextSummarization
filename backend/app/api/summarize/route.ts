@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
 
     // Resolve routing mode
     const { resolveRoutingMode } = await import('@/services/routing.service')
-    const routingMode = resolveRoutingMode({ routing_mode: requestRoutingMode, model: modelOverride })
+    const routingMode = await resolveRoutingMode({ routing_mode: requestRoutingMode, model: modelOverride })
 
     // Check if streaming is requested
     const { searchParams } = new URL(request.url)

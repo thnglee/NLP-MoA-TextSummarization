@@ -174,13 +174,32 @@ export function getFallbackModel(failedModel: string): string | null {
  * 2. Explicit `model` override → forced
  * 3. Default → 'auto' (complexity-based routing per development plan)
  */
-export function resolveRoutingMode(request: {
+export async function resolveRoutingMode(request: {
   routing_mode?: RoutingMode
   model?: string
-}): RoutingMode {
+}): Promise<RoutingMode> {
   if (request.routing_mode) return request.routing_mode
   if (request.model) return 'forced'
-  return 'auto'
+
+  try {
+    const supabase = getSupabaseAdmin()
+    const { data, error } = await supabase
+      .from('app_settings')
+      .select('value')
+      .eq('key', 'routing_config')
+      .single()
+
+    if (!error && data?.value?.routing_mode) {
+      return data.value.routing_mode as RoutingMode
+    }
+  } catch (err) {
+    logger.addLog('routing', 'resolve-error', {
+      error: err instanceof Error ? err.message : String(err),
+    })
+  }
+
+  // Ultimate fallback if DB fetch fails
+  return 'forced'
 }
 
 // ============================================================================
