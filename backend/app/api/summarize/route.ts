@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-        const fusionResult = await runMoAFusion(articleText, website, moaConfig)
+        const fusionResult = await runMoAFusion(articleText, website, moaConfig, undefined, url)
 
         const modelTag = `moa:${fusionResult.aggregator.model_name}`
 
