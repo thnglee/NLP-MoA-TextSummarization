@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
 
     // Check if streaming is requested
     const { searchParams } = new URL(request.url)
-    let isStreaming = searchParams.get('stream') === 'true'
+    const isStreaming = searchParams.get('stream') === 'true'
 
     // Fetch global routing config from DB to use as defaults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -83,11 +83,6 @@ export async function POST(request: NextRequest) {
       globalRoutingConfig = row?.value || {}
     } catch (err) {
       console.error('[Summarize] Failed to fetch global routing config', err)
-    }
-
-    if ((routingMode === 'fusion' || routingMode === 'evaluation') && isStreaming) {
-      console.log(`[Summarize] Silently disabling stream for ${routingMode} mode`)
-      isStreaming = false
     }
 
     // ============================================================================
@@ -285,6 +280,40 @@ export async function POST(request: NextRequest) {
           fusion: fusionResult,
         }
 
+        if (isStreaming) {
+          const encoder = new TextEncoder()
+          const stream = new ReadableStream({
+            start(controller) {
+              const summaryChunk = {
+                type: 'summary-delta',
+                delta: JSON.stringify({ summary: response.summary })
+              }
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify(summaryChunk)}\n\n`))
+              
+              const metadataChunk = {
+                type: 'metadata',
+                summary: response.summary,
+                category: response.category,
+                readingTime: response.readingTime,
+                usage: response.usage
+              }
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify(metadataChunk)}\n\n`))
+              
+              const doneChunk = { type: 'done' }
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify(doneChunk)}\n\n`))
+              controller.close()
+            }
+          })
+          return new NextResponse(stream, {
+            headers: {
+              ...getCorsHeaders(),
+              'Content-Type': 'text/event-stream',
+              'Cache-Control': 'no-cache, no-transform',
+              'Connection': 'keep-alive',
+            },
+          })
+        }
+
         return NextResponse.json(response, { headers: getCorsHeaders() })
       } catch (err) {
         if (err instanceof MoAInsufficientDraftsError) {
@@ -379,6 +408,39 @@ export async function POST(request: NextRequest) {
           processingTimeMs: processingTime
         }).catch(err => console.error('[Summarize Evaluation] Failed to track action:', err))
       )
+
+      if (isStreaming) {
+        const encoder = new TextEncoder()
+        const stream = new ReadableStream({
+          start(controller) {
+            const summaryChunk = {
+              type: 'summary-delta',
+              delta: JSON.stringify({ summary: response.summary })
+            }
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(summaryChunk)}\n\n`))
+            
+            const metadataChunk = {
+              type: 'metadata',
+              summary: response.summary,
+              category: response.category,
+              readingTime: response.readingTime,
+            }
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(metadataChunk)}\n\n`))
+            
+            const doneChunk = { type: 'done' }
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(doneChunk)}\n\n`))
+            controller.close()
+          }
+        })
+        return new NextResponse(stream, {
+          headers: {
+            ...getCorsHeaders(),
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache, no-transform',
+            'Connection': 'keep-alive',
+          },
+        })
+      }
 
       return NextResponse.json(response, { headers: getCorsHeaders() })
     }
