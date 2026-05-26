@@ -128,7 +128,18 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-        const fusionResult = await runMoAFusion(articleText, website, moaConfig, undefined, url)
+        // Disable heavy evaluation metrics and LLM judging in the synchronous critical path
+        // to prevent Vercel Serverless Function / Client timeouts (e.g. 10s Hobby timeout).
+        // These are deferred to the asynchronous background `waitUntil` pipeline instead.
+        const syncMoAConfig = {
+          ...moaConfig,
+          includeEvaluation: false,
+          judgeOverride: {
+            ...moaConfig.judgeOverride,
+            judge_mode: 'metrics_only' as const,
+          },
+        }
+        const fusionResult = await runMoAFusion(articleText, website, syncMoAConfig, undefined, url)
 
         const modelTag = `moa:${fusionResult.aggregator.model_name}`
 
@@ -150,6 +161,61 @@ export async function POST(request: NextRequest) {
                 ? `Proposers failed: ${fusionResult.pipeline.failed_proposers.join(', ')}`
                 : undefined,
             })
+
+            // Calculate evaluation metrics (ROUGE, BLEU, BERTScore) and LLM judges asynchronously in the background.
+            // BERTScore microservice pings/cold-starts won't block the client summary response.
+            try {
+              const { scoreSummary, pickBestDraftByJudge, runFusionPairwiseJudge, runFusionVsAllDraftsJudge } = await import('@/output-fusion/moa.evaluation')
+              
+              // 1. Calculate lexical scores and BERTScore
+              const [fScores, perDraftScores] = await Promise.all([
+                scoreSummary(fusionResult.fused.summary, articleText),
+                Promise.all(
+                  fusionResult.drafts.map(async draft =>
+                    draft.status === "success"
+                      ? await scoreSummary(draft.summary, articleText)
+                      : { rouge1: null, rouge2: null, rougeL: null, bleu: null, bert_score: null, compression_rate: null }
+                  )
+                )
+              ])
+              fusionResult.fused.scores = fScores
+              fusionResult.drafts.forEach((draft, i) => {
+                draft.scores = perDraftScores[i]
+              })
+
+              // 2. Pick best draft via LLM judge (AlpacaEval) using the original judgeConfigOverride
+              const bestDraft = await pickBestDraftByJudge(
+                fusionResult.drafts,
+                articleText,
+                judgeConfigOverride,
+              )
+
+              // 3. Pairwise judge comparing fused vs best-draft
+              let judgePairwiseResult = null
+              if (bestDraft) {
+                judgePairwiseResult = await runFusionPairwiseJudge({
+                  fusedSummary: fusionResult.fused.summary,
+                  bestDraft,
+                  articleText,
+                  override: judgeConfigOverride,
+                })
+              }
+              fusionResult.judge_pairwise = judgePairwiseResult
+
+              // 4. Pairwise judge comparing fused vs each individual draft (optional)
+              let judgeVsDrafts: any[] = []
+              if (moaConfig.judgeVsAllDrafts && fusionResult.pipeline.successful_proposers > 0) {
+                judgeVsDrafts = await runFusionVsAllDraftsJudge({
+                  fusedSummary: fusionResult.fused.summary,
+                  drafts: fusionResult.drafts,
+                  articleText,
+                  override: judgeConfigOverride,
+                })
+              }
+              fusionResult.judge_vs_drafts = judgeVsDrafts
+            } catch (evalErr) {
+              console.error('[Summarize Fusion] Background evaluation/judging failed:', evalErr)
+            }
 
             const fusionId = await saveMoAFusionResult({
               result: fusionResult,
