@@ -187,8 +187,8 @@ export async function POST(request: NextRequest) {
                 fusionResult.fused.summary,
                 articleText,
                 judgeConfigOverride ? {
-                  factuality_enabled: (judgeConfigOverride as any).factuality_enabled,
-                  factuality_model: (judgeConfigOverride as any).factuality_model,
+                  factuality_enabled: (judgeConfigOverride as { factuality_enabled?: boolean }).factuality_enabled,
+                  factuality_model: (judgeConfigOverride as { factuality_model?: string }).factuality_model,
                 } : undefined,
               ),
             ])
@@ -675,8 +675,8 @@ export async function POST(request: NextRequest) {
                         calculateBertScore(originalContent, summaryText),
                         runJudgeForSummary(summaryText, originalContent, judgeConfigOverride),
                         runFactualityForSummary(summaryText, originalContent, judgeConfigOverride ? {
-                          factuality_enabled: (judgeConfigOverride as any).factuality_enabled,
-                          factuality_model: (judgeConfigOverride as any).factuality_model,
+                          factuality_enabled: (judgeConfigOverride as { factuality_enabled?: boolean }).factuality_enabled,
+                          factuality_model: (judgeConfigOverride as { factuality_model?: string }).factuality_model,
                         } : undefined),
                       ])
 

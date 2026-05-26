@@ -14,6 +14,16 @@ const nextConfig = {
       },
     ]
   },
+  experimental: {
+    serverComponentsExternalPackages: ['natural'],
+  },
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      'webworker-threads': false,
+    };
+    return config;
+  }
 }
 
 module.exports = nextConfig
