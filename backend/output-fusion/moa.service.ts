@@ -86,6 +86,7 @@ function withTimeout<T>(
 async function runProposer(
   articleText: string,
   website: string | undefined,
+  articleUrl: string | undefined,
   model: ModelConfig,
   timeoutMs: number,
   deps: MoADependencies,
@@ -93,7 +94,7 @@ async function runProposer(
   const startTime = performance.now()
   try {
     const response = await withTimeout(
-      deps.performSummarize({ content: articleText, url: website }, model),
+      deps.performSummarize({ content: articleText, url: articleUrl || website }, model),
       timeoutMs,
       model.model_name,
     )
@@ -153,6 +154,7 @@ export async function runMoAFusion(
   website: string | undefined,
   config: MoAConfig,
   deps: MoADependencies = defaultDeps,
+  articleUrl?: string,
 ): Promise<MoAFusionResult> {
   logger.addLog("moa-fusion", "start", {
     proposers: config.proposers.map(p => p.model_name),
@@ -165,7 +167,7 @@ export async function runMoAFusion(
   // ── Layer 1 — Proposers (parallel) ─────────────────────────────────────
   const draftResults = await Promise.all(
     config.proposers.map(model =>
-      runProposer(articleText, website, model, config.proposerTimeoutMs, deps),
+      runProposer(articleText, website, articleUrl, model, config.proposerTimeoutMs, deps),
     ),
   )
 
