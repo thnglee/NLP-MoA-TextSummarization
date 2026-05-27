@@ -202,7 +202,7 @@ const SummarySidebar: React.FC = () => {
           // Try to extract summary field from accumulated JSON
           try {
             // Look for "summary":" pattern and extract text until next field or end
-            const summaryMatch = accumulatedJson.match(/"summary"\s*:\s*"([^"]*(?:\\.[^"]*)*)"?/)
+            const summaryMatch = accumulatedJson.match(/"summary"\s*:\s*"([^"\\]*(?:\\.[^"\\]*)*)"?/)
             if (summaryMatch) {
               // Unescape JSON string
               const summaryText = summaryMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"')
