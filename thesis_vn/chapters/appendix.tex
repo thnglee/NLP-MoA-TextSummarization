@@ -71,16 +71,3 @@ Bài báo gốc được cung cấp dưới đây để tham khảo:\\
 \end{tcolorbox}
 
 Phát hiện (tái khẳng định): Sự xuất hiện đơn thuần của văn bản gốc trong ngữ cảnh của mô hình tổng hợp giúp thay đổi hoàn toàn hành vi của mô hình từ chắp vá bản thảo sang dung hợp biên tập. Các quy tắc chi tiết (\texttt{v1} nghiêm ngặt so với \texttt{v2} linh hoạt) không làm biến động mạnh các hệ số định lượng, nhưng việc loại bỏ các ràng buộc văn phong như từ ``cô đọng'' lại là yếu tố quyết định để đạt được phong cách báo chí chuẩn mực, sang trọng.
-
-\section*{Phụ lục D: Thiết kế cơ sở dữ liệu}
-
-Cơ sở dữ liệu PostgreSQL trên nền tảng Supabase được triển khai thông qua 25 migration. 
-Lược đồ cơ sở dữ liệu được phân chia mạch lạc thành ba nhóm chức năng chính: các số liệu đo lường chất lượng trên mỗi lượt tóm tắt, dữ liệu đặc thù phục vụ cấu trúc MoA, và hồ sơ lưu trữ các tác vụ đánh giá bởi con người. 
-Các mối liên kết logic giữa ba nhóm chức năng này được minh họa chi tiết thông qua sơ đồ Thực thể - Quan hệ (ER) trong Hình~\ref{fig:database_schema}.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\linewidth]{figures/database_schema.png}
-  \caption{Lược đồ cơ sở dữ liệu Fiber mô tả các bảng chính và mối quan hệ giữa chúng.}
-  \label{fig:database_schema}
-\end{figure}
