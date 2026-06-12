@@ -1,0 +1,262 @@
+{
+  "experiment": "residual-connection-ablation",
+  "started_at": "2026-06-04T10:01:25.634Z",
+  "finished_at": "2026-06-04T10:03:35.566Z",
+  "config": {
+    "proposers": [
+      "gpt-4o-mini",
+      "gemini-2.5-flash",
+      "claude-haiku-4-5"
+    ],
+    "aggregator": "gpt-4o",
+    "judge_model": "gpt-4o-mini",
+    "bert_enabled": false,
+    "judge_enabled": true,
+    "articles_processed": 3
+  },
+  "records": [
+    {
+      "index": 1,
+      "url": "https://tienphong.vn/chu-nhat-do-2026-gap-nu-sinh-gan-10-lan-hien-mau-post1823998.tpo",
+      "article_length": 5670,
+      "proposers_used": [
+        "gpt-4o-mini",
+        "gemini-2.5-flash",
+        "claude-haiku-4-5"
+      ],
+      "successful_drafts": 2,
+      "with_snippet": {
+        "summary": "Bài viết kể về tinh thần nhiệt huyết và trách nhiệm của các sinh viên tham gia ngày hội hiến máu tình nguyện Chủ Nhật Đỏ, do báo Tiền Phong phát động. Nguyễn Nguyễn Khánh Huyền, sinh viên ngành Quản lý kinh tế tại Trường ĐH Tài chính - Marketing, đã 6 lần hiến máu, với cảm xúc sâu sắc khi biết máu của mình đã cứu sống bệnh nhân. Huyền không chỉ hiến máu mà còn tích cực hỗ trợ tổ chức các chương trình tình nguyện tại trường. Nguyễn Khánh Duyên, sinh viên ngành Lâm nghiệp tại Trường ĐH Nông Lâm TPHCM, cũng đã hiến máu 7 lần, được thúc đẩy bởi mất mát gia đình. Duyên coi đây là hành động lan tỏa yêu thương và chăm sóc sức khỏe để tiếp tục hiến tặng. Đoàn Ngọc Toàn, sinh viên ngành Quản trị kinh doanh quốc tế tại Trường ĐH Tài chính - Marketing, đã 3 lần hiến máu và cảm nhận niềm tự hào khi góp phần cứu người. Ngày hội Chủ Nhật Đỏ là dịp để những người trẻ lan tỏa yêu thương và sống có ích, dự kiến quy tụ nhiều sinh viên và nghệ sĩ tham gia.",
+        "prompt_tokens": 2666,
+        "completion_tokens": 295,
+        "latency_ms": 3398,
+        "axis_a": {
+          "rouge1": 0.1673,
+          "rouge2": 0.1492,
+          "rougeL": 0.1371,
+          "bert_score": null
+        },
+        "axis_b": {
+          "rubric": {
+            "faithfulness": 5,
+            "coverage": 4,
+            "fluency": 5,
+            "conciseness": 4,
+            "overall": 4
+          },
+          "factuality": {
+            "entailed_ratio": 0.5882352941176471,
+            "total_claims": 17,
+            "hallucination_count": 0,
+            "not_mentioned_count": 7
+          }
+        }
+      },
+      "no_snippet": {
+        "summary": "Bài viết kể về sự kiện Chủ Nhật Đỏ, một ngày hội hiến máu tình nguyện do Báo Tiền Phong phát động, thu hút sự tham gia nhiệt tình của các sinh viên. Trong đó, Nguyễn Khánh Huyền, sinh viên Trường ĐH Tài chính - Marketing, đã có 6 lần hiến máu. Cô cảm thấy xúc động khi biết máu của mình đã giúp đỡ bệnh nhân và coi đây là cách sống có ý nghĩa hơn. Nguyễn Khánh Duyên, sinh viên Trường ĐH Nông Lâm TPHCM, đã hiến máu 7 lần, được thúc đẩy bởi mất mát trong gia đình, và nhấn mạnh ý thức chăm sóc sức khỏe để tiếp tục hiến tặng. Ngoài ra, Đoàn Ngọc Toàn cũng nổi bật với 3 lần hiến máu. Các bạn trẻ này đều coi hiến máu là hành động lan tỏa yêu thương và cứu người. Sự kiện Chủ Nhật Đỏ 2026 dự kiến sẽ diễn ra vào ngày 7-8/3 tại Trường ĐH Văn Hiến, với sự tham gia của hơn 5.000 sinh viên và hơn 20 nghệ sĩ, hoa hậu, hứa hẹn tạo nên không khí sôi động và ý nghĩa cho cộng đồng.",
+        "prompt_tokens": 1091,
+        "completion_tokens": 299,
+        "latency_ms": 3470,
+        "axis_a": {
+          "rouge1": 0.1548,
+          "rouge2": 0.1315,
+          "rougeL": 0.1236,
+          "bert_score": null
+        },
+        "axis_b": {
+          "rubric": {
+            "faithfulness": 5,
+            "coverage": 4,
+            "fluency": 5,
+            "conciseness": 5,
+            "overall": 5
+          },
+          "factuality": {
+            "entailed_ratio": 0.5,
+            "total_claims": 18,
+            "hallucination_count": 0,
+            "not_mentioned_count": 9
+          }
+        }
+      },
+      "pairwise": {
+        "winner": "without",
+        "per_dimension": {
+          "faithfulness": "with",
+          "coverage": "without",
+          "fluency": "without",
+          "conciseness": "without"
+        },
+        "justification": "Bản B cung cấp thông tin chi tiết hơn về ngày hội Chủ Nhật Đỏ, bao gồm cả số lượng sinh viên tham gia và thời gian tổ chức, trong khi Bản A thiếu những chi tiết này, mặc dù vẫn giữ tính chính xác."
+      },
+      "axis_a_delta": {
+        "rouge1": 0.012500000000000011,
+        "rouge2": 0.017699999999999994,
+        "rougeL": 0.013499999999999998,
+        "bert_score": null
+      }
+    },
+    {
+      "index": 2,
+      "url": "https://tienphong.vn/ong-tran-sy-thanh-cam-ket-gi-voi-cu-tri-lang-son-post1823987.tpo",
+      "article_length": 3233,
+      "proposers_used": [
+        "gpt-4o-mini",
+        "gemini-2.5-flash",
+        "claude-haiku-4-5"
+      ],
+      "successful_drafts": 3,
+      "with_snippet": {
+        "summary": "Ngày 1/3, tại xã Lộc Bình, tỉnh Lạng Sơn đã diễn ra Hội nghị tiếp xúc cử tri với các ứng cử viên Đại biểu Quốc hội khóa XVI thuộc Đơn vị bầu cử số 1. Ông Trần Sỹ Thanh, Chủ nhiệm Ủy ban Kiểm tra Trung ương, cùng các ứng cử viên khác như bà Đoàn Thu Hà và lãnh đạo tòa án các khu vực đã tham gia. Ông Thanh cam kết nếu được cử tri tín nhiệm bầu làm Đại biểu Quốc hội sẽ nỗ lực hết mình để xứng đáng là người đại diện cho nhân dân, gương mẫu chấp hành hiến pháp và pháp luật, bảo vệ quyền và lợi ích hợp pháp của nhân dân. Ông cũng nhấn mạnh việc phấn đấu hoàn thành nhiệm vụ phát triển kinh tế - xã hội, đảm bảo quốc phòng an ninh giai đoạn 2025-2030, với mục tiêu xây dựng Lạng Sơn thành cực tăng trưởng của vùng trung du và miền núi phía Bắc vào năm 2030. Các ứng cử viên khác cũng cam kết giữ mối liên hệ chặt chẽ với cử tri, thường xuyên tiếp xúc, lắng nghe và phản ánh trung thực ý kiến, kiến nghị của nhân dân đến Quốc hội và các cơ quan có thẩm quyền. Đa số cử tri bày tỏ sự đồng tình và đánh giá cao chương trình hành động của các ứng cử viên, cho thấy sự quan tâm và trách nhiệm đối với sự phát triển của tỉnh Lạng Sơn.",
+        "prompt_tokens": 2463,
+        "completion_tokens": 349,
+        "latency_ms": 4959,
+        "axis_a": {
+          "rouge1": 0.3558,
+          "rouge2": 0.3354,
+          "rougeL": 0.3235,
+          "bert_score": null
+        },
+        "axis_b": {
+          "rubric": {
+            "faithfulness": 5,
+            "coverage": 5,
+            "fluency": 5,
+            "conciseness": 5,
+            "overall": 5
+          },
+          "factuality": {
+            "entailed_ratio": 0.9,
+            "total_claims": 20,
+            "hallucination_count": 0,
+            "not_mentioned_count": 2
+          }
+        }
+      },
+      "no_snippet": {
+        "summary": "Ngày 1/3, tại xã Lộc Bình, tỉnh Lạng Sơn, đã diễn ra Hội nghị tiếp xúc cử tri với các ứng cử viên Đại biểu Quốc hội khóa XVI thuộc Đơn vị bầu cử số 1. Trong số các ứng cử viên có ông Trần Sỹ Thanh, Chủ nhiệm Ủy ban Kiểm tra Trung ương, cùng các ứng cử viên khác như bà Đoàn Thu Hà và lãnh đạo tòa án các khu vực của tỉnh.\n\nTại hội nghị, ông Trần Sỹ Thanh cam kết sẽ duy trì mối liên hệ chặt chẽ với cử tri, thường xuyên lắng nghe và phản ánh trung thực ý kiến, kiến nghị của người dân đến Quốc hội và các cơ quan có thẩm quyền. Ông cũng nhấn mạnh tầm quan trọng của việc phát triển kinh tế - xã hội của tỉnh Lạng Sơn, với mục tiêu xây dựng tỉnh này thành một cực tăng trưởng của vùng trung du và miền núi phía Bắc vào năm 2030. \n\nÔng Thanh khẳng định sẽ nỗ lực hết mình để xứng đáng là người đại diện cho nhân dân tại cơ quan quyền lực cao nhất của đất nước, tuân thủ hiến pháp và pháp luật, bảo vệ quyền và lợi ích hợp pháp của nhân dân. Ông cũng cam kết cùng lãnh đạo và cử tri Lạng Sơn phấn đấu hoàn thành xuất sắc các nhiệm vụ phát triển kinh tế - xã hội, quốc phòng an ninh giai đoạn 2025-2030.\n\nCác ứng cử viên khác cũng cam kết giữ mối liên hệ chặt chẽ với cử tri, thường xuyên tiếp xúc, lắng nghe và phản ánh ý kiến của nhân dân. Đa số cử tri bày tỏ sự đồng tình và đánh giá cao chương trình hành động của các ứng cử viên, thể hiện tinh thần trách nhiệm và sự quan tâm đối với cuộc bầu cử sắp tới.",
+        "prompt_tokens": 1402,
+        "completion_tokens": 437,
+        "latency_ms": 6875,
+        "axis_a": {
+          "rouge1": 0.4376,
+          "rouge2": 0.4011,
+          "rougeL": 0.3154,
+          "bert_score": null
+        },
+        "axis_b": {
+          "rubric": {
+            "faithfulness": 5,
+            "coverage": 5,
+            "fluency": 5,
+            "conciseness": 5,
+            "overall": 5
+          },
+          "factuality": {
+            "entailed_ratio": 1,
+            "total_claims": 16,
+            "hallucination_count": 0,
+            "not_mentioned_count": 0
+          }
+        }
+      },
+      "pairwise": {
+        "winner": "without",
+        "per_dimension": {
+          "faithfulness": "without",
+          "coverage": "without",
+          "fluency": "without",
+          "conciseness": "without"
+        },
+        "justification": "Bản A cung cấp thông tin chi tiết và rõ ràng hơn về các ứng cử viên và cam kết của họ, đồng thời phản ánh đúng các điểm chính của bài báo gốc."
+      },
+      "axis_a_delta": {
+        "rouge1": -0.08179999999999998,
+        "rouge2": -0.06570000000000004,
+        "rougeL": 0.008099999999999996,
+        "bert_score": null
+      }
+    },
+    {
+      "index": 3,
+      "url": "https://tienphong.vn/thong-tin-moi-vu-2-nu-sinh-lop-8-bi-bat-ve-lam-vo-o-nghe-an-post1823985.tpo",
+      "article_length": 2288,
+      "proposers_used": [
+        "gpt-4o-mini",
+        "gemini-2.5-flash",
+        "claude-haiku-4-5"
+      ],
+      "successful_drafts": 3,
+      "with_snippet": {
+        "summary": "Tại Trường Phổ thông Dân tộc Bán trú Trung học Cơ sở Na Loi, Nghệ An, hai nữ sinh lớp 8 đã bị \"bắt\" về làm vợ theo tập tục địa phương bởi hai nam thanh niên từ xã Mường Lống. Sau một thời gian vận động và tuyên truyền, một trong hai nữ sinh, L.H.D., đã đồng ý quay trở lại trường học vào ngày 3/3. Nhà trường sẽ tiếp tục nỗ lực vận động nữ sinh còn lại để quay lại học tập. Trước đó, cả hai nữ sinh đều là học sinh ngoan và không có biểu hiện gì khác thường. Sự việc xảy ra trong đêm nên không ai phát hiện và ngăn chặn kịp thời. Sở Giáo dục và Đào tạo Nghệ An đã yêu cầu nhà trường báo cáo cụ thể về sự việc và sẽ đưa ra chỉ đạo phù hợp, đồng thời phối hợp với chính quyền địa phương để tăng cường tuyên truyền nhằm ngăn chặn tình trạng tảo hôn trong lứa tuổi học sinh. Dù đã có nhiều nỗ lực, hiện tượng tảo hôn vẫn còn tồn tại và cần được xử lý triệt để hơn tại một số địa phương.",
+        "prompt_tokens": 2052,
+        "completion_tokens": 278,
+        "latency_ms": 3738,
+        "axis_a": {
+          "rouge1": 0.3839,
+          "rouge2": 0.3052,
+          "rougeL": 0.2744,
+          "bert_score": null
+        },
+        "axis_b": {
+          "rubric": {
+            "faithfulness": 5,
+            "coverage": 5,
+            "fluency": 5,
+            "conciseness": 5,
+            "overall": 5
+          },
+          "factuality": {
+            "entailed_ratio": 0.9230769230769231,
+            "total_claims": 13,
+            "hallucination_count": 0,
+            "not_mentioned_count": 1
+          }
+        }
+      },
+      "no_snippet": {
+        "summary": "Tại Trường Phổ thông Dân tộc Bán trú Trung học Cơ sở Na Loi, Nghệ An, đã xảy ra sự việc hai nữ sinh lớp 8 bị \"bắt\" về làm vợ theo tập tục địa phương. Hai nữ sinh này, L.H.A. và L.H.D., bị hai nam thanh niên từ xã Mường Lống tổ chức \"bắt\" trong đêm mà không có sự can thiệp kịp thời. Sau khi nhà trường và chính quyền địa phương tiến hành vận động và tuyên truyền, một trong hai nữ sinh, L.H.D., đã đồng ý quay trở lại trường học vào ngày 3/3. Nhà trường vẫn tiếp tục nỗ lực vận động để thuyết phục nữ sinh còn lại quay trở lại học tập. Trước tình trạng tảo hôn vẫn còn tồn tại tại một số địa phương, Sở Giáo dục và Đào tạo Nghệ An đã yêu cầu báo cáo chi tiết sự việc và cam kết phối hợp chặt chẽ với chính quyền địa phương nhằm tăng cường công tác tuyên truyền, giáo dục để ngăn chặn hiện tượng này trong lứa tuổi học sinh.",
+        "prompt_tokens": 1267,
+        "completion_tokens": 262,
+        "latency_ms": 3261,
+        "axis_a": {
+          "rouge1": 0.3615,
+          "rouge2": 0.2867,
+          "rougeL": 0.2322,
+          "bert_score": null
+        },
+        "axis_b": {
+          "rubric": {
+            "faithfulness": 5,
+            "coverage": 5,
+            "fluency": 5,
+            "conciseness": 5,
+            "overall": 5
+          },
+          "factuality": {
+            "entailed_ratio": 0.65,
+            "total_claims": 20,
+            "hallucination_count": 0,
+            "not_mentioned_count": 7
+          }
+        }
+      },
+      "pairwise": {
+        "winner": "with",
+        "per_dimension": {
+          "faithfulness": "tie",
+          "coverage": "with",
+          "fluency": "with",
+          "conciseness": "with"
+        },
+        "justification": "Bản B cung cấp thông tin một cách đầy đủ và súc tích hơn, đồng thời có độ trôi chảy tốt hơn bản A, mặc dù bản A cũng không thiếu thông tin."
+      },
+      "axis_a_delta": {
+        "rouge1": 0.02240000000000003,
+        "rouge2": 0.018500000000000016,
+        "rougeL": 0.04219999999999999,
+        "bert_score": null
+      }
+    }
+  ]
+}

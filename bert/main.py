@@ -78,6 +78,50 @@ class ScoreResponse(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Chunking helper
+# ---------------------------------------------------------------------------
+
+def chunk_text_by_tokens(
+    tokenizer,
+    text: str,
+    max_length: int = 256,
+    stride: int = 128,
+) -> list[str]:
+    """
+    Tokenize *text* and split it into overlapping windows of *max_length* tokens
+    using a sliding window with *stride* step.
+
+    Returns a list of decoded string chunks. If the text fits within *max_length*
+    tokens the list contains only the original text (no chunking needed).
+
+    PhoBERT max = 256 tokens. With stride=128 a 1 000-token reference produces
+    ~7 chunks — all of which are scored and averaged.
+    """
+    encoding = tokenizer(
+        text,
+        add_special_tokens=False,
+        return_attention_mask=False,
+        return_tensors=None,
+    )
+    token_ids = encoding["input_ids"]
+
+    if len(token_ids) <= max_length:
+        return [text]  # short enough — no chunking needed
+
+    chunks: list[str] = []
+    for start in range(0, len(token_ids), stride):
+        end = start + max_length
+        chunk_ids = token_ids[start:end]
+        chunk_str = tokenizer.decode(chunk_ids, skip_special_tokens=True)
+        if chunk_str.strip():
+            chunks.append(chunk_str)
+        if end >= len(token_ids):
+            break
+
+    return chunks if chunks else [text]
+
+
+# ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
 @app.get("/healthz", status_code=200, tags=["Health"])
@@ -102,25 +146,43 @@ async def calculate_score(payload: ScoreRequest):
     try:
         logger.info("Computing BERTScore …")
 
-        # Safely truncate input texts using the underlying tokenizer to avoid index out-of-bounds.
-        # PhoBERT has a maximum sequence length of 256 tokens.
         cand_text = payload.candidate_text
         ref_text = payload.reference_text
         tokenizer = getattr(bert_scorer, "_tokenizer", None)
-        
+
         if tokenizer is not None:
+            # --- Candidate (summary) ---
+            # Summaries are short; simple truncation to 256 tokens is fine.
             cand_tokens = tokenizer(cand_text, truncation=True, max_length=256)
             cand_text = tokenizer.decode(cand_tokens["input_ids"], skip_special_tokens=True)
-            
-            ref_tokens = tokenizer(ref_text, truncation=True, max_length=256)
-            ref_text = tokenizer.decode(ref_tokens["input_ids"], skip_special_tokens=True)
 
-        _, _, F1 = bert_scorer.score(
-            cands=[cand_text],
-            refs=[ref_text],
-        )
-        f1_value = round(float(F1[0].item()), 6)
-        logger.info(f"BERTScore F1 = {f1_value}")
+            # --- Reference (original article) ---
+            # Articles can be 1 000+ tokens. Instead of discarding everything past
+            # token 256 we split into overlapping 256-token chunks (stride = 128),
+            # score the candidate against every chunk, then average the F1 scores
+            # so the full article contributes to the evaluation.
+            ref_chunks = chunk_text_by_tokens(tokenizer, ref_text, max_length=256, stride=128)
+        else:
+            ref_chunks = [ref_text]
+
+        chunk_count = len(ref_chunks)
+        logger.info(f"Reference split into {chunk_count} chunk(s) of ≤256 tokens (stride=128).")
+
+        if chunk_count == 1:
+            # Fast path — no chunking needed
+            _, _, F1 = bert_scorer.score(cands=[cand_text], refs=[ref_chunks[0]])
+            f1_value = round(float(F1[0].item()), 6)
+        else:
+            # Score candidate against each reference chunk and average
+            f1_scores: list[float] = []
+            for i, chunk in enumerate(ref_chunks):
+                _, _, F1 = bert_scorer.score(cands=[cand_text], refs=[chunk])
+                chunk_f1 = float(F1[0].item())
+                f1_scores.append(chunk_f1)
+                logger.info(f"  chunk {i + 1}/{chunk_count}: F1 = {chunk_f1:.6f}")
+            f1_value = round(sum(f1_scores) / len(f1_scores), 6)
+
+        logger.info(f"BERTScore F1 = {f1_value} (avg over {chunk_count} chunk(s))")
         return ScoreResponse(f1_score=f1_value, model_used=MODEL_NAME)
     except Exception as exc:
         logger.exception("Error during BERTScore calculation.")

@@ -20,7 +20,7 @@ function getArg(name: string, fallback = ""): string {
 }
 
 const API_BASE = getArg("api", "http://localhost:3000")
-const INPUT_PATH = path.resolve(__dirname, "sample-urls-long-20.json")
+const INPUT_PATH = path.resolve(__dirname, "sample-urls-long-2.json")
 const TIMEOUT_MS = 600000 // 10 mins
 
 async function fetchWithTimeout(url: string, init: RequestInit, timeoutMs: number): Promise<Response> {
