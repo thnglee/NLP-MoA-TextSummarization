@@ -23,28 +23,9 @@ Kết quả dung hợp (mô hình tổng hợp GPT-4o):
 
 Nhận xét: Bản tóm tắt dung hợp cuối cùng đã thành công trong việc: (i)~giữ lại mốc thời gian cụ thể (chiều 11 tháng 5) vốn được cung cấp bởi Claude và Gemini nhưng bị GPT-4o-mini bỏ sót; (ii)~giữ lại hành động pháp lý (\textit{khởi tố}) được đề cập trong cả ba bản thảo; (iii)~bổ sung thêm ngữ cảnh cơ quan thể chế (lời kêu gọi của gia đình và chính quyền địa phương yêu cầu tăng cường an ninh đoạn đường học sinh đi lại) vốn xuất hiện trong bài gốc nhưng bị cả ba bản thảo bỏ qua. Sự gia tăng của tiêu chí Độ bao phủ (Coverage) ($+0,16$ trong Mục~4.3.1) chính là trung bình số học của các tác động tương tự như thế này trên $154$ bài viết thực nghiệm.
 
-\section*{Phụ lục B: Minh họa kiểm chứng thông tin}
+\section*{Phụ lục B: Thử nghiệm gợi ý đối với mô hình tổng hợp}
 
-Phụ lục này minh họa quy trình kiểm chứng thông tin trên một bài viết phức tạp hơn, nơi các mô hình đề xuất thường xuyên ảo giác thông tin hoặc nhầm lẫn giữa các mốc chi tiết lịch sử.
-
-Nguồn: ``Thủ tướng Phạm Minh Chính thăm chính thức Trung Quốc''
-
-\begin{itemize}
-  \item Mệnh đề 1 --- ``Thủ tướng Phạm Minh Chính thăm Trung Quốc từ ngày 25 đến ngày 28/6/2023.''
-        Kết quả Tavily: Lịch trình chính thức đăng tải trên \textit{chinhphu.vn}. Phán quyết: \texttt{entailed} (chấp thuận), điểm số tin cậy $98$.
-  \item Mệnh đề 2 --- ``Trong khuôn khổ chuyến thăm, Thủ tướng đã hội kiến Tổng bí thư, Chủ tịch nước Tập Cận Bình.''
-        Kết quả Tavily: Báo cáo tin tức từ \textit{Thông tấn xã Việt Nam}, báo \textit{Nhân Dân}. Phán quyết: \texttt{entailed} (chấp thuận), điểm số tin cậy $95$.
-  \item Mệnh đề 3 --- ``Đây là chuyến thăm đầu tiên của một lãnh đạo cấp cao Việt Nam tới Trung Quốc sau 10 năm.''
-        Kiểm chứng từ Tavily: Tổng bí thư Nguyễn Phú Trọng đã thăm Trung Quốc vào tháng 10/2022. Phán quyết: \texttt{contradicted} (mâu thuẫn), điểm số tin cậy $10$.
-  \item Mệnh đề 4 --- ``Hai bên đã ký kết Bản ghi nhớ về hợp tác phát triển hạ tầng đường sắt.''
-        Kết quả Tavily: Thông cáo báo chí chung trên cổng thông tin \textit{baochinhphu.vn}. Phán quyết: \texttt{entailed} (chấp thuận), điểm số tin cậy $90$.
-\end{itemize}
-
-Kết quả tổng hợp: Hệ thống đã phát hiện và dán nhãn thành công Mệnh đề~3 là mâu thuẫn dữ kiện thực tế. Mặc dù các phần còn lại của bản tóm tắt đều hoàn toàn chính xác, điểm số tin cậy tổng hợp vẫn bị kéo xuống mức $64\%$, kích hoạt cảnh báo Độ tin cậy thấp. Việc này ngăn chặn hiệu quả sự lan truyền của mệnh đề sai lệch về ``khoảng cách 10 năm''.
-
-\section*{Phụ lục C: Thử nghiệm gợi ý đối với mô hình tổng hợp}
-
-Ba biến thể gợi ý đối với mô hình tổng hợp được thảo luận trong Mục~3.4.5 và Mục~4.2.2 được tái hiện chi tiết dưới đây. Quá trình phát triển gợi ý phản ánh rõ rệt sự dịch chuyển từ việc chắp vá bản thảo thô sơ sang dung hợp biên tập có neo ngữ cảnh gốc.
+Ba biến thể câu lệnh đối với mô hình tổng hợp được tái hiện chi tiết dưới đây. Quá trình phát triển gợi ý phản ánh rõ rệt sự dịch chuyển từ việc chắp vá bản thảo thô sơ sang dung hợp biên tập có neo ngữ cảnh gốc.
 
 \begin{tcolorbox}[title=Biến thể cơ sở (Chỉ chắp vá bản thảo), colback=gray!5!white, colframe=gray!75!black, breakable, fontupper=\small\ttfamily]
 Bạn là một biên tập viên báo chí Việt Nam. Dưới đây là n bản tóm tắt cho cùng một bài báo. Hãy tổng hợp thành một bản tóm tắt cuối cùng, trung lập, văn phong báo chí.

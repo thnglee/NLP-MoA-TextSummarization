@@ -1,7 +1,7 @@
 % !TEX root = ../../thesis.tex
 \chapter{Giới thiệu bài toán}
 
-Chương này đặt nền móng cho toàn bộ khóa luận bằng việc giới thiệu bài toán trọng tâm --- tóm tắt văn bản tự động đi kèm với kiểm chứng tin tức tiếng Việt
+Chương này đặt nền móng cho toàn bộ khóa luận bằng việc giới thiệu bài toán trọng tâm --- tóm tắt văn bản tin tức tiếng Việt
  --- cùng với kỹ thuật Mixture-of-Agents (MoA) được khóa luận lựa chọn làm phương pháp tiếp cận chính. 
  Trước tiên, Mục~1.1 trình bày định nghĩa bài toán tóm tắt văn bản và các thách thức đặc thù khi áp dụng cho tiếng Việt; 
  Mục~1.2 giới thiệu pipeline MoA với thiết kế phân tầng đa tác nhân; 
@@ -59,11 +59,6 @@ Bên cạnh nhu cầu đọc thông tin nhanh, người đọc ngày nay cũng n
 Các tiêu đề giật gân, trích dẫn phiến diện và thông tin sai lệch lan truyền trên mạng xã hội và các tổng hợp tin tức ngày càng tinh vi và khó phân biệt.
 Kiểm chứng thủ công không đủ khả năng đáp ứng so với quy mô thông tin hiện tại; một công cụ hỗ trợ được tích hợp ngay trong trình duyệt, có khả năng
 gắn cờ các mệnh đề không có căn cứ, ngày càng trở nên có giá trị và ngày càng trở nên quan trọng hơn khi được gắn liền với bài toán tóm tắt tin tức.
-
-Tìm kiếm web mở đã trở thành nguồn bằng chứng tốt nhất được lựa chọn cho bài toán kiểm chứng, vì không có cơ sở tri thức nào có thể theo kịp tin tức
-mới hàng ngày. Xác minh tăng cường tìm kiếm kết hợp một API tìm kiếm web
-với một LLM đọc các đoạn trích xuất được và đưa ra phán quyết; đây
-là thiết kế được áp dụng trong Chương~3 (Tavily $\rightarrow$ GPT-4o-mini).
 
 \section{Pipeline Mixture-of-Agents (MoA)}
 
