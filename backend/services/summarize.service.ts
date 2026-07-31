@@ -184,7 +184,7 @@ export async function performSummarize(request: SummarizeRequest, modelConfig?: 
   // BERTScore, lexical metrics, LLM-judge, and factuality run in parallel.
   void (async () => {
     try {
-      const { runJudgeForSummary } = await import('./llm-judge.runner')
+      const { runJudgeForSummary } = await import('./optional/llm-judge.runner')
       const { runFactualityForSummary } = await import('./factuality.runner')
       const [metrics, bertScore, judgeFields, factualityFields] = await Promise.all([
         Promise.resolve(calculateLexicalMetrics(response.summary, extractedContent)),

@@ -1,18 +1,11 @@
 /**
  * Domain Types
  * 
- * Core domain types extracted from schemas and used across the application.
- * These types represent the business domain entities and their relationships.
- * 
- * Note: Types are inferred from Zod schemas in schemas.ts for single source of truth.
- * This file provides additional domain-specific types and utilities.
+ * Core domain types used across the NLP MoA Text Summarization project.
+ * Types are inferred from Zod schemas in schemas.ts for single source of truth.
  */
 
 import type {
-  FactCheckRequest,
-  FactCheckResponse,
-  FactCheckDebugInfo,
-  FactCheckData,
   SummarizeRequest,
   SummarizeResponse,
   SummarizeDebugInfo,
@@ -21,111 +14,14 @@ import type {
   Env,
 } from "./schemas"
 
-// Import shared types used by both extension and backend
-import type {
-  TrustLevel,
-  FactCheckResult as SharedFactCheckResult,
-} from "../../shared/types"
-
 // Re-export schema-inferred types for convenience
 export type {
-  FactCheckRequest,
-  FactCheckResponse,
-  FactCheckDebugInfo,
-  FactCheckData,
   SummarizeRequest,
   SummarizeResponse,
   SummarizeDebugInfo,
   SummaryData,
   LogEntry,
   Env,
-}
-
-// Re-export shared types
-export type { TrustLevel }
-
-// ============================================================================
-// Fact Check Domain Types
-// ============================================================================
-
-/**
- * Fact check result with trust level classification
- * Extended from shared type to include verified field
- */
-export interface FactCheckResult extends SharedFactCheckResult {
-  verified: boolean
-}
-
-/**
- * Helper function to determine trust level from score
- */
-export function getTrustLevel(score: number): TrustLevel {
-  if (score >= 70) return "high"
-  if (score >= 40) return "medium"
-  return "low"
-}
-
-/**
- * Convert FactCheckResponse to FactCheckResult with trust level
- */
-export function toFactCheckResult(response: FactCheckResponse): FactCheckResult {
-  return {
-    score: response.score,
-    level: getTrustLevel(response.score),
-    reason: response.reason,
-    sources: response.sources,
-    verified: response.verified,
-  }
-}
-
-// ============================================================================
-// Search Domain Types
-// ============================================================================
-
-/**
- * Search options for source discovery
- */
-export interface SearchOptions {
-  query: string
-  maxResults?: number
-  searchDepth?: "basic" | "advanced"
-  domains?: string[]
-  debug?: boolean
-}
-
-/**
- * Individual search result from Tavily API
- */
-export interface SearchResult {
-  title: string
-  url: string
-  content: string
-  score: number
-}
-
-/**
- * Search response with aggregated sources and content
- */
-export interface SearchResponse {
-  sources: string[]
-  sourceContent: string
-  results: SearchResult[]
-  debugInfo?: SearchDebugInfo
-}
-
-/**
- * Debug information for search operations
- */
-export interface SearchDebugInfo {
-  query: string
-  resultsCount: number
-  results: Array<{
-    title: string
-    url: string
-    content: string
-    contentLength: number
-    score: number
-  }>
 }
 
 // ============================================================================
