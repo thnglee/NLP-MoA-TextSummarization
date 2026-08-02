@@ -1,0 +1,9 @@
+Cuộc_thi năm nay thu_hút 47 đội_tuyển tham_gia , với 144 học_sinh từ sáu đến 12 tuổi , đến từ những câu_lạc_bộ Robotics trên toàn_quốc . 
+Các đội thi được chia làm hai bảng : Trung_cấp ( học_sinh 9-12 tuổi ) và Sơ_cấp ( học_sinh 6-9 tuổi ) để tranh tài . 
+Ban tổ_chức đã trao Giải vô_địch ở hệ Sơ_cấp cho trường Tiểu_học ( TH ) VIETKIDS ( Hà_Nội ) ; hệ Trung_cấp dành cho trường TH Trần_Cao_Vân ( Đà_Nẵng ) . 
+Ngoài_ra , Ban tổ_chức còn trao năm giải Nhì ; sáu giải Ba ; các giải Sáng_tạo , Phong_cách , Đồng_đội ở cả hai hệ cho các đội thi . 
+Chủ_đề cuộc_thi Robothon_Quốc gia 2013 năm nay là “ Thành_phố thông_minh ” : Một vấn_đề được đặt ra là trong vài thập_kỷ tới , đô_thị sẽ phát_triển rất nhanh_chóng về quy_mô và tốc_độ , kéo_theo hàng_loạt vấn_đề như : thảm_họa thiên_nhiên , chi_phí sinh_hoạt , tỷ_lệ tội_phạm , giao_thông , giáo_dục … Các đội_tuyển tham_gia thi_đấu sẽ sử_dụng trí thông_minh , tư_duy sáng_tạo của mình , để lắp_ráp , cài_đặt robot nhằm giải_quyết các vấn_đề mà đề_bài đưa ra , giúp thành_phố của mình trở_thành một “ Thành_phố thông_minh ” . 
+Đây là lần đầu_tiên một cuộc_thi robot dành cho học_sinh tiểu_học được tổ_chức nhằm từng bước đưa hoạt_động giáo_dục robotic phát_triển trong các trường tiểu_học và THCS ở Việt_Nam . 
+Tạo cơ_hội cho học_sinh được tiếp_cận , tham_gia các hoạt_động giáo_dục có tính khoa_học , sáng_tạo . 
+Đồng_thời lựa_chọn những đội_tuyển xuất_sắc nhất để chuẩn_bị cho cuộc_thi Robotics quốc_tế 2013 diễn ra_vào cuối tháng 11 tại thủ_đô Manila ( Philippines ) . 
+THANH_TÂM 

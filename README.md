@@ -46,25 +46,25 @@ Fiber injects a sidebar into supported Vietnamese news sites, generates LLM-powe
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Browser extension | [Plasmo](https://www.plasmo.com/), React 18, TypeScript, Tailwind CSS |
-| Backend API | Next.js 14 (App Router), TypeScript, Zod |
-| Database | Supabase (PostgreSQL) |
-| LLM providers | OpenAI, Google Gemini, Anthropic Claude, HuggingFace Inference |
-| Search | Tavily |
-| Content extraction | `@mozilla/readability` + JSDOM |
-| Lexical metrics | Custom ROUGE implementation, `bleu-score` |
-| Semantic metrics | BERTScore microservice (FastAPI + `vinai/phobert-base`) |
+| Layer              | Technology                                                            |
+| ------------------ | --------------------------------------------------------------------- |
+| Browser extension  | [Plasmo](https://www.plasmo.com/), React 18, TypeScript, Tailwind CSS |
+| Backend API        | Next.js 14 (App Router), TypeScript, Zod                              |
+| Database           | Supabase (PostgreSQL)                                                 |
+| LLM providers      | OpenAI, Google Gemini, Anthropic Claude, HuggingFace Inference        |
+| Search             | Tavily                                                                |
+| Content extraction | `@mozilla/readability` + JSDOM                                        |
+| Lexical metrics    | Custom ROUGE implementation, `bleu-score`                             |
+| Semantic metrics   | BERTScore microservice (FastAPI + `vinai/phobert-base`)               |
 
 ### Supported Models
 
-| Provider | Models | Type |
-|----------|--------|------|
-| OpenAI | GPT-4o Mini, GPT-4o, GPT-4.1 Mini, GPT-4.1, o4 Mini, o3 Mini | Standard + Reasoning |
-| Google Gemini | Gemini 2.0 Flash Lite, 2.0 Flash, 2.5 Flash, 2.5 Pro, 3.1 Flash Lite, Flash Latest, 3 Flash Preview | Standard |
-| Anthropic | Claude Haiku 4.5, Sonnet 4.5, Sonnet 4.6, Opus 4.6 | Standard |
-| HuggingFace | ViT5-large (Vietnamese news summarization) | Base |
+| Provider      | Models                                                                                              | Type                 |
+| ------------- | --------------------------------------------------------------------------------------------------- | -------------------- |
+| OpenAI        | GPT-4o Mini, GPT-4o, GPT-4.1 Mini, GPT-4.1, o4 Mini, o3 Mini                                        | Standard + Reasoning |
+| Google Gemini | Gemini 2.0 Flash Lite, 2.0 Flash, 2.5 Flash, 2.5 Pro, 3.1 Flash Lite, Flash Latest, 3 Flash Preview | Standard             |
+| Anthropic     | Claude Haiku 4.5, Sonnet 4.5, Sonnet 4.6, Opus 4.6                                                  | Standard             |
+| HuggingFace   | ViT5-large (Vietnamese news summarization)                                                          | Base                 |
 
 > **Note:** PhoGPT-4B-Chat (`vinai/PhoGPT-4B-Chat`) is registered as a routing candidate but is not yet deployed — it is not available on HuggingFace's free Inference API. See [#28](https://github.com/thnglee/fiber/issues/28) for deployment plans. The fallback chain routes medium-complexity articles to GPT-4o in the meantime.
 
@@ -119,13 +119,14 @@ BERTScore Microservice (FastAPI)
 
 The routing system automatically selects the best model based on article complexity:
 
-| Complexity | Token Threshold | Preferred Model | Fallback Chain |
-|-----------|----------------|-----------------|----------------|
-| Short | ≤ 400 tokens | ViT5 | → PhoGPT → GPT-4o |
-| Medium | ≤ 1500 tokens | PhoGPT | → GPT-4o |
-| Long | > 1500 tokens | GPT-4o | — |
+| Complexity | Token Threshold | Preferred Model | Fallback Chain    |
+| ---------- | --------------- | --------------- | ----------------- |
+| Short      | ≤ 400 tokens    | ViT5            | → PhoGPT → GPT-4o |
+| Medium     | ≤ 1500 tokens   | PhoGPT          | → GPT-4o          |
+| Long       | > 1500 tokens   | GPT-4o          | —                 |
 
 Three routing modes are available:
+
 - **auto** — Complexity-based model selection with automatic fallback (default for normal usage)
 - **evaluation** — Runs all candidate models in parallel, scores each summary with BERTScore, and returns the highest-scoring result (for thesis experiments)
 - **forced** — Uses whatever model is specified or currently active (for manual testing)
@@ -213,18 +214,18 @@ Set `BERT_SERVICE_URL=http://localhost:7860` in `backend/.env`. Also deployable 
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/summarize` | Summarize an article. Body: `{ url?, content?, stream?, model?, routing_mode? }` |
-| `POST` | `/api/fact-check` | Fact-check selected text. Body: `{ text, model? }` |
-| `GET` | `/api/settings` | Get active model + all available model configs |
-| `PATCH` | `/api/settings/active` | Switch active model. Body: `{ model }` |
-| `PATCH` | `/api/settings/config` | Update model parameters. Body: `{ model, temperature?, ... }` |
-| `GET/PUT` | `/api/settings/routing` | Get or update routing config (mode, thresholds) |
-| `GET` | `/api/routing` | Routing analytics: model distribution, fallback rates, avg BERTScore |
-| `GET` | `/api/metrics` | Fetch paginated evaluation metrics (filterable by mode, model) |
-| `GET` | `/api/dashboard` | Fetch recent extension actions |
-| `GET` | `/api/logs/stream` | SSE debug log stream |
+| Method    | Endpoint                | Description                                                                      |
+| --------- | ----------------------- | -------------------------------------------------------------------------------- |
+| `POST`    | `/api/summarize`        | Summarize an article. Body: `{ url?, content?, stream?, model?, routing_mode? }` |
+| `POST`    | `/api/fact-check`       | Fact-check selected text. Body: `{ text, model? }`                               |
+| `GET`     | `/api/settings`         | Get active model + all available model configs                                   |
+| `PATCH`   | `/api/settings/active`  | Switch active model. Body: `{ model }`                                           |
+| `PATCH`   | `/api/settings/config`  | Update model parameters. Body: `{ model, temperature?, ... }`                    |
+| `GET/PUT` | `/api/settings/routing` | Get or update routing config (mode, thresholds)                                  |
+| `GET`     | `/api/routing`          | Routing analytics: model distribution, fallback rates, avg BERTScore             |
+| `GET`     | `/api/metrics`          | Fetch paginated evaluation metrics (filterable by mode, model)                   |
+| `GET`     | `/api/dashboard`        | Fetch recent extension actions                                                   |
+| `GET`     | `/api/logs/stream`      | SSE debug log stream                                                             |
 
 All request/response shapes are validated with Zod schemas defined in `backend/domain/schemas.ts`.
 
@@ -232,18 +233,18 @@ All request/response shapes are validated with Zod schemas defined in `backend/d
 
 Each summarization stores the following in the `evaluation_metrics` table:
 
-| Metric | Description |
-|--------|-------------|
-| `rouge_1` / `rouge_2` / `rouge_l` | Lexical overlap (unigram, bigram, LCS) |
-| `bleu` | 4-gram BLEU precision |
-| `bert_score` | Semantic similarity F1 via PhoBERT microservice |
-| `compression_rate` | Summary length / original length |
-| `latency` | Time to first token (streaming) or total time (batch) in ms |
-| `model` | LLM model used (e.g., `gpt-4o-mini`, `gemini-2.5-flash`, `VietAI/vit5-large-vietnews-summarization`) |
-| `prompt_tokens` / `completion_tokens` | Token usage |
-| `estimated_cost_usd` | Computed from token counts and per-model pricing |
-| `mode` | `"streaming"` or `"batch"` |
-| `routing_id` | Links to the routing decision that selected this model |
+| Metric                                | Description                                                                                          |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `rouge_1` / `rouge_2` / `rouge_l`     | Lexical overlap (unigram, bigram, LCS)                                                               |
+| `bleu`                                | 4-gram BLEU precision                                                                                |
+| `bert_score`                          | Semantic similarity F1 via PhoBERT microservice                                                      |
+| `compression_rate`                    | Summary length / original length                                                                     |
+| `latency`                             | Time to first token (streaming) or total time (batch) in ms                                          |
+| `model`                               | LLM model used (e.g., `gpt-4o-mini`, `gemini-2.5-flash`, `VietAI/vit5-large-vietnews-summarization`) |
+| `prompt_tokens` / `completion_tokens` | Token usage                                                                                          |
+| `estimated_cost_usd`                  | Computed from token counts and per-model pricing                                                     |
+| `mode`                                | `"streaming"` or `"batch"`                                                                           |
+| `routing_id`                          | Links to the routing decision that selected this model                                               |
 
 Evaluation datasets cover 5 Vietnamese news categories: thoi_su (current affairs), phap_luat (law), kinh_te (economics), giao_duc (education), van_hoa (culture).
 

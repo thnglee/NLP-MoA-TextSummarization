@@ -1,0 +1,7 @@
+Yahoo đã khá chậm chân trong việc tích_hợp HTTPS , trước đó , Google đã cung_cấp HTTPS như_là một tùy chọn không bắt_buộc cho người dùng từ năm 2008 và chuyển nó thành mặc_định từ năm 2010 . 
+Hotmail cung_cấp tùy chọn này từ 2010 và cũng cho nó thành mặc_định hai năm sau đó . 
+Trong khi đó Yahoo chỉ mới cung_cấp tùy chọn này từ hồi đầu năm nay mà thôi . 
+Mặc_dù vậy nhưng trễ vẫn còn đỡ hơn không . 
+Lưu_ý là kết_nối HTTPS giai_đoạn đầu sẽ chỉ hỗ_trợ phiên_bản mail trên web mà thôi . 
+Nếu bạn sử_dụng các ứng_dụng Yahoo_Mail trên điện_thoại và tablet thì chúng vẫn chưa hỗ_trợ HTTPS . 
+Theo Gizmodo , WashingtonPost 

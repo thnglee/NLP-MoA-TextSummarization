@@ -1,0 +1,4 @@
+Từ 8/1 năm sau , Mail của Yahoo sẽ bắt_đầu áp_dụng công_nghệ mã_hóa giúp bảo_vệ thư của người dùng tốt hơn . Cụ_thể , từ thời_điểm nói trên , Yahoo_Mail , theo mặc_định , sẽ áp_dụng công_nghệ mã_hóa SSL  ( Secure_Sockets_Layer ) hay còn gọi_là HTTPS . 
+người dùng truy_cập vào dịch_vụ thư_điện_tử Yahoo_Mail sẽ được chuyển sang giao_thức bảo_mật SSL ( http sẽ thêm chữ s vào địa_chỉ trang_web thành https : / / ) , giúp_việc duyệt thư_điện_tử của người dùng trở_nên an_toàn hơn . 
+SSL là một tiêu_chuẩn an_ninh công_nghệ toàn_cầu tạo ra một liên_kết được mã_hóa giữa máy_chủ web và trình_duyệt . 
+Kết_nối HTTPS giai_đoạn đầu sẽ chỉ hỗ_trợ phiên_bản mail trên web 

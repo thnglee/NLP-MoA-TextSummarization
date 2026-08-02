@@ -1,0 +1,23 @@
+Yahoo hôm_nay đã làm mới ứng_dụng Mail trên nền web , Android , iOS và Windows 8 lên phiên_bản mới với một giao_diện mới hoàn_toàn . 
+Nền của Yahoo_Mail giờ_đây sẽ có một màu đồng_nhất hoặc sử_dụng ảnh lấy từ Flickr , tương_tự như cách mà Yahoo_Weather hiển_thị ảnh nền . 
+Theme này cũng sẽ được đồng_bộ xuyên suốt tất_cả mọi máy nhằm tạo sự quen_thuộc và đồng_nhất cho khách_hàng . 
+Giao_diện soạn_thảo email giờ_đây được đơn_giản_hóa và làm theo phong_cách phẳng để người dùng có_thể tập_trung vào nội_dung chính của thư . 
+Các thư được trả_lời nối_tiếp nhau theo dạng hội_thoại giờ_đây được hiển_thị trực_quan hơn , giúp người dùng dễ theo_dõi câu_chuyện hơn . 
+Yahoo_Mail mới cho các nền_tảng nói trên sẽ bắt_đầu được cập_nhật dần_dần kể từ hôm_nay . 
+Cũng trong dịp này , Yahoo đã ăn_mừng sinh_nhật lần thứ 16 của Mail bằng cách mở dung_lượng miễn_phí cho người dùng mail lên thành 1TB . 
+Hãng nói dung_lượng này đủ để chứ khoảng 500.000 đến 1 triệu thư có tập_tin đính kèm và một người dùng trung_bình có_thể xài nó trong " 6000 năm " . 
+Chưa dừng lại ở đó , Yahoo hôm_nay còn miễn_phí một_số tính_năng trước_đây chỉ có trong gói " Mail_Plus " , chẳng_hạn như cho_phép tạo tài_khoản mail dùng một lần , chuyển_tiếp thư , truy_cập thư offline bằng giao_thức POP . 
+Người dùng Mail_Plus hiện_tại có_thể tiếp_tục duy_trì gói cước của mình với giá 19,99 $ / năm với tất_cả ưu_đãi như trên kèm theo việc không có quảng_cáo . 
+Người dùng miễn_phí nếu muốn thoát khỏi quảng_cáo thì phải_chi đến 49,95 $ / năm . 
+Yahoo tiết_lộ thêm rằng ngoài những thay_đổi về ngoại_hình , hãng cũng nâng_cấp Yahoo_Mail với vài tính_năng mới . 
+Chẳng_hạn , thanh side bar ở cạnh trái màn_hình giờ_đây có_thể được ẩn đi để cung_cấp thêm diện_tích cho trình quản_lí mail . 
+Người dùng cũng có_thể đánh_dấu sao vào những thư quan_trọng , tìm_kiếm email từ cùng người gửi hoặc xóa một thư mà không cần phải mở thư ra . 
+Yahoo nói điều này giúp tăng tốc_độ và hiệu_suất sử_dụng email của chúng_ta . 
+Nói về việc xem email theo dạng cuộc hội_thoại , Yahoo_Mail cho_phép người dùng xem hết các thư trong cuộc hội_thoại đó chỉ bằng cách nhấn vào dấu mũi_tên đầu dòng chứ không cần phải mở thư ra xem chi_tiết . 
+Đây cũng là tính_năng giúp Yahoo_Mail tiến thêm một bước đến gần với Gmail . 
+Bên_cạnh đó , trong giao_diện biên_tập email , thanh công_cụ để định_dạng văn_bản được di_chuyển xuống cạnh_đáy , ra xa khỏi khu_vực điền tên người gửi và tiêu_đề thư . 
+Hai trường CC và BCC thì có_thể ẩn đi để lại một giao_diện " sạch hơn " . 
+Dòng tiêu_đề thì_có font chữ đậm hơn phiên_bản trước một_chút . 
+Hiện_Yahoo_Mail đang có 281 triệu người dùng . 
+Mới_đây hãng đã thực_hiện nhiều thay_đổi với sản_phẩm thư_điện_tử của mình , chẳng_hạn như việc tái cấp lại các tên tài_khoản theo yêu_cầu , ra_mắt ứng_dụng cho tablet và smartphone với giao_diện đẹp , tăng tốc_độ tải email , giảm thư rác , tích_hợp Flickr và Dropbox ... 
+Nguồn : TechCrunch 

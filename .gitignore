@@ -50,3 +50,7 @@ yarn-debug.log*
 *.synctex.gz
 *.bbl
 *.blg
+
+zzz.txt
+
+dataset/ViMs

@@ -1,0 +1,4 @@
+LINK: http://www.baomoi.com/Home/CNTT/ictnews.vn/NSA-dot-nhap-ca-trung-tam-du-lieu-cua-Google-Yahoo/12300654.epi
+TITLE: NSA đột_nhập cả trung_tâm dữ_liệu của Google , Yahoo 
+SUMMARY: ICTnews – Cơ_quan An_ninh Mỹ ( NSA ) đã bí_mật thu_thập dữ_liệu từ các trung_tâm dữ_liệu của Google và Yahoo bằng cách khai_thác các liên_kết kết_nối những máy_chủ khổng_lồ trên khắp thế_giới , theo tài_liệu mới được Edward_Snowden công_bố . 
+TIME: 31/10/2013 09:20

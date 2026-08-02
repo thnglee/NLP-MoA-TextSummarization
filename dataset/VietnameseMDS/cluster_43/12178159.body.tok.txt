@@ -1,0 +1,7 @@
+Yahoo_Mail sẽ chính_thức áp_dụng giao_thức bảo_mật SSL vào đầu năm 2014 - Ảnh : AFP Theo CNET , từ ngày 8.1.2014 , người dùng truy_cập vào dịch_vụ thư_điện_tử Yahoo_Mail sẽ được chuyển sang giao_thức bảo_mật SSL ( http sẽ thêm chữ s vào địa_chỉ trang_web thành https : / / ) , giúp_việc duyệt thư_điện_tử của người dùng trở_nên an_toàn hơn . 
+Được biết , SSL là một tiêu_chuẩn an_ninh công_nghệ toàn_cầu tạo ra một liên_kết được mã_hóa giữa máy_chủ web và trình_duyệt . 
+Liên_kết này đảm_bảo tất_cả các dữ_liệu trao_đổi giữa máy_chủ web và trình_duyệt được bảo_mật an_toàn . 
+Việc_Yahoo_Mail áp_dụng giao_thức SSL được xem là khá muộn , khi mà các hãng công_nghệ khác đã dùng giao_thức này từ khá lâu . 
+Chẳng_hạn như Google đã áp_dụng cho dịch_vụ Gmail và Microsoft áp_dụng cho dịch_vụ Hotmail ( hiện là Outlook.com ) vào năm 2010 . 
+Facebook cũng đã cung_cấp tính_năng tương_tự vào tháng 7.2011 và Twitter là tháng 8.2011 . 
+Thành_Luân 

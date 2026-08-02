@@ -1,0 +1,3 @@
+Đại diện hãng Yahoo vừa nói với tờ WashingtonPost rằng bắt đầu từ ngày 8/1 năm sau, họ sẽ mặc định kích hoạt kết nối bảo mật HTTPS cho toàn bộ người dùng Yahoo trên web. HTTPS là một chuẩn kết nối được bảo mật cao, toàn bộ email lưu chuyển giữa trình duyệt và các máy chủ Yahoo sẽ được mã hóa toàn bộ để không bị kẻ xấu đánh cắp thông tin. Đây là một chuẩn bảo mật rất thông dụng và được khá nhiều hãng sử dụng.
+(GenK.vn) - Từ tháng Một năm sau, Yahoo mới bắt đầu sử dụng (mặc định) giao thức HTTPS cho dịch vụ Mail của mình, chậm hơn 4 năm so với Gmail.
+(TNO) Yahoo vừa thông báo sẽ áp dụng giao thức bảo mật Secure Sockets Layer (SSL) cho dịch vụ mail của mình, bắt đầu vào tháng 1.2014.

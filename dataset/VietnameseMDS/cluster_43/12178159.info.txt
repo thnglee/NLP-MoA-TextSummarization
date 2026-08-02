@@ -1,0 +1,4 @@
+LINK: http://www.baomoi.com/Home/CNTT/www.thanhnien.com.vn/Yahoo-ap-dung-giao-thuc-bao-mat-SSL/12178159.epi
+TITLE: Yahoo áp_dụng giao_thức bảo_mật SSL 
+SUMMARY: ( TNO ) Yahoo vừa thông_báo sẽ áp_dụng giao_thức bảo_mật Secure_Sockets_Layer ( SSL ) cho dịch_vụ mail của mình , bắt_đầu vào tháng 1.2014 . 
+TIME: 15/10/2013 14:37

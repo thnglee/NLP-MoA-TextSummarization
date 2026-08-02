@@ -1,0 +1,21 @@
+Trung_tâm dữ_liệu của Google . 
+Ảnh : Internet > > Tổng_thống Mỹ yêu_cầu ngừng theo_dõi trụ_sở Liên_Hợp quốc / Giám_đốc Tình_báo Mỹ khẳng_định Nhà_Trắng biết NSA nghe lén / Tình_báo Mỹ tức_giận khi Barack_Obama nói không biết vụ nghe lén / NSA nghe lén di_động của Thủ_tướng Merkel cách nào ? 
+Theo thông_tin được đăng lần đầu trên báo The_Washington_Post , NSA , với sự trợ_giúp của Cơ_quan liên_lạc thuộc chính_phủ Anh GCHQ , đã vận_hành một chương_trình có tên mã MUSCULAR . 
+Chương_trình này được cho là có_thể thu_thập nội_dung và siêu dữ_liệu trực_tiếp từ những cáp_quang thuộc sở_hữu tư_nhân kết_nối các trung_tâm dữ_liệu . 
+MUSCULAR có_vẻ hoạt_động độc_lập với PRISM , chương_trình tối_mật cho_phép NSA và GCHQ truy_cập dữ_liệu từ 9 công_ty công_nghệ lớn thông_qua lệnh của tòa_án . 
+Với MUSCULAR , NSA và GCHQ dường_như đã tìm ra cách xâm_nhập cửa sau vào mạng nội_bộ của các trung_tâm dữ_liệu của Goolgle và Yahoo . 
+NSA dường_như đang khai_thác một liên_kết yếu trong cơ_sở_hạ_tầng của các công_ty , nơi các máy_chủ chuyên nhận dữ_liệu từ người dùng của Google và Yahoo kết_nối với trung_tâm dữ_liệu đám mây của hai công_ty này . 
+Trước_đây , Google đã tuyên_bố họ sẽ mã_hóa dữ_liệu được truyền giữa các trung_tâm dữ_liệu trong khi Yahoo không sử_dụng loại mã_hóa này . 
+Trong tuyên_bố với tờ The_Post , Google và Yahoo phủ_nhận việc cho_phép NSA truy_cập máy_chủ của họ . 
+Hiện chưa rõ quy_mô của chương_trình , nhưng một tài_liệu rò_rỉ đề ngày 9/1/2013 được trích_dẫn trong bài báo của The_Washington_Post viết rằng NSA đã thu_thập 181.280.466 
+tài_liệu trong 30 ngày_trước đó . 
+Và một tài_liệu khác miêu_tả hoạt_động truy_cập này là " truy_cập với số_lượng lớn " . 
+Câu_chuyện vỡ_lở trong khi giám_đốc Keith_Alexander tham_dự một hội_nghị về bảo_mật mạng tại Washington . 
+Khi được hỏi về thông_tin trên , ông Alexander đã phủ_nhận . 
+Ông phát_biểu trước Bloomberg_Television : " NSA không xâm_phạm bất_kỳ cơ_sở_dữ_liệu nào . 
+Sẽ là hành_động bất_hợp_pháp nếu chúng_tôi làm như_thế . 
+Vì_vậy tôi không biết tin_đồn đó nói_gì , nhưng thôi có_thể nói với các bạn rằng trong thực_tế chúng_tôi không truy_cập máy_chủ của Google và máy_chủ của Yahoo " . 
+Tuy_nhiên , một_số người coi lời phủ_nhận của ông Alexander chỉ là một chiêu khéo_léo nhằm tránh phải giải_quyết các cáo_buộc trong bài viết của The_Post . 
+Ví_dụ , nhà_nghiên_cứu bảo_mật Askhan_Soltani đã viết trên tài_khoản Twitter như sau : " Để nói rõ thì " khai_thác các đường_dẫn " không cùng nghĩa với " hack vào máy_chủ tư_nhân " . 
+Ông ấy có_thể phủ_nhận hành_vi này trong khi vẫn thực_hiện hành_vi kia " . 
+Duy_Anh_Theo_Mashable 

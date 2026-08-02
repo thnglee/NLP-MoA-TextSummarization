@@ -1,0 +1,3 @@
+Đại_diện hãng Yahoo vừa nói với tờ WashingtonPost rằng bắt_đầu_từ ngày 8/1 năm sau , họ sẽ mặc_định kích_hoạt kết_nối bảo_mật HTTPS cho toàn_bộ người dùng Yahoo trên web . HTTPS là một chuẩn kết_nối được bảo_mật cao , toàn_bộ email lưu_chuyển giữa trình_duyệt và các máy_chủ Yahoo sẽ được mã_hóa toàn_bộ để không bị kẻ xấu đánh_cắp thông_tin . Đây là một chuẩn bảo_mật rất thông_dụng và được khá nhiều hãng sử_dụng . 
+( GenK.vn ) - Từ tháng Một năm sau , Yahoo mới bắt_đầu sử_dụng ( mặc_định ) giao_thức HTTPS cho dịch_vụ Mail của mình , chậm hơn 4 năm so với Gmail . 
+( TNO ) Yahoo vừa thông_báo sẽ áp_dụng giao_thức bảo_mật Secure_Sockets_Layer ( SSL ) cho dịch_vụ mail của mình , bắt_đầu vào tháng 1.2014 . 

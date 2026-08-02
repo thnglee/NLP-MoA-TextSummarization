@@ -1,0 +1,10 @@
+Trong thời_gian gần đây , Yahoo tiếp_tục áp_dụng rất nhiều nâng_cấp cho dịch_vụ Mail của họ , trong đó gần đây nhất_là những nâng_cấp về giao_diện cùng 1 TB dung_lượng lưu_trữ . 
+Ngày hôm_nay , họ công_bố một tính_năng mới cho dịch_vụ của mình : Từ 8/1 năm sau , Mail của Yahoo sẽ bắt_đầu áp_dụng công_nghệ mã_hóa giúp bảo_vệ thư của người dùng tốt hơn . 
+Cụ_thể , từ thời_điểm nói trên , Yahoo_Mail , theo mặc_định , sẽ áp_dụng công_nghệ mã_hóa SSL ( Secure_Sockets_Layer ) hay còn gọi_là HTTPS . 
+Đây là công_nghệ mã_hóa cho độ bảo_mật cao giúp mail của người dùng tránh được các nguy_cơ bị đánh_cắp . 
+Yahoo cũng đã từng áp_dụng HTTPS cho dịch_vụ của mình hồi đầu năm , tuy_nhiên đây chỉ là một tùy chọn chứ không phải là giao_thức mặc_định . 
+> > Xem thêm : Giao_thức https : / / an_toàn hơn những vẫn bị " bỏ_xó " ? 
+Dù động_thái này của Yahoo là rất đáng hoan_nghênh , nhưng có_thể thấy rằng đây là một phản_ứng chậm_chạp của hãng . 
+Đối_thủ của Yahoo_Mail - Gmail của Google - đã áp_dụng giao_thức HTTPS này từ năm 2008 , và công_nghệ này được mặc_định trên Gmail từ tháng Một năm 2010 ; còn các chuyên_gia bảo_mật đã từng nhiều lần khuyến_cáo rằng giao_thức http không đủ an_toàn . 
+Cũng đáng chú_ý nữa_là công_bố của Yahoo được đưa ra ngay sau khi tờ Washington_Post công_bố thông_tin rằng Cơ_quan an_ninh quốc_gia Mỹ ( NSA ) đã từng tự_ý thu_thập hàng triệu danh_bạ của người dùng ; và trong số này , danh_bạ thu_thập được từ Yahoo_Mail nhiều gấp đôi so với tổng danh_bạ thu_thập từ các dịch_vụ lớn khác cộng lại . 
+Tuy bài viết không nêu rõ lý_do vì_sao có sự khác_biệt này , nhưng một trong số các nguyên_nhân có_thể là do Yahoo đã không áp_dụng các công_nghệ mã_hóa để bảo_vệ email của người dùng . 

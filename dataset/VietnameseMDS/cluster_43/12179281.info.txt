@@ -1,0 +1,4 @@
+LINK: http://www.baomoi.com/Home/CNTT/www.tinhte.vn/Yahoo-Mail-se-mac-dinh-ho-tro-HTTPS-bat-dau-tu-08012014/12179281.epi
+TITLE: Yahoo_Mail sẽ mặc_định hỗ_trợ HTTPS bắt_đầu_từ 08/01/2014 
+SUMMARY: Đại_diện hãng Yahoo vừa nói với tờ WashingtonPost rằng bắt_đầu_từ ngày 8/1 năm sau , họ sẽ mặc_định kích_hoạt kết_nối bảo_mật HTTPS cho toàn_bộ người dùng Yahoo trên web . HTTPS là một chuẩn kết_nối được bảo_mật cao , toàn_bộ email lưu_chuyển giữa trình_duyệt và các máy_chủ Yahoo sẽ được mã_hóa toàn_bộ để không bị kẻ xấu đánh_cắp thông_tin . Đây là một chuẩn bảo_mật rất thông_dụng và được khá nhiều hãng sử_dụng . 
+TIME: 15/10/2013 17:06
