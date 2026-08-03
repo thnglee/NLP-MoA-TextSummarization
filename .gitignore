@@ -57,3 +57,5 @@ models/qwen/
 models/vit5/
 models/mt5/
 models/t5vi/
+
+dataset/vietnews/

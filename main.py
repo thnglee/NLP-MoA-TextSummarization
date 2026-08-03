@@ -1,6 +1,15 @@
-from models.use_models.load_models import get_summary
+from models.use_models.load_models import *
+from datasets import load_dataset
 
 if __name__ == "__main__":
-    for model_name in ["vit5", "mt5", "qwen", "t5vi"]:
-        for i in range(1, 3):
-            get_summary(model_name, f"input{i}.txt")
+    run_vit5_on_vietnews_test(
+        dataset_path="datasets/vietnews/test.jsonl",
+        output_dir="output/summary/vit5/vietnews_test",
+
+        # Chạy từ mẫu đầu tiên.
+        start_index=0,
+
+        # None: chạy toàn bộ.
+        # Đổi thành 10 để thử trước 10 mẫu.
+        max_samples=200,
+    )
