@@ -52,3 +52,7 @@ yarn-debug.log*
 *.blg
 
 zzz.txt
+
+models/qwen/
+models/vit5/
+models/mt5/
