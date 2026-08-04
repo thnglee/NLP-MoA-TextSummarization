@@ -1,9 +1,14 @@
-INDEX: 0
-GUID: 1
-TITLE: Bản án cho đối tượng giả danh công an để lừa đảo
+INDEX:
+0
+GUID:
+1
+TITLE:
+Bản án cho đối tượng giả danh công an để lừa đảo
 VĂN BẢN GỐC:
 Theo lời khai của Huy tại phiên toà, để có tiền sử dụng cá nhân, Huy " nổ " là sĩ quan cục Phòng chống ma tuý của bộ Công an đóng tại TP. Đà Nẵng, có nguồn mua ô tô thanh lý giá rẻ, và khả năng chạy việc vào ngành công an. Chỉ với lời " nổ " này, từ tháng 10/2016 đến 9/2017, nhiều người đã bị lừa đảo với tổng số tiền 3,2 tỷ đồng. Trong đó, người bị Huy lừa nhiều nhất là vợ chồng ông Bảo Th., ngụ quận Hải Châu. Huy giới thiệu với cặp vợ chồng này mình có suất mua ô tô thanh lý giá rẻ và rủ họ mua cùng. Tin lời, vợ chồng ông Th. đưa cho Huy hơn 1 tỷ đồng. Cùng thủ đoạn, Huy lừa thêm ông Nguyễn Tấn T. 970 triệu đồng, Lê Quốc Th. 400 triệu đồng, Trần Nhật S. 300 triệu đồng … Sau chiêu thức mua xe thanh lý, Huy chuyển sang giả vờ có khả năng xin việc vào ngành công an. Với chiêu thức này, Huy lừa vợ chồng ông Đinh Ngọc H. 250 triệu đồng. Ngoài ra, Huy hứa hẹn, tháng 3/2017 sẽ đưa kết quả cho con ông H. đi làm việc. Tuy nhiên, sau nhiều lần hẹn mà không có quyết định tuyển dụng, ông H. đã gửi đơn tố cáo đến cơ quan Công an. Từ đó, những hành vi sai trái của Huy lần lượt được truy ra. Huy tại phiên toà.
 TÓM TẮT THAM CHIẾU:
 Ngày 25/2, TAND TP. Đà Nẵng tuyên phạt Hồ Xuân Huy ( SN 1994 ), ngụ quận Hải Châu, 12 năm tù về tội Lừa đảo chiếm đoạt tài sản.
 TÓM TẮT DO VIT5 SINH:
 Ngày 12/4, TAND TP. Đà Nẵng mở phiên toà sơ thẩm, tuyên phạt Lê Văn Huy, SN 1985, ngụ tỉnh Quảng Nam, 10 năm 6 tháng tù về tội Lừa đảo chiếm đoạt tài sản.
+THỜI GIAN TÓM TẮT:
+15.4931 giây

@@ -1,15 +1,18 @@
-from models.use_models.load_models import *
-from datasets import load_dataset
+# from models.use_models.summary_vietnews import run_vit5_on_vietnews_test
+from pathlib import Path
+
+from utils.lexrank import run_lexrank_on_vietnews
+from utils.textrank import run_textrank_on_vietnews
 
 if __name__ == "__main__":
-    run_vit5_on_vietnews_test(
-        dataset_path="datasets/vietnews/test.jsonl",
-        output_dir="output/summary/vit5/vietnews_test",
+    # run_vit5_on_vietnews_test(
+    #     dataset_path="dataset/vietnews/test.jsonl",
+    #     output_dir="output/summary/vit5/vietnews_test", start_index=200, max_samples=300,)
 
-        # Chạy từ mẫu đầu tiên.
-        start_index=0,
+    run_textrank_on_vietnews(
+            dataset_path=Path("dataset/vietnews/test.jsonl"),
+            output_dir=Path("output/summary/textrank/vietnews_test"), start_index=0, max_samples=200,)
 
-        # None: chạy toàn bộ.
-        # Đổi thành 10 để thử trước 10 mẫu.
-        max_samples=200,
-    )
+    run_lexrank_on_vietnews(
+                dataset_path=Path("dataset/vietnews/test.jsonl"),
+                output_dir=Path("output/summary/lexrank/vietnews_test"), start_index=0, max_samples=200,)
