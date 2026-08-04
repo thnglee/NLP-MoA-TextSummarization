@@ -11,8 +11,8 @@ if __name__ == "__main__":
 
     run_textrank_on_vietnews(
             dataset_path=Path("dataset/vietnews/test.jsonl"),
-            output_dir=Path("output/summary/textrank/vietnews_test"), start_index=0, max_samples=200,)
+            output_dir=Path("output/summary/textrank/vietnews_test"), start_index=200, max_samples=1000,)
 
     run_lexrank_on_vietnews(
                 dataset_path=Path("dataset/vietnews/test.jsonl"),
-                output_dir=Path("output/summary/lexrank/vietnews_test"), start_index=0, max_samples=200,)
+                output_dir=Path("output/summary/lexrank/vietnews_test"), start_index=200, max_samples=1000,)
