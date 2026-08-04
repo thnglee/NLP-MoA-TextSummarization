@@ -1,0 +1,14 @@
+INDEX:
+135
+GUID:
+136
+TITLE:
+Điều tra vụ một thanh niên bị nhiều"ma men"đâm tử vong
+VĂN BẢN GỐC:
+Ngày 14/1, cơ quan CSĐT Công an huyện Thuỷ Nguyên, TP. Hải Phòng cho biết, đơn vị đang phối hợp cùng các phòng nghiệp vụ Công an TP. Hải Phòng khẩn trương điều tra, làm rõ vụ án mạng xảy ra tại khu vực xã Thuỷ Triều khiến một người bị thiệt mạng. Nạn nhân được xác định là anh Đinh Ngọc Th. (trú tại thị trấn Minh Đức, huyện Thuỷ Nguyên). Theo thông tin ban đầu, vào khoảng 21h30 ngày 11/1, một nhóm thanh niên đã đến khu nhà trọ của anh Trần Văn Chung (ở thôn 8, xã Thuỷ Triều, huyện Thuỷ Nguyên), giáp ranh với khu công nghiệp VSIP, để tìm bạn gái. Tại đây, do sẵn có hơi men, nhóm thanh niên trên đã lời qua tiếng lại dẫn đến cãi chửi nhau với người trông coi khu nhà trọ của anh Chung rồi bỏ đi. Ít phút sau, khi anh Đinh Ngọc Th. đến khu nhà trọ thì nhóm thanh niên trên quay trở lại, bất ngờ dùng dao, kiếm đâm chém nhiều nhát. Sau khi gây án, nhóm thanh niên trên tiếp tục đập phá một số tài sản tại khu nhà trọ rồi mới rời khỏi hiện trường. Ngay sau đó, anh Th. đã được mọi người đưa đi bệnh viện hữu nghị Việt Tiệp cấp cứu. Đến khoảng 23h30 cùng ngày, nạn nhân Th. tử vong do vết thương quá nặng. Nhận được tin báo, ngay trong đêm, lực lượng Công an xã Thuỷ Triều và Công an huyện Thuỷ Nguyên đã nhanh chóng có mặt, phối hợp với các đơn vị nghiệp vụ Công an TP. Hải Phòng khám nghiệm hiện trường, lấy lời khai người liên quan. Đến ngày 13/1, cơ quan CSĐT Công an huyện Thuỷ Nguyên đã tạm giữ 2 đối tượng, đồng thời tiếp tục truy bắt, vận động những đối tượng còn lại ra đầu thú để điều tra, xử lý theo luật định. Ảnh minh hoạ.
+TÓM TẮT THAM CHIẾU:
+Sẵn có men rượu trong người, nhìn thấy anh Th. đến khu nhà trọ, nhiều đối tượng đã dùng dao kiếm tấn công khiến nạn nhân tử vong.
+TÓM TẮT DO SBERT + MMR SINH:
+Ít phút sau, khi anh Đinh Ngọc Th. đến khu nhà trọ thì nhóm thanh niên trên quay trở lại, bất ngờ dùng dao, kiếm đâm chém nhiều nhát. Ngay sau đó, anh Th. đã được mọi người đưa đi bệnh viện hữu nghị Việt Tiệp cấp cứu.
+THỜI GIAN TÓM TẮT:
+0.1325 giây

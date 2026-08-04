@@ -1,0 +1,14 @@
+INDEX:
+61
+GUID:
+62
+TITLE:
+Ông Phan Văn Vĩnh tự nguyện viết đơn xin về trại để dự toà
+VĂN BẢN GỐC:
+Liên quan đến sức khoẻ của bị cáo Phan Văn Vĩnh, nguồn tin trên báo Đất Việt, sáng 7/11, luật sư Nguyễn Thị Huyền Trang, một trong 3 người bào chữa cho ông Phan Văn Vĩnh cho biết, thân chủ của bà vẫn đang nằm viện. Theo lời luật sư Trang, tâm lý ông Vĩnh ổn định, tinh thần minh mẫn và đã tự nguyện viết đơn xin về trại để tham gia phiên toà đầy đủ. Do đang điều trị bệnh nên dự kiến sát ngày bắt đầu phiên toà sơ thẩm, cựu Tổng cục trưởng Tổng cục Cảnh sát Bộ Công an mới quay lại trại tạm giam. Trong những lần tiếp xúc gần đây, ông Vĩnh nói với người bào chữa rằng muốn xuất hiện tại toà để khai đúng sự thật. Đại diện cơ quan tố tụng tỉnh Phú Thọ xác nhận thông tin trên và cho biết ông Vĩnh sẽ có mặt ở phiên toà để đảm bảo việc xét xử được thuận lợi. Zing đưa tin, luật sư Trang cho biết trong quá trình điều tra, thân chủ của bà đã nhận tội, còn cụ thể như thế nào thì ra toà sẽ thẩm vấn công khai. Theo thông báo số 28/2018/QĐXXST-HS ngày 29/10/2018 của TAND tỉnh Phú Thọ, ngày 12/11 tới đây, TAND tỉnh Phú Thọ sẽ đưa vụ án"Sử dụng mạng internet thực hiện hành vi chiếm đoạt tài sản; Tổ chức đánh bạc; Đánh bạc; Mua bán trái phép hoá đơn; Rửa tiền; Lợi dụng chức vụ quyền hạn trong khi thi hành công vụ"ra xét xử sơ thẩm. Đại tá Phùng Đức Quang, Phó Giám đốc Công an tỉnh Phú Thọ cho biết, đây là lần đầu tiên tại Phú Thọ diễn ra một phiên toà lớn, với tính chất phức tạp vì có nhiều bị cáo, người có quyền nghĩa vụ liên quan và luật sư. Đơn vị này đã lên kế hoạch chi tiết, tập huấn và huy động gần 500 cán bộ, công an tham gia bảo vệ cho phiên toà. Ngoài ra, Công an tỉnh Phú Thọ còn báo cáo bộ Công an hỗ trợ thêm về phương tiện, nghiệp vụ và con người để đảm bảo việc xét xử diễn ra một cách an toàn nhất. Đại diện TAND tỉnh Phú Thọ cho hay sẽ tạo điều kiện tốt nhất cho các cơ quan báo chí tác nghiệp. Tuy nhiên, do điều kiện cơ sở vật chất, TAND tỉnh Phú Thọ cũng sẽ xem xét, chọn lọc kỹ lưỡng các cơ quan báo chí nào được tác nghiệp, số lượng phóng viên của mỗi cơ quan được tham dự phiên toà. Mộc Miên (Tổng hợp) Ông Phan Văn Vĩnh trước khi bị bắt.
+TÓM TẮT THAM CHIẾU:
+Ông Phan Văn Vĩnh đã tự nguyện viết đơn xin về trại để tham dự phiên toà xét xử diễn ra vào ngày 12/11 của TAND tỉnh Phú Thọ.
+TÓM TẮT DO SBERT + MMR SINH:
+Đại diện cơ quan tố tụng tỉnh Phú Thọ xác nhận thông tin trên và cho biết ông Vĩnh sẽ có mặt ở phiên toà để đảm bảo việc xét xử được thuận lợi. Mộc Miên (Tổng hợp) Ông Phan Văn Vĩnh trước khi bị bắt.
+THỜI GIAN TÓM TẮT:
+0.1180 giây

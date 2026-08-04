@@ -1,0 +1,14 @@
+INDEX:
+26
+GUID:
+27
+TITLE:
+Thái Bình: Tạm giữ nghi phạm tạt axit khiến hai ông lão trọng thương
+VĂN BẢN GỐC:
+Ngày 4/8, Thiếu tá Lê Trường Giang - Trưởng Công an phường Bồ Xuyên, TP. Thái Bình, tỉnh Thái Bình cho biết, công an phường đang phối hợp với công an thành phố điều tra làm rõ, vụ tạt axit vừa xảy ra trên địa bàn khiến 2 người bị thương rất nặng. Theo thông tin ban đầu, nhà ông Phạm Xuân H. (SN 1951, trú tại phường Bồ Xuyên) kinh doanh ăn uống. Sáng 4/8, như thường lệ, ông H. dậy sớm tập thể dục rồi đi qua khu nhà mình khoảng 400m (thuộc tổ 45, phường Bồ Xuyên) để nhận vó bò (một món nhậu bình dân - PV). Bất ngờ, một đối tượng đi qua tạt axit vào ông H. Ông T. (trú tại xã Vũ Tiến, huyện Vũ Thư, tỉnh Thái Bình) là người giao vó bò ngay bên cạnh cũng bị axit bắn vào người. Sau khi gây án, đối tượng lập tức bỏ trốn. Ông H. và ông T. đã được người dân đưa tới bệnh viện cấp cứu. Các vết thương của các nạn nhân chủ yếu tập trung ở vùng mặt và bụng. Do vết thương rất nặng nên ông H. sau khi cấp cứu được chuyển lên viện Bỏng Quốc gia để tiếp tục điều trị. Đến trưa ngày 4/8, đại diện phòng Cảnh sát hình sự Công an tỉnh Thái Bình cung cấp thêm thông tin, đơn vị vừa tạm giữ nghi phạm gây nên vụ án kể trên. Nghi phạm có tên là Mậu, trú cùng phường Bồ Xuyên. Cơ quan công an hiện đang đấu tranh, lấy lời khai của nghi phạm để điều tra làm rõ nguyên nhân, xử lý nghi phạm theo luật định. Ông H. và ông T. bị thương rất nặng do bị tạt axit vào người.
+TÓM TẮT THAM CHIẾU:
+Khi đang giao nhận vó bò để làm hàng ăn, ông H. đã bị một đối tượng tại axit vào người. Ông H. và một người khác đã bị thương rất nặng.
+TÓM TẮT DO SBERT + MMR SINH:
+Bất ngờ, một đối tượng đi qua tạt axit vào ông H. Ông T. (trú tại xã Vũ Tiến, huyện Vũ Thư, tỉnh Thái Bình) là người giao vó bò ngay bên cạnh cũng bị axit bắn vào người. Ông H. và ông T. đã được người dân đưa tới bệnh viện cấp cứu.
+THỜI GIAN TÓM TẮT:
+0.1201 giây

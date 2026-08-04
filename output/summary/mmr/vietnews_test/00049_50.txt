@@ -1,0 +1,14 @@
+INDEX:
+49
+GUID:
+50
+TITLE:
+Tóm gọn băng nhóm chuyên cắt trộm cáp viễn thông khắp đất Huế
+VĂN BẢN GỐC:
+Báo Giao thông đăng tải, sáng 15/6, Công an tỉnh Thừa Thiên - Huế cho biết vừa bắt giữ các đối tượng: Nguyễn Thành Lâm (SN 1989), Nguyễn Hữu Trường (SN 1990), Nguyễn Văn Luân (SN 1988) và Đặng Đình Thái (SN 1986, cùng trú tại huyện Ngọc Hồi, tỉnh Kon Tum) để làm rõ hành vi trộm cắp tài sản. Trước đó, tại nhiều địa phương trên địa bàn tỉnh liên tục xảy ra sự cố về mạng viễn thông nguyên nhân được xác định là đường dây cáp bị phá hoại. Ngay khi tiếp nhận thông tin trên, Phòng Cảnh sát hình sự Công an tỉnh đã vào cuộc điều tra, xác lập chuyên án để truy tìm kẻ gây rối. Qua điều tra, cơ quan công an làm rõ, từ tháng 2, nhóm đối tượng không có nghề nghiệp ổn định, đi từ Kon Tum ra Huế thuê nhà nghỉ rồi đi trộm cắp cáp. Đến khuya 10/6, khi các đối tượng vừa thực hiện vụ trộm cáp viễn thông tại xã Vinh Thái - Vinh Hà (huyện Phú Vang, Thừa Thiên - Huế) và đang trên đường tẩu thoát thì bị bắt giữ. Tại Cơ quan điều tra, các đối tượng bước đầu khai nhận hành vi phạm tội. Trả lời báo Lao động thủ đô, Thượng tá Phan Thế Hùng - Phó Trưởng phòng Cảnh sát hình sự Công an tỉnh Thừa Thiên Huế cho hay, các đối tượng lợi dụng thời điểm đêm tối, nơi vắng vẻ và việc những đường cáp viễn thông thường bắc qua bìa rừng, đoạn đường vắng, xa khu dân cư để thực hiện hành vi trộm cắp. Nhóm này đã gây ra 10 vụ trộm cắp cáp viễn thông khác trên địa bàn thị xã Hương Thuỷ, Hương Trà, huyện Nam Đông, A Lưới, Phú Vang. Tổng cộng các đối tượng đã lấy trộm 1.049 m dây cáp viễn thông với trọng lượng 1.024 kg, tổng thiệt hại hơn 100 triệu đồng. Số tiền thu được từ bán lõi đồng, các đối tượng chia nhau tiêu xài. Cắt dây cáp để tách lấy lõi đồng bán phế liệu được rất ít tiền, tuy nhiên số cáp bị cắt trộm cộng với các thiết bị đi kèm và nhân công để khôi phục lại đường dây thì tốn rất nhiều tiền, chưa kể đến còn khiến cho thông tin liên lạc và hoạt động khác thông qua đường cáp ở nhiều khu vực bị gián đoạn... Vụ việc vẫn đang được tiếp tục làm rõ. Bá Di (Tổng hợp) Các đối tượng tại cơ quan điều tra (ảnh: Lao động thủ đô). Dụng cụ gây án (ảnh: Báo Giao thông). Số cáp các đối tượng đã cắt trộm (ảnh: Zing.vn).
+TÓM TẮT THAM CHIẾU:
+4 đối tượng không nghề nghiệp ổn định, rủ nhau xuống TP. Huế thuê nhà nghỉ rồi cắt trộm cáp viễn thông bán lấy tiền tiêu xài.
+TÓM TẮT DO SBERT + MMR SINH:
+Đến khuya 10/6, khi các đối tượng vừa thực hiện vụ trộm cáp viễn thông tại xã Vinh Thái - Vinh Hà (huyện Phú Vang, Thừa Thiên - Huế) và đang trên đường tẩu thoát thì bị bắt giữ. Số cáp các đối tượng đã cắt trộm (ảnh: Zing.
+THỜI GIAN TÓM TẮT:
+0.2196 giây

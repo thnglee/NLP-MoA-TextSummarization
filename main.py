@@ -1,5 +1,5 @@
 from models.use_models.summary_vietnews import run_vit5_on_vietnews_test
-from models.use_models.extract_mmr import run_mmr_on_vietnews
+from models.use_models.extract_mmr import run_extractive_on_vietnews
 # from pathlib import Path
 
 # from utils.lexrank import run_lexrank_on_vietnews
@@ -18,6 +18,6 @@ if __name__ == "__main__":
     #             dataset_path=Path("dataset/vietnews/test.jsonl"),
     #             output_dir=Path("output/summary/lexrank/vietnews_test"), start_index=1000, max_samples=2000,)
 
-    run_mmr_on_vietnews(
+    run_extractive_on_vietnews(
         dataset_path="dataset/vietnews/test.jsonl",
-        output_dir="output/summary/mmr/vietnews_test", start_index=0, max_samples=3,)
+        output_dir="output/summary/mmr/vietnews_test", start_index=0, max_samples=200,)

@@ -1,0 +1,14 @@
+INDEX:
+70
+GUID:
+71
+TITLE:
+Đắk Lắk: Điều tra vụ cán bộ huyện đâm đồng nghiệp tử vong trong quán karaoke
+VĂN BẢN GỐC:
+Clip: Cơ quan Công an tỉnh Đắk Lắk điều tra vụ việc Ngày 5/5, thông tin từ cơ quan CSĐT Công an tỉnh Đắk Lắk cho biết, đơn vị này đang tạm giữ đối tượng Nguyễn Minh Hải (34 tuổi, cán bộ phòng Kinh tế hạ tầng thuộc UBND huyện Krông Ana, tỉnh Đắk Lắk) để điều tra về hành vi Giết người. Theo thông tin ban đầu, vào tối 4/5, Hải cùng 2 người em họ đi nhậu. Đến khoảng 19h30 cùng ngày, 3 người đến quán karaoke Thái Gia Hưng (tổ dân phố 3, thị trấn Buôn Trấp) để hát. Tại đây, Hải gặp anh Lê Xuân Sơn (39 tuổi, cán bộ của trung tâm Phát triển quỹ đất huyện Krông Ana) cũng đang hát trong quán nên vào phòng hát của anh này chào hỏi, giao lưu. Đến khoảng 21h30 cùng ngày, khi cả 2 nhóm cùng ra về thì giữa Hải và anh Sơn xảy ra mâu thuẫn, cự cãi và đánh nhau. Lúc này, mọi người đã can ngăn nên Hải ra về. Tuy nhiên, trên đường về nhà, Hải vào nhà người quen lấy 2 con dao bầu rồi quay lại quán karaoke tìm anh Sơn để trả thù. Khi quay lại quán, thấy anh Sơn đi ra thì Hải lao vào dùng dao đâm 1 nhát trúng vùng ngực khiến nạn nhận tử vong tại chỗ. Sau khi gây án Hải đã đến cơ quan công an đầu thú. Hiện vụ việc đang được Cơ quan CSĐT Công an tỉnh Đắk Lắk tiếp tục điều tra làm rõ. Hiện trường xảy ra vụ việc. Đối tượng Hải tại cơ quan công an.
+TÓM TẮT THAM CHIẾU:
+Do mâu thuẫn trong quán karaoke, cán bộ phòng Kinh tế hạ tầng huyện đã đâm tử vong cán bộ trung tâm Phát triển quỹ đất của huyện.
+TÓM TẮT DO SBERT + MMR SINH:
+Clip: Cơ quan Công an tỉnh Đắk Lắk điều tra vụ việc Ngày 5/5, thông tin từ cơ quan CSĐT Công an tỉnh Đắk Lắk cho biết, đơn vị này đang tạm giữ đối tượng Nguyễn Minh Hải (34 tuổi, cán bộ phòng Kinh tế hạ tầng thuộc UBND huyện Krông Ana, tỉnh Đắk Lắk) để điều tra về hành vi Giết người.
+THỜI GIAN TÓM TẮT:
+0.1921 giây

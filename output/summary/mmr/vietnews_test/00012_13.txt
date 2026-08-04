@@ -1,0 +1,14 @@
+INDEX:
+12
+GUID:
+13
+TITLE:
+2 vợ chồng bị giết ở Hưng Yên: Nghi phạm khai phút đối mặt với nạn nhân
+VĂN BẢN GỐC:
+Liên quan vụ 2 vợ chồng bị giết hại ở Hưng Yên, cảnh sát đã bắt giữ nghi phạm Đinh Công Tráng (SN 1977, trú tại khu phố An Bình, phường An Tảo, TP. Hưng Yên, tỉnh Hưng Yên). Quá trình đấu tranh, ban đầu đối tượng Tráng rất ngoan cố, quanh co, chối tội. Hắn nghĩ ra các chiêu trò để không trả lời thẳng vào câu hỏi của điều tra viên. Tuy nhiên, lực lượng công an đã kiên trì đấu tranh, cùng với những tài liệu chứng cứ thu thập được, cuối cùng đối tượng Tráng phải khai nhận toàn bộ hành vi phạm tội. Theo lời khai của Tráng, do nghiện ma tuý lại không có công ăn việc làm ổn định nên Tráng rất túng thiếu tiền bạc. Vào ban đêm, hắn thường hay đi lang thang để xem gia đình nào sơ hở, không khoá cửa thì đột nhập vào nhà để trộm cắp các tài sản gọn nhẹ như điện thoại, ví tiền. Nếu là lấy cắp được đồ vật thì đem bán lấy tiền ăn tiêu. Bởi vậy, đêm ngày 16, rạng sáng ngày 17/8/2018, đối tượng Tráng cũng đi lang thang khi đến khu vực nhà anh Đặng Văn T. (đường Linh Đài, khu phố Nam Tiến, phường Hồng Châu, TP. Hưng Yên), Tráng đã nhòm ngó qua cổng xem có gì sơ hở không. Lúc này, Tráng phát hiện cửa lách nhà anh T. không khoá, vì thế hắn đã trèo qua cổng, qua cửa lách, mò vào phòng ngủ nơi vợ chồng anh T. đang say giấc. Tại đây, Tráng thấy điện thoại của chị Nguyễn Thị H. (vợ anh T.) đang sạc ở đầu giường. Tráng đã nảy ý định lấy luôn chiếc điện thoại này. Tuy nhiên, đúng lúc Tráng với tay lấy điện thoại thì chị H. thức giấc, túm lại. Bất ngờ, Tráng dùng dao đâm chị H. gục ngay tại chỗ. Nghe tiếng kêu của vợ, anh T. tỉnh giấc. Phát hiện sự việc, anh T. lao vào ôm đối tượng giằng co. Chưa dừng lại, Tráng tiếp tục dùng dao đâm anh T. khiến cả hai vợ chồng nạn nhân tử vong. Vào cuộc điều tra, sau khi đã xác định được nghi phạm là Tráng, cơ quan tố tụng đã tiến hành khám xét chỗ ở của đối tượng này. Tại đây, lực lượng chức năng thu giữ được con dao bầu (nghi vấn là hung khí gây án). Qua công tác giám định của viện Khoa học Hình sự (bộ Công an), kết quả xác định cho thấy, con dao thu giữ tại nơi ở của Tráng có ADN của nạn nhân Nguyễn Thị H. và đối tượng Đinh Công Tráng. Căn cứ vào các tài liệu thu thập được, cơ quan Cảnh sát điều tra Công an tỉnh Hưng Yên đã khởi tố Đinh Công Tráng về tội Giết người. Đối tượng Tráng (ảnh nhỏ) đã khai nhận về hành vi giết 2 vợ chồng ở Hưng Yên.
+TÓM TẮT THAM CHIẾU:
+Liên quan vụ 2 vợ chồng bị giết ở Hưng Yên, nghi phạm Đinh Công Tráng đã khai nhận về phút đối mặt với các nạn nhân.
+TÓM TẮT DO SBERT + MMR SINH:
+Lúc này, Tráng phát hiện cửa lách nhà anh T. không khoá, vì thế hắn đã trèo qua cổng, qua cửa lách, mò vào phòng ngủ nơi vợ chồng anh T. đang say giấc. Đối tượng Tráng (ảnh nhỏ) đã khai nhận về hành vi giết 2 vợ chồng ở Hưng Yên.
+THỜI GIAN TÓM TẮT:
+0.2516 giây

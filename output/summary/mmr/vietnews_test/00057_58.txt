@@ -1,0 +1,14 @@
+INDEX:
+57
+GUID:
+58
+TITLE:
+Bắt cặp đôi rủ nhau bỏ học rồi đi cướp
+VĂN BẢN GỐC:
+Ngày 24/7, theo Công an quận Sơn Trà, TP. Đà Nẵng, vừa bắt giữ 2 đối tượng Võ Minh Hiếu (SN 2000) và Lê Thanh Hiếu (SN 2001), cùng ngụ huyện Tiên Phước, tỉnh Quảng Nam, để điều tra hành vi cướp tài sản. Trước đó, tối 22/7, chị Trương Thị B. (SN 2000), ngụ tỉnh Gia Lai, cùng người bạn đi dạo tại bãi biển phường Phước Mỹ, quận Sơn Trà thì bị 1 nam thanh niên cướp giật chiếc điện thoại rồi tẩu thoát. Ngay sau đó, chị B. đã trình báo sự việc đến Công an phường Phước Mỹ. Nhận được thông tin, Công an phường Phước Mỹ đã phối hợp với Cảnh sát hình sự, Công an quận Sơn Trà xác minh và làm rõ thủ phạm chính là 2 đối tượng tên Hiếu. Tại cơ quan điều tra, cả 2 thừa nhận đã rủ nhau bỏ học. Mới đây, họ dắt nhau ra TP. Đà Nẵng kiếm việc làm. Việc chưa tìm được thì họ đã cùng nhau cướp tài sản và bị sa lưới. 2 đối tượng tại cơ quan điều tra.
+TÓM TẮT THAM CHIẾU:
+2 đối tượng tên Hiếu cùng rủ nhau hỏ học rồi từ tỉnh Quảng Nam ra TP. Đà Nẵng cướp giật tài sản và bị bắt giữ.
+TÓM TẮT DO SBERT + MMR SINH:
+Ngày 24/7, theo Công an quận Sơn Trà, TP. Đà Nẵng, vừa bắt giữ 2 đối tượng Võ Minh Hiếu (SN 2000) và Lê Thanh Hiếu (SN 2001), cùng ngụ huyện Tiên Phước, tỉnh Quảng Nam, để điều tra hành vi cướp tài sản. 2 đối tượng tại cơ quan điều tra.
+THỜI GIAN TÓM TẮT:
+0.0855 giây

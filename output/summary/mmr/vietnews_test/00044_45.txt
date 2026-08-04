@@ -1,0 +1,14 @@
+INDEX:
+44
+GUID:
+45
+TITLE:
+Vụ nữ sinh giao gà bị giết: Kẻ chủ mưu khai có liên lạc với mẹ nạn nhân sau khi bắt giữ Cao Mỹ D.
+VĂN BẢN GỐC:
+Theo một nguồn tin, liên quan vụ nữ sinh giao gà bị giết, đối tượng Vì Văn Toán - kẻ được cho là cầm đầu vụ án đã khai rằng, bà Trần Thị Hiền - mẹ ruột của nạn nhân Cao Mỹ D. nợ hắn một khoản tiền khoảng 300 triệu đồng. Do đó, nhóm Vì Văn Toán, Bùi Văn Công và các đồng phạm khác đã tìm cách bắt giữ nữ sinh Cao Mỹ D. nhằm gây sức ép với người nhà của D. để đòi tiền nợ. Cũng theo nguồn tin, Vì Văn Toán còn khai, sau khi nhóm của Bùi Văn Công bắt giữ nữ sinh Cao Mỹ D. thì nhóm này có liên lạc với bà Trần Thị Hiền để thông báo tình hình. Đại ý nhắn với bà Hiền rằng"con bà đã nằm trong tay bọn tôi"nhằm ép bà Hiền phải trả tiền. Tuy nhiên, Toán cũng khai, bà Hiền cho rằng nhóm của Toán không dám"hại"con gái mình nên không thấy"động tĩnh"gì về việc trả tiền. Bên cạnh đó, quá trình bắt giữ nữ sinh Cao Mỹ D., nhóm của Bùi Văn Công, Vương Văn Hùng và nhiều đối tượng khác đã thay nhau xâm hại nạn nhân khiến sức khoẻ của D. bị suy kiệt. Khi thấy D. yếu ớt, nhóm của Bùi Văn Công đã báo cho Vì Văn Toán biết tình hình. Toán đã trực tiếp đến nhà Công xem sự thể ra sao. Tại nhà Công, khi nhận thấy nạn nhân Cao Mỹ D. đã suy kiệt sức lực, Toán và các đối tượng bàn nhau phải"giải quyết"nữ sinh này để bịt đầu mối. Sau đó, chúng sát hại nạn nhân và để thi thể ở khu vực chăn nuôi của một căn nhà hoang, gần nhà Công. Các đối tượng khai, việc sát hại nạn nhân Cao Mỹ D. không nằm trong kế hoạch ban đầu của chúng. Cảnh sát đang tích cực đấu tranh, đối chiếu với các tài liệu khác để làm rõ lời khai của từng đối tượng. Được biết, lúc đầu, Vì Văn Toán và Bùi Văn Công nhất quyết không khai ra mối quan hệ giữa các đối tượng và bà Trần Thị Hiền, cũng như mục đích thực sự của chúng khi bắt giữ Cao Mỹ D. Tuy nhiên, sau đó, Vì Văn Toán khai nhận có mối quan hệ làm ăn liên quan đến đường dây ma tuý mà bà Trần Thị Hiền cũng tham gia. Thậm chí đến thời điểm này, bà Hiền cũng thừa nhận có"làm ăn về ma tuý", ngoài Vì Văn Toán thì còn liên quan đến cả vợ của Vì Văn Toán. Như vậy, sau nhiều nỗ lực điều tra phá án của cơ quan tố tụng tỉnh Điện Biên và bộ Công an, đến nay nhiều tình tiết của vụ án phức tạp này đã dần sáng tỏ. Các đối tượng trong vụ án và hiện trường nơi phát hiện thi thể nữ sinh Cao Mỹ D.
+TÓM TẮT THAM CHIẾU:
+Liên quan vụ nữ sinh giao gà bị giết, đối tượng Vì Văn Toán - kẻ được cho là cầm đầu vụ án đã khai rằng, sau khi bắt giữ nữ sinh Cao Mỹ D., nhóm đối tượng này có liên lạc với mẹ nạn nhân.
+TÓM TẮT DO SBERT + MMR SINH:
+Theo một nguồn tin, liên quan vụ nữ sinh giao gà bị giết, đối tượng Vì Văn Toán - kẻ được cho là cầm đầu vụ án đã khai rằng, bà Trần Thị Hiền - mẹ ruột của nạn nhân Cao Mỹ D. nợ hắn một khoản tiền khoảng 300 triệu đồng.
+THỜI GIAN TÓM TẮT:
+0.1600 giây

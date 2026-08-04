@@ -1,0 +1,14 @@
+INDEX:
+190
+GUID:
+191
+TITLE:
+Hình phạt thích đáng cho 20 bị cáo gây rối trật tự công cộng
+VĂN BẢN GỐC:
+Ngày 30/7, TAND TP. Biên Hoà (tỉnh Đồng Nai) đã đưa 20 đối tượng liên quan đến vụ án Gây rối trật tự công cộng vào giữa tháng 6/2018 ra xét xử. Sau một ngày xét xử, HĐXX đã tuyên phạt các bị cáo gồm: Trần Nguyễn Duy Quang (35 tuổi, ngụ huyện Thống Nhất, tỉnh Đồng Nai) 1 năm 6 tháng tù giam; Phạm Ngọc Hạnh (45 tuổi, ngụ TP. Biên Hoà) 1 năm 4 tháng tù giam, 13 bị cáo khác nhận mức án từ 8 - 10 tháng tù giam cùng về tội Gây rối trật tự công cộng. Riêng 5 bị cáo bị tuyên phạt mức án từ 1 năm đến 1 năm 2 tháng tù giam nhưng cho cải tạo không giam giữ do đang phải nuôi con nhỏ. Trước đó, vào sáng 10/6, hàng trăm người dân trong tỉnh Đồng Nai đã kéo nhau xuống các trục đường lớn như: Nguyễn Ái Quốc, Đồng Khởi, Quốc lộ 1 A, … để phản đối dự án Luật Đơn vị hành chính kinh tế đặc biệt. Rất nhiều người dân xuống đường một cách ôn hoà nhưng trong đó có nhiều đối tượng lợi dụng vấn đề này để lôi kéo kích động người khác la hét, trưng băng rôn, … làm náo loạn đường phố. Tại khu vực ngã tư Lạc Cường (TP. Biên Hoà) có nhiều đối tượng hò hét và ra đường chặn các phương tiện, không cho lưu thông khiến giao thông khó khăn, ùn ứ nghiêm trọng. Vào cuộc điều tra, Công an TP. Biên Hoà đã bắt giữ 52 đối tượng liên quan. Qua quá trình sàng lọc, cơ quan công an đã khởi tố 20 đối tượng về hành vi gây rối trật tự công cộng. Sau một ngày xét xử, HĐXX đã nhận định hành vi của các bị cáo gây mất an ninh trật tự, ảnh hưởng đến tình hình trật tự trị an, gây ảnh hưởng xấu đến xã hội. Tại toà, các bị cáo cũng đã cúi đầu nhận tội, ân hận về hành vi sai trái của mình. Các bị cáo tại toà.
+TÓM TẮT THAM CHIẾU:
+Lợi dụng việc nhiều người xuống đường để phản đối dự án Luật Đơn vị hành chính kinh tế đặc biệt, các bị cáo đã tổ chức gây rối trật tự công cộng.
+TÓM TẮT DO SBERT + MMR SINH:
+Ngày 30/7, TAND TP. Biên Hoà (tỉnh Đồng Nai) đã đưa 20 đối tượng liên quan đến vụ án Gây rối trật tự công cộng vào giữa tháng 6/2018 ra xét xử. Vào cuộc điều tra, Công an TP. Biên Hoà đã bắt giữ 52 đối tượng liên quan.
+THỜI GIAN TÓM TẮT:
+0.2040 giây

@@ -1,0 +1,14 @@
+INDEX:
+54
+GUID:
+55
+TITLE:
+Thanh Hoá: Truy nã cặp đôi cầm đầu tổ chức tín dụng đen lớn nhất nước
+VĂN BẢN GỐC:
+Báo Pháp luật TP. HCM đưa tin, chiều 16/5, Công an TP. Thanh Hoá vừa ra Quyết định truy nã 2 đối tượng Phùng Ngọc Huy và Trần Thị Diệp (cùng 38 tuổi, ngụ TP. Hải Phòng) về tội Cho vay lãi nặng trong giao dịch dân sự. Công an cho biết, 2 đối tượng này nằm trong nhóm tội phạm chuyên cho vay nặng lãi núp dưới bóng Công ty tài chính Tín Nghĩa và có vai trò cầm đầu. Thông tin trên báo Dân Sinh, mới đây, Công an TP. Thanh Hoá đã phá chuyên án 219V, triệt xoá băng, ổ nhóm tội phạm chuyên cho vay nặng lãi núp dưới bóng Công ty tài chính Tín Nghĩa. Tổ chức tín dụng đen Tín Nghĩa đã phát triển, mở rộng trên 50 chi nhánh trên địa bàn khắp cả nước. Tổ chức này chuyên cho vay lãi với mức lãi suất từ 5.000 - 9.000 đồng / 1 triệu / ngày, tương đương từ 182,5% đến 328% / năm. Công an TP. Thanh Hoá đã điều tra, mở rộng và khởi tố 21 bị can về hành vi cho vay lãi nặng trong giao dịch dân sự. Trong số đó có Phùng Ngọc Huy và Trần Thị Diệp. Tuy nhiên, 2 đối tượng này đã bỏ trốn khỏi nơi cư trú. Công an TP. Thanh Hoá cho biết, nếu phát hiện Phùng Ngọc Huy và Trần Thị Diệp, các tổ chức, cá nhân đều có quyền bắt giữ hoặc báo cho cơ quan chức năng nơi gần nhất. Mộc Miên (Tổng hợp) Chú thích ảnh
+TÓM TẮT THAM CHIẾU:
+Đôi nam nữ cầm đầu tổ chức tín dụng đen hơn 50 chi nhánh trong cả nước đang bị Công an TP. Thanh Hoá ra quyết định truy nã.
+TÓM TẮT DO SBERT + MMR SINH:
+Báo Pháp luật TP. HCM đưa tin, chiều 16/5, Công an TP. Thanh Hoá vừa ra Quyết định truy nã 2 đối tượng Phùng Ngọc Huy và Trần Thị Diệp (cùng 38 tuổi, ngụ TP. Hải Phòng) về tội Cho vay lãi nặng trong giao dịch dân sự.
+THỜI GIAN TÓM TẮT:
+0.1125 giây
