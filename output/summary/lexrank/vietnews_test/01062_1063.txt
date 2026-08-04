@@ -11,4 +11,4 @@ TÓM TẮT THAM CHIẾU:
 TÓM TẮT DO LEXRANK SINH:
 Vinh. Vinh. Vinh.
 THỜI GIAN TÓM TẮT:
-0.0039 giây
+0.0032 giây

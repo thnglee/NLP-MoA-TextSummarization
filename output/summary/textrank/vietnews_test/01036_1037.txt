@@ -11,4 +11,4 @@ So với nhóm đối tượng liên quan đến vụ án nữ sinh Cao Mỹ D. 
 TÓM TẮT DO TEXTRANK SINH:
 Ông nói: " Tôi biết Nhiệm nghiện, nhưng có lẽ kinh tế gia đình cũng khá giả nên nó chưa từng hoặc bị phát hiện liên quan đến trộm cắp gì cả, ở địa phương nó thực sự chịu khó. " Khi nghe tên Phạm Văn Nhiệm liên quan đến vụ án, chúng tôi đều không tin vì ông Nhiệm này hiền lành có tiếng. " Thằng Nhiệm là đứa rất ngoan và chịu khó làm ăn, nó có dính đến ma tuý nhưng không trộm cắp, gây gổ với ai bao giờ.
 THỜI GIAN TÓM TẮT:
-0.0066 giây
+0.0050 giây

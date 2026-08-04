@@ -1,0 +1,14 @@
+INDEX:
+2207
+GUID:
+2208
+TITLE:
+Té ngay đầu hầm Thủ Thiêm, nam thanh niên bị xe cán chết
+VĂN BẢN GỐC:
+Danh tính nạn nhân là anh Trần Nguyên C., 21 tuổi, ngụ TP. HCM. Khoảng 14h30 ngày 25-2, anh C. điều khiển xe máy chạy qua hầm Thủ Thiêm, hướng từ quận 1 sang quận 2. Khi vừa ra khỏi hầm khoảng 50m thì bất ngờ bị té khiến cả người lẫn xe văng vào làn xe ôtô phía ngoài. Cùng lúc này, chiếc xe tải chạy cùng chiều không xử lý kịp đã cán anh C. tử vong tại chỗ. Vụ việc còn khiến giao thông qua hầm Thủ Thiêm ùn ứ kéo dài. Đến khoảng 16h, thi thể nạn nhân được đưa đi, hiện trường được giải toả. Cơ quan chức năng đang xử lý hiện trường vụ tai nạn - Ảnh: LÊ PHAN
+TÓM TẮT THAM CHIẾU:
+Vừa ra khỏi hầm Thủ Thiêm, quận 2, TP. HCM thì nam thanh niên bị té vào làn xe ôtô, đúng lúc một xe tải đang từ trong chạy ra cán trúng khiến người này chết tại chỗ.
+TÓM TẮT DO TEXTRANK SINH:
+Khoảng 14h30 ngày 25-2, anh C. điều khiển xe máy chạy qua hầm Thủ Thiêm, hướng từ quận 1 sang quận 2. Cùng lúc này, chiếc xe tải chạy cùng chiều không xử lý kịp đã cán anh C. tử vong tại chỗ.
+THỜI GIAN TÓM TẮT:
+0.0033 giây

@@ -11,4 +11,4 @@ TÓM TẮT THAM CHIẾU:
 TÓM TẮT DO TEXTRANK SINH:
 Theo báo Công an TP. HCM, ngày 8/9, cơ quan CSĐT Công an tỉnh Đồng Nai cho biết đã bắt giữ 7 đối tượng liên quan đến vụ ẩu đả gây chết người tại huyện Trảng Bom, tỉnh Đồng Nai xảy ra vào tối 6/9, khiến 1 người tử vong. Theo báo Công an TP.
 THỜI GIAN TÓM TẮT:
-0.0038 giây
+0.0040 giây

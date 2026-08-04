@@ -1,0 +1,14 @@
+INDEX:
+2660
+GUID:
+2661
+TITLE:
+Gắn thiết bị giám sát giao thông ở cầu Phú Mỹ
+VĂN BẢN GỐC:
+Đây là biện pháp nhằm tăng cường đảm bảo trật tự an toàn giao thông, hạn chế tai nạn giao thông do phương tiện vi phạm tốc độ gây ra và kịp thời phát hiện các sự cố tại khu vực cầu Phú Mỹ. Trong thời gian qua ở dốc cầu Phú Mỹ phía Q. 2 đã xảy ra nhiều vụ tai nạn giao thông chết người do xe tải và container gây ra và trở thành điểm đen về giao thông TP. HCM. Theo đó, xe tải và container chỉ được phép chạy tốc độ tối đa không quá 40 km/h. Theo Phòng cảnh sát giao thông đường bộ đường sắt, Công an TP. HCM việc kiểm tra xử phạt xe vi phạm tốc độ ở cầu Phú Mỹ được áp dụng theo Nghị định 46/2016/NĐ-CP về " xử phạt vi phạm hành chính trong lĩnh vực giao thông đường bộ và đường sắt ". Các mức phạt như sau: - Phạt tiền 600.000 - 800.000 đồng đối với người điều khiển xe chạy quá tốc độ quy định từ 5 km/h đến dưới 10 km/h - Phạt tiền 2-3 triệu đồng đối với người điều khiển xe chạy quá tốc độ quy định từ 10 km/h đến 20 km/h - Phạt tiền 5-6 triệu đồng đối với người điều khiển xe chạy quá tốc độ quy định trên 20 km/h đến 35 km/h - Phạt tiền từ 7-8 triệu đồng đối với người điều khiển xe chạy quá tốc độ quy định trên 35 km/h. Tuỳ mức độ vi phạm, ngoài bị phạt tiền, người điều khiển xe thực hiện hành vi vi phạm, còn bị áp dụng các hình thức xử phạt bổ sung như: bị tước quyền sử dụng giấy phép lái xe từ 1-3 tháng ( hoặc từ 2-4 tháng ).
+TÓM TẮT THAM CHIẾU:
+Từ 1-4, TP. HCM triển khai kiểm soát tốc độ và giám sát giao thông ở cầu Phú Mỹ nối Q. 2 với Q. 7 bằng thiết bị kiểm tra tốc độ và camera giám sát giao thông.
+TÓM TẮT DO TEXTRANK SINH:
+Đây là biện pháp nhằm tăng cường đảm bảo trật tự an toàn giao thông, hạn chế tai nạn giao thông do phương tiện vi phạm tốc độ gây ra và kịp thời phát hiện các sự cố tại khu vực cầu Phú Mỹ. 2 đã xảy ra nhiều vụ tai nạn giao thông chết người do xe tải và container gây ra và trở thành điểm đen về giao thông TP. HCM việc kiểm tra xử phạt xe vi phạm tốc độ ở cầu Phú Mỹ được áp dụng theo Nghị định 46/2016/NĐ-CP về " xử phạt vi phạm hành chính trong lĩnh vực giao thông đường bộ và đường sắt ".
+THỜI GIAN TÓM TẮT:
+0.0028 giây

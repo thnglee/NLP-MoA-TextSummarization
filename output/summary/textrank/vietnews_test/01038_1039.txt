@@ -11,4 +11,4 @@ Hằng chỉ đạo các cô gái này trang điểm, mặc đồ gợi cảm, t
 TÓM TẮT DO TEXTRANK SINH:
 Khi có khách hàng, Hằng cho khách tự chọn " hàng " qua ảnh, sau đó thoả thuận giá cả và điều các cô gái đến để phục vụ. Trong lần " đi khách " này, mỗi cô gái được trả 4 triệu đồng. Hằng và các cô gái trong đường dây thường xuyên mặc đồ gợi cảm chụp ảnh để " câu khách ".
 THỜI GIAN TÓM TẮT:
-0.0034 giây
+0.0060 giây

@@ -11,4 +11,4 @@ Chỉ sau hơn 15 phút nhận khách vào nghỉ, người quản lý khách s�
 TÓM TẮT DO TEXTRANK SINH:
 Tại đây, những người có mặt phát hiện nam thanh niên và chị T. nằm bất động trên nền nhà, trên người có nhiều vết thương và máu. Nhận tin báo, Công an quận Bình Tân có mặt tại hiện trường, điều tra vụ việc. Tại hiện trường, công an phát hiện nam thanh niên nằm bất động, trên người có vết thương nên đưa đi bệnh viện cấp cứu trong tình trạng nguy kịch.
 THỜI GIAN TÓM TẮT:
-0.0049 giây
+0.0050 giây

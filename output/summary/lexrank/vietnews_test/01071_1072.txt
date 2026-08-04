@@ -11,4 +11,4 @@ Ngày 5/6, cơ quan CSĐT Bộ Công an đã ra quyết định khởi tố 4 b�
 TÓM TẮT DO LEXRANK SINH:
 Hà Nội tiến hành bắt khẩn cấp nhóm 4 đối tượng trên vì hành vi sử dụng thủ đoạn công nghệ cao để chiếm đoạt tài sản của các doanh nghiệp kinh doanh dịch vụ trung gian thanh toán và ví điện tử. Sau khi chiếm được quyền điều khiển tài khoản quản trị admin của các website, các đối tượng tạo khống số dư cho một số tài khoản tạo ra trước đó và sử dụng để mua thông tin thẻ cào các loại. Ngoài ra, thông tin trên Thanh Niên, một số website không tự tấn công được, đối tượng đã thuê các hacker nước ngoài rà quét lỗ hổng, tấn công chiếm quyền điều khiển để đối tượng sử dụng vào mục đích chiếm đoạt dữ liệu của các website này.
 THỜI GIAN TÓM TẮT:
-0.0032 giây
+0.0033 giây
