@@ -8,7 +8,7 @@ VĂN BẢN GỐC:
 Ngày 16/8, Công an huyện Bình Chánh, TP. HCM cho biết, đang cùng các đơn vị nghiệp vụ Công an TP. HCM điều tra làm rõ việc một người đàn ông bị tử vong tại mương nước bên đường. Thông tin ban đầu cho hay, chiều 15/8, người dân phát hiện thi thể một nam giới tử vong trên mương nước cạnh đường Trần Đại Nghĩa, thuộc địa bàn xã Lê Minh Xuân (huyện Bình Chánh). Nạn nhân tử vong dưới mương nước, trên người có nhiều vết thương. Phía bờ mương có một mũ bảo hiểm. Vụ việc lập tức được trình báo lên lực lượng chức năng địa phương. Nhận được tin báo, Công an huyện Bình Chánh đã có mặt tại hiện trường, cùng một số đơn vị nghiệp vụ Công an TP. HCM tiến hành lấy lời khai nhân chứng, khám nghiệm hiện trường, điều tra nguyên nhân tử vong của nạn nhân. Bước đầu danh tính nạn nhân được xác định là tài xế chạy xe ôm nhiều năm tên L., khoảng hơn 50 tuổi, ngụ quận Gò Vấp, TP. HCM. Tuy nhiên, tại hiện trường không phát hiện chiếc xe máy của ông L. Hiện, vụ việc đang được công an điều tra, làm rõ. Báo Người Đưa Tin sẽ tiếp tục cập nhật thông tin. Hiện trường phát hiện thi thể người đàn ông chạy xe ôm. Khu vực này là mương nước cạnh đường khá vắng người qua lại.
 TÓM TẮT THAM CHIẾU:
 Thi thể người đàn ông chạy xe ôm lâu năm được người dân phát hiện tử vong tại mương nước bên đường. Chiếc xe máy của nạn nhân không thấy tại hiện trường.
-TÓM TẮT DO SBERT + MMR SINH:
-Ngày 16/8, Công an huyện Bình Chánh, TP. HCM cho biết, đang cùng các đơn vị nghiệp vụ Công an TP. HCM điều tra làm rõ việc một người đàn ông bị tử vong tại mương nước bên đường. Phía bờ mương có một mũ bảo hiểm.
+TÓM TẮT COMPRESSIVE EXTRACTIVE:
+Ngày 16/8 Công an Bình Chánh TP. HCM cho biết các đơn vị HCM làm việc một người đàn ông bị mương. Nạn nhân tử vong mương nước người nhiều vết thương. Phía bờ mương có một mũ bảo hiểm.
 THỜI GIAN TÓM TẮT:
-0.1052 giây
+0.9287 giây

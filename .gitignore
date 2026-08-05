@@ -59,5 +59,4 @@ models/mt5/
 models/t5vi/
 models/mmr/
 
-dataset/vietnews/
-dataset/vietnamese-summarization-dataset-0001/
+dataset/
