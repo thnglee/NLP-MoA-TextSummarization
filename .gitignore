@@ -50,6 +50,8 @@ yarn-debug.log*
 *.synctex.gz
 *.bbl
 *.blg
+*.bcf
+*.run.xml
 
 zzz.txt
 

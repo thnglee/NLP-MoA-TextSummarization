@@ -1,0 +1,188 @@
+\documentclass[a4paper]{report}
+
+% ============================================================
+% CẤU HÌNH THÔNG TIN THAM SỐ HÓA (METADATA CONFIGURATION)
+% ============================================================
+\newcommand{\university}{ĐẠI HỌC QUỐC GIA HÀ NỘI \\ TRƯỜNG ĐẠI HỌC CÔNG NGHỆ}
+\newcommand{\universityen}{VIETNAM NATIONAL UNIVERSITY, HANOI \\ UNIVERSITY OF ENGINEERING AND TECHNOLOGY}
+\newcommand{\authorname}{Lê Văn Thắng}
+\newcommand{\authornameen}{Le Van Thang}
+\newcommand{\reporttitle}{NGHIÊN CỨU, XÂY DỰNG HỆ THỐNG TÓM TẮT \\ TIN TỨC TIẾNG VIỆT SỬ DỤNG \\ MÔ HÌNH NGÔN NGỮ LỚN}
+\newcommand{\reporttitleen}{RESEARCH AND DEVELOPMENT OF A \\ VIETNAMESE NEWS SUMMARIZATION SYSTEM \\ USING LARGE LANGUAGE MODELS}
+\newcommand{\reporttype}{BÁO CÁO BÀI TẬP LỚN MÔN XỬ LÝ NGÔN NGỮ TỰ NHIÊN}
+\newcommand{\reporttypeen}{NLP COURSE FINAL PROJECT REPORT}
+\newcommand{\major}{Ngành: Khoa học Máy tính}
+\newcommand{\majoren}{Major: Computer Science}
+\newcommand{\supervisor}{TS. Vương Thị Hồng}
+\newcommand{\supervisoren}{Dr. Vuong Thi Hong}
+\newcommand{\reportyear}{2026}
+\newcommand{\reportlocation}{HÀ NỘI}
+\newcommand{\reportlocationen}{HA NOI}
+
+% ============================================================
+% 1. NGÔN NGỮ VÀ PHÔNG CHỮ (LANGUAGE & FONTS)
+% ============================================================
+\usepackage{vntex}
+\usepackage[vietnamese]{babel}
+\usepackage{indentfirst}
+\usepackage{csquotes}
+\DeclareQuoteAlias{english}{vietnamese}
+
+% ============================================================
+% 2. KHUÔN DẠNG TRANG VÀ GIÃN DÒNG (GEOMETRY & SPACING)
+% ============================================================
+\usepackage[left=3.0cm,right=2.0cm,top=2.0cm,bottom=2.0cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.3}
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{1.0cm}
+\setlength{\emergencystretch}{1em}
+
+% ============================================================
+% 3. TOÁN HỌC (MATHEMATICS)
+% ============================================================
+\usepackage{amsmath,amsfonts,amssymb}
+\newcommand{\argmax}{\arg\!\max}
+
+% ============================================================
+% 4. BẢNG BIỂU VÀ ĐỒ HỌA (TABLES & GRAPHICS)
+% ============================================================
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{array,tabularx,longtable,booktabs}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\usepackage{float}
+\usepackage[font=normalsize]{caption}
+
+\definecolor{orange}{RGB}{255,128,0}
+\definecolor{gray}{RGB}{128,128,128}
+\definecolor{purple}{RGB}{128,0,128}
+
+% ============================================================
+% 5. TIỆN ÍCH TRÌNH BÀY (PRESENTATION UTILITIES)
+% ============================================================
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{calc,shapes,arrows,positioning}
+\usepackage{pdfpages}
+\usepackage[hang,flushmargin]{footmisc}
+\usepackage{perpage}
+\MakePerPage{footnote}
+
+\def\changemargin#1#2{\list{}{\rightmargin#2\leftmargin#1}\item[]}
+\let\endchangemargin=\endlist
+
+% ============================================================
+% 6. ĐỊNH DẠNG TIÊU ĐỀ VÀ MỤC LỤC (TITLES & TOC)
+% ============================================================
+\usepackage{titlesec}
+\usepackage{tocloft,calc}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{0pt}{\LARGE}
+\titlespacing*{\chapter}{0cm}{-\topskip}{20pt}[0pt]
+
+\titleformat{\section}
+  {\fontsize{15}{18}\bfseries}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{1.5ex plus .2ex}{1ex plus .2ex}
+
+\titleformat{\subsection}
+  {\fontsize{13}{16}\bfseries}{\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{1.2ex plus .2ex}{0.8ex plus .2ex}
+
+\titleformat{\subsubsection}[runin]
+  {\normalfont\normalsize\bfseries}{\thesubsubsection.}{1em}{}
+\titlespacing*{\subsubsection}{0pt}{*0.5}{*0.5}
+
+\makeatletter
+\def\l@figure{\@dottedtocline{1}{1em}{2.2em}}
+\def\l@table{\@dottedtocline{1}{1em}{2.2em}}
+\makeatother
+
+\renewcommand{\cftchappresnum}{Chương }
+\renewcommand{\cftchapaftersnum}{: }
+\AtBeginDocument{\addtolength\cftchapnumwidth{\widthof{\bfseries Chương \ }}}
+\setlength{\cftchapnumwidth}{2.8em}
+\setlength{\cftsecnumwidth}{2.8em}
+\setlength{\cftsubsecindent}{4.3em}
+\setlength{\cftsubsecnumwidth}{3.8em}
+
+%% Việt hóa các nhãn tự động
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+\renewcommand{\chaptername}{Chương}
+
+% ============================================================
+% 7. LIÊN KẾT VÀ TRÍCH DẪN (HYPERLINKS & BIBLIOGRAPHY)
+% ============================================================
+\usepackage{xurl}
+\usepackage[unicode]{hyperref}
+\hypersetup{pdfborder={0 0 0}}
+
+\usepackage[
+  backend=biber,
+  style=numeric,
+  sorting=nty
+]{biblatex}
+\addbibresource{references.bib}
+
+% ============================================================
+% DOCUMENT BODY
+% ============================================================
+\begin{document}
+
+% Trang bìa
+\input{cover}\cleardoublepage
+
+\pagenumbering{roman}
+% Tóm tắt tiếng Việt
+\input{chapters/abstract_vi}\cleardoublepage
+% Lời cam đoan
+\input{chapters/assurance}\cleardoublepage
+% Lời cảm ơn
+\input{chapters/acknowledgement}\cleardoublepage
+
+% Mục lục
+\addcontentsline{toc}{chapter}{MỤC LỤC}
+\renewcommand{\contentsname}{\centering \fontsize{22}{0}\selectfont \bfseries MỤC LỤC}
+\tableofcontents\cleardoublepage
+
+% Danh mục hình vẽ
+\addcontentsline{toc}{chapter}{DANH MỤC HÌNH VẼ}
+\renewcommand{\listfigurename}{\centering \fontsize{22}{0}\selectfont \bfseries DANH MỤC HÌNH VẼ}
+\listoffigures\cleardoublepage
+
+% Danh mục bảng biểu
+\addcontentsline{toc}{chapter}{DANH MỤC BẢNG BIỂU}
+\renewcommand{\listtablename}{\centering \fontsize{22}{0}\selectfont \bfseries DANH MỤC BẢNG BIỂU}
+\listoftables\cleardoublepage
+
+% Danh mục ký hiệu và chữ viết tắt
+\input{chapters/glossary}\cleardoublepage
+
+% Nội dung chính
+\pagenumbering{arabic}
+\input{chapters/introduction}\cleardoublepage
+\input{chapters/01_introduction}\cleardoublepage
+\input{chapters/02_background}\cleardoublepage
+\input{chapters/03_system_design}\cleardoublepage
+\input{chapters/04_experiments}\cleardoublepage
+\input{chapters/conclusion}\cleardoublepage
+
+% Tài liệu tham khảo
+\printbibliography[title={TÀI LIỆU THAM KHẢO}]
+\addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
+\cleardoublepage
+
+% Phụ lục
+\input{chapters/appendix}\cleardoublepage
+\IfFileExists{thesis_modification.pdf}{\includepdf[pages=-]{thesis_modification.pdf}}{}
+
+\end{document}
