@@ -1,0 +1,18 @@
+INDEX:
+34
+GUID:
+34
+TITLE:
+
+VĂN BẢN GỐC:
+Bàng quang tăng hoạt (OAB) là một hội chứng dẫn đến nhu cầu đi tiểu cấp kỳ không thể dừng. Các triệu chứng thường gặp bao gồm: Tiểu gấp (triệu chứng chủ yếu) Tiểu gấp không kiểm soát (không kịp vào nhà vệ sinh) Tiểu lắt nhắt nhiều lần và tiểu đêm (thức dậy ban đêm đi tiểu) Bác sĩ sẽ giúp bạn chính thức chẩn đoán hội chứng bàng quang tăng hoạt như một nguyên nhân tiềm ẩn. Chỉ có 2% nam giới mắc chứng bàng quang tăng hoạt có triệu chứng tiểu không kiểm soát, do đó bác sĩ cần phải xem xét mọi nguyên nhân tiềm tàng khác. Bác sĩ sẽ khám lâm sàng và chỉ định làm xét nghiệm nước tiểu, thậm chí có thể nội soi trong các trường hợp phức tạp. Kết quả cũng cho thấy sự tăng hoạt của cơ bàng quang ở vách bàng quang. Phương pháp điều trị gồm liệu pháp hành vi với chế độ đi tiểu theo giờ. Chế độ đi tiểu theo giờ gồm đi tiểu cách các khoảng thời gian nhất định – ví dụ, cứ mỗi bốn giờ đi một lần - cho dù bạn không thực sự muốn đi tiểu. Đây là một chế độ luyện tập bàng quang, một hình thức của liệu pháp nhận thức – hành vi. Bạn hãy cố gắng luyện tập bàng quang trút nước tiểu vào các thời gian nhất định để ngăn ngừa tiểu không tự chủ. Một báo cáo gần đây cho thấy liệu pháp hành vi phản hồi sinh học (tiểu theo giờ) được chứng minh là tốt hơn dược lý trị liệu với oxybutynin hoặc dùng giả dược ở các bệnh nhân đang điều trị tình trạng bất ổn định cơ chóp. Phản hồi sinh học là liệu pháp trong đó bệnh nhân được gắn một số điện cực để đo các phản hồi sinh lý vô thức, chủ quan của họ. Với phương pháp này bệnh nhân có thể thấy cơ thể mình có phản hồi sinh học (như buồn tiểu và chú ý đến nhu cầu của mình) chống lại với “báo động giả”. Khả năng thấy được dữ liệu thực sự hơn là phán đoán sẽ giúp họ đánh giá những tín hiệu của cơ thể. Có một số phương pháp can thiệp thuốc men, đặc biệt là Ditropan, với liều lượng 5 mg, mỗi ngày hai lần. Các liệu pháp kết hợp hành vi, thuốc men và phản hồi sinh học được áp dụng phổ biến.
+TÓM TẮT THAM CHIẾU:
+Bàng quang tăng hoạt (OAB) là một hội chứng phổ biến gây ra nhu cầu đi tiểu cấp bách và không kiểm soát được. Các triệu chứng bao gồm tiểu gấp, tiểu không tự chủ, tiểu nhiều lần và tiểu đêm. Chẩn đoán OAB được xác định thông qua khám lâm sàng, xét nghiệm nước tiểu và có thể nội soi. Phương pháp điều trị chủ yếu là liệu pháp hành vi, bao gồm đi tiểu theo giờ và luyện tập bàng quang. Liệu pháp phản hồi sinh học cũng được chứng minh là hiệu quả hơn so với một số loại thuốc. Các phương pháp điều trị kết hợp cũng được áp dụng.
+TÓM TẮT DO VIT5 SINH:
+Bàng quang tăng hoạt (OAB) là một hội chứng dẫn đến nhu cầu đi tiểu cấp kỳ khong thể dừng. Các triệu chứng này bao gồm tiểu gấp, lắt nhắt và đêm. Bác sĩ sẽ chẩn đoán và chỉ định làm xét nghiệm nước tiểu. Chế độ đi tiể theo giờ bao gồm chế độ tiể cách các khoảng thời gian nhất định. Kết quả xét nghiệm cho thấy cơ thể có phản hồi sinh học, trong khi các phương pháp khác như Ditropan và Ditropsan được áp dụng phổ biến.
+THỜI GIAN TÓM TẮT:
+3.7362 giây
+TỪ KHÓA HƯỚNG DẪN:
+Không sử dụng
+ĐIỂM RERANK:
+Không sử dụng

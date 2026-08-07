@@ -1,0 +1,18 @@
+INDEX:
+49
+GUID:
+49
+TITLE:
+
+VĂN BẢN GỐC:
+Tuy nhiên 2 " siêu dự án N " này đã chậm A tiến độ N và ngừng V thi công V nhiều A tháng N nayTheo đại diện N ban N Quản lý V dự án N y tế N trọng điểm N ( bộ N Y tế N ) , đây là V 2 dự án N trọng điểm N của bộ N Y tế N , quy mô V dự án N rất lớn A , công nghệ N hiện đại A lần N đầu tiên A được V áp dụng V tại Việt Nam . Do đó , bộ N Y tế N đã chỉ đạo V Ban N sử dụng V nhà thầu N tư vấn V nước ngoài N ( công ty N VK – Brussels N ) lập V dự án N , thiết kế V ý tưởng N , thiết kế V cơ sở N ( TKCS ) và triển khai V thiết kế V kỹ thuật N ( TKKT ) phần N kiến trúc V công trình N . Bộ N cũng chỉ đạo V ban N Quản lý V dự án N y tế N trọng điểm N tổ chức V đấu thầu V rộng rãi A các gói N thầu V hỗn hợp N , bao gồm N TKKT , thiết kế V bản vẽ N thi công V , thi công V và lắp đặt V thiết bị N công trình N . Đại diện N ban N Quản lý V dự án N y tế N trọng điểm V còn cho V rằng , trên cơ sở N TKKT theo V từng hạng mục N và giai đoạn N được V thẩm định V , phê duyệt V , thì cơ quan thiết kế N của tổng N thầu V mới có thể hoàn chỉnh V dự toán N để gửi V viện N Kinh tế N xây dựng V thẩm tra N . Từng điều chỉnh V thiết N kếTheo N đại diện V ban N Quản lý V dự án N y tế N trọng điểm V , một phần N chậm A tiến độ N còn do hai dự án N từng phải V điều chỉnh V một số hạng N mục A thiết kế V do hạ tầng N khó khăn A và điều chỉnh V từ bệnh viện N . Về N việc N có V hay không điều chỉnh V dự án N một số hạng N mục A làm V tăng V , vượt V tổng N vốn N đầu tư V , đại diện N Ban thừa nhận V , trong quá trình N triển khai V thực hiện V , cả 2 dự án N đều phải V điều chỉnh V TKCS do 2 bệnh viện N yêu cầu V bổ sung V một số hạng N mục A như diện tích N lưu trú V , trực V của bác sĩ N nội trú V , khu N xạ N trị V ( Bệnh viện N Việt Đức ) . Riêng V hạng mục V phần N ngầm A , phương án N thiết kế V cơ sở N ban đầu N là V cọc N khoan V nhồi N . Trả lời V câu hỏi N của PV , thời gian N tới bộ N Y tế N đã có V phương án N cụ thể A như thế nào để khắc phục V tình trạng N chậm A tiến độ N hiện nay N ? Đại diện V ban N Quản lý V dự án N y tế N trọng điểm N ( bộ N Y tế N ) cho V biết V : “ Bộ N đã có V văn bản N trình V Thủ tướng N về giải pháp N khắc phục V chậm A tiến độ N của 2 dự án N , bên cạnh N đó Phó Thủ tướng N Trịnh Đình Dũng cũng chỉ đạo V bộ N Xây dựng V sớm A có V phương án N tháo gỡ V khó khăn A để đẩy V nhanh A tiến độ N hai dự án N ” .
+TÓM TẮT THAM CHIẾU:
+Hai siêu dự án trọng điểm của Bộ Y tế đã bị chậm tiến độ và ngừng thi công trong nhiều tháng. Các dự án có quy mô lớn, sử dụng công nghệ hiện đại lần đầu tiên tại Việt Nam. Nguyên nhân chậm trễ đến từ việc điều chỉnh thiết kế do khó khăn về hạ tầng và yêu cầu bổ sung hạng mục từ bệnh viện. Bộ Y tế đã trình Thủ tướng Chính phủ các giải pháp khắc phục và nhận được chỉ đạo từ Phó Thủ tướng để đẩy nhanh tiến độ.
+TÓM TẮT DO VIT5 SINH:
+Bộ Y tế đã chỉ đạo quản lý dự án y tế trọng điểm (Bộ Y tế) để giải quyết vấn đề chậm tiến độ và ngừng thi công nhiều tháng nay. Hai dự án này có quy mô lớn, công nghệ hiện đại và được áp dụng tại Việt Nam. Nguyên nhân chính được xác định là do khó khăn trong quá trình thiết kế và đầu tư. Phó Thủ tướng chỉ đạo bộ Xây dựng sớm có phương án tháo gỡ khó khăn để đẩy nhanh tiến độ.
+THỜI GIAN TÓM TẮT:
+2.7969 giây
+TỪ KHÓA HƯỚNG DẪN:
+Không sử dụng
+ĐIỂM RERANK:
+Không sử dụng

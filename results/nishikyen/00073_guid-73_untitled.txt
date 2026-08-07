@@ -1,0 +1,18 @@
+INDEX:
+73
+GUID:
+73
+TITLE:
+
+VĂN BẢN GỐC:
+Theo thông tin từ Phòng khám đa khoa Hải Tiến , các bệnh nhân lần lượt vào cấp cứu tại đơn vị từ lúc rạng sáng nay 26-5 trong tình trạng nôn ói , đau đầu , chóng mặt .Đến chiều 26-5 , phòng khám đang điều trị cho khoảng 50 bệnh nhân có biểu hiện ngộ độc .Cơ quan chức năng huyện Hoằng Hoá cho hay những người bị ngộ độc là du khách đang ở khách sạn H.G và Đ . A , nằm trên địa bàn Khu du lịch biển Hải Tiến , huyện Hoằng Hoá từ ngày hôm qua .Tối 25-5 , số du khách này có ăn các món hải sản tại một nhà hàng ở TP Sầm Sơn .Ông Lê Sỹ Nghiêm - chủ tịch UBND huyện Hoằng Hoá - cho biết UBND huyện đang chỉ đạo xử lý vụ việc nêu trên .Hiện các nạn nhân đang được cấp cứu , điều trị tại Phòng khám đa khoa Hải Tiến .
+TÓM TẮT THAM CHIẾU:
+Sáng 26/5, Phòng khám đa khoa Hải Tiến tiếp nhận nhiều bệnh nhân có dấu hiệu ngộ độc thực phẩm với các triệu chứng như nôn ói, đau đầu, chóng mặt. Khoảng 50 du khách đang được điều trị, nghi ngờ ngộ độc sau khi ăn hải sản tại một nhà hàng ở Sầm Sơn vào tối 25/5. Những du khách này đang ở tại các khách sạn H.G và Đ.A, thuộc Khu du lịch biển Hải Tiến. UBND huyện Hoằng Hoá đang chỉ đạo xử lý vụ việc và hỗ trợ cấp cứu cho các nạn nhân.
+TÓM TẮT DO VIT5 SINH:
+Phòng khám đa khoa Hải Tiến đã tiếp nhận và điều trị cho khoảng 50 du khách có dấu hiệu ngộ độc sau khi ăn các món hải sản tại một nhà hàng ở TP Sầm Sơn. Cơ quan chức năng đang xử lý vụ việc ngộ độc du khách, đặc biệt là du khách đến từ các khu du lịch biển H.G và Đ. A. Vụ việc xảy ra vào tối 25/5 tại Khu du lịch biển H. G.Đ.A. UBND Huyện Hoằng Hóa đang chỉ đạo xử lý, đồng thời các du khách đang được cấp cứu, điều trị tại đây.
+THỜI GIAN TÓM TẮT:
+2.9758 giây
+TỪ KHÓA HƯỚNG DẪN:
+Không sử dụng
+ĐIỂM RERANK:
+Không sử dụng

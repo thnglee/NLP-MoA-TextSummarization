@@ -1,0 +1,18 @@
+INDEX:
+107
+GUID:
+107
+TITLE:
+
+VĂN BẢN GỐC:
+Trước khi chó con hoặc chó trưởng thành đi vệ sinh trong hộp, nó sẽ cần có thể bước vào hộp của mình. Bạn cần dạy nó rằng hộp an toàn, thậm chí vui nhộn. Khen khi chó vào hộp. Lặp lại mệnh lệnh, và một lần nữa, khen chó và cư xử vui vẻ rằng chó đang ở trong hộp. Tiếp tục luyện tập đến khi bạn có thể hướng dẫn chó vào hộp trong khi ra lệnh “dùng hộp”. Khi chó đã quen được hướng dẫn vào hộp, thử chỉ đưa ra mệnh lệnh. Hãy kiên nhẫn và đừng lặp lại những lỗi sai. Nếu chó không bước vào, bạn chỉ cần đi chỗ khác và cố thử lại lần sau, hoặc quay lại hướng dẫn. Nếu chó bước vào theo mệnh lệnh, khen chó thật nhiều. Tiếp tục luyện tập cho đến khi chó bước vào theo hiệu lệnh ngay lập tức.
+TÓM TẮT THAM CHIẾU:
+Để huấn luyện chó đi vệ sinh đúng chỗ, trước hết cần tạo cho chúng cảm giác an toàn và vui vẻ với hộp vệ sinh. Bắt đầu bằng việc khuyến khích chó vào hộp và khen ngợi chúng. Lặp lại hành động này nhiều lần kèm theo mệnh lệnh, thưởng và sự vui vẻ. Tiếp tục luyện tập cho đến khi chó có thể tự giác vào hộp khi được ra lệnh. Kiên nhẫn và đừng ép buộc, nếu chó không vào hộp, hãy thử lại sau. Khen thưởng khi chó thực hiện đúng, và lặp lại cho đến khi chó vào hộp ngay lập tức.
+TÓM TẮT DO VIT5 SINH:
+Bài viết hướng dẫn cách dẫn chó vào hộp an toàn và vui vẻ trước khi chúng đi vệ sinh. Trước khi chó vào, bạn cần dạy nó rằng hộp của mình an toàn, thậm chí vui vẻ. Lặp lại mệnh lệnh và cư xử vui vẻ với chó. Sau khi chó đã vào hộp, hãy cố gắng hướng dẫn chúng vào hộp trong khi ra lệnh "dùng hộp". Sau đó, hãy thử lặp lại những lỗi sai để đảm bảo chó khỏe mạnh.
+THỜI GIAN TÓM TẮT:
+2.9136 giây
+TỪ KHÓA HƯỚNG DẪN:
+Không sử dụng
+ĐIỂM RERANK:
+Không sử dụng
