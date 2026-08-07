@@ -1,0 +1,14 @@
+INDEX:
+131
+GUID:
+131
+TITLE:
+
+VĂN BẢN GỐC:
+Theo trang Science Alert , phát hiện mới về cấu trúc gene được mô tả như một " nút xoắn " của DNA trong các tế bào sống đã khẳng định thêm sự thật là bảng mã gene phức tạp của chúng ta không chỉ gồm chuỗi xoắn kép quen thuộc lâu nay mà còn gồm một cấu trúc khác có tính đối xứng phức tạp hơn nữa .Các biến thể phân tử này có thể có những ảnh hưởng nhất định tới các chức năng sinh học của cơ thể .Ông Daniel Christ - nhà nghiên cứu điều trị kháng thể của Viện Nghiên cứu Y khoa Garvan ở Australia , chủ trì nghiên cứu về cấu trúc mới của DNA , cho biết : " Giống như phần lớn chúng ta thường nghĩ về DNA , chúng tôi cũng chỉ nghĩ về chuỗi xoắn kép .Tuy nhiên nghiên cứu mới này nhắc nhở chúng tôi rằng có những cấu trúc DNA khác cũng đang tồn tại và có thể rất quan trọng với các tế bào của chúng ta " .Thành phần mới trong DNA do nhóm nghiên cứu tìm ra được gọi là cấu trúc motif xen giữa ( " intercalated motif " hay " i - motif " ) vốn lần đầu được phát hiện vào những năm 1990 .Tuy nhiên cho tới nay người ta mới chỉ thấy xuất hiện cấu trúc này trong các tế bào ở điều kiện nghiên cứu ống nghiệm mà không phải trong các tế bào sống .Tuy nhiên nhờ công trình nghiên cứu của nhóm các nhà khoa học do ông Christ chủ trì , người ta đã thấy cấu trúc i - motif này xuất hiện một cách tự nhiên trong tế bào người , điều này cho thấy tầm quan trọng nhất định của cấu trúc này .Như vậy , với việc khẳng định chắc chắn về sự tồn tại của một dạng cấu trúc DNA mới trong các tế bào , các nhà khoa học đã có căn cứ xác thực để tiếp tục tìm hiểu chức năng thực sự của những cấu trúc này với cơ thể chúng ta .Kết quả nghiên cứu này vừa được đăng tải trên tạp chí khoa học Nature Chemistry .
+TÓM TẮT THAM CHIẾU:
+Phát hiện mới về cấu trúc gene "nút xoắn" (i-motif) trong DNA sống đã mở ra một hướng nghiên cứu mới về sự phức tạp của mã gene. Cấu trúc i-motif, vốn được biết đến từ thập niên 1990, đã được chứng minh là tồn tại tự nhiên trong tế bào người, không chỉ trong điều kiện ống nghiệm. Nghiên cứu do Daniel Christ dẫn đầu cho thấy sự quan trọng của cấu trúc này đối với tế bào. Điều này thách thức quan niệm truyền thống về cấu trúc xoắn kép DNA và gợi mở những khám phá mới về chức năng sinh học.
+TÓM TẮT DO MODEL SINH:
+Vào năm 1990, Cấu trúc gene được mô tả như "nút xoắn" của DNA trong tế bào sống. Tuy nhiên, các nhà khoa học đã phát hiện ra sự tồn tại của nó trong cơ thể chúng ta, đặc biệt là chuỗi xoắn kép quen thuộc lâu. Sự xuất hiện của Cấu Trúc i-motif xen giữa đã cho thấy tầm quan trọng của chúng. Các nhà nghiên cứu đã tìm ra bằng chứng xác thực để xác định sự tồn tại của chúng, đồng thời công bố kết quả nghiên cứu trên tạp chí Nature Chemistry.
+THỜI GIAN TÓM TẮT:
+7.0347 giây
