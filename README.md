@@ -1,207 +1,208 @@
-# Fiber
+# Tóm tắt văn bản tiếng Việt — ViT5 vs. Extractive
 
-A browser extension + full-stack backend that automatically **summarizes** and **fact-checks** Vietnamese news articles using AI. Built as a university thesis project.
+> **Bài tập lớn học phần Xử lý Ngôn ngữ Tự nhiên**  
+> Trường Đại học Công nghệ — Đại học Quốc gia Hà Nội  
+> Giáo viên hướng dẫn: TS. Trần Hồng Việt · 2026
 
-Fiber injects a sidebar into supported Vietnamese news sites, generates LLM-powered summaries with category tags and reading time estimates, and lets users highlight any text for search-augmented fact-checking — all scored with lexical and semantic evaluation metrics.
+Dự án thực nghiệm so sánh hiệu năng giữa mô hình tóm tắt trừu tượng hóa **ViT5** và các thuật toán tóm tắt trích xuất (**TextRank**, **LexRank**) trên bộ dữ liệu **vietnews**. Kết quả được đánh giá qua 7 độ đo: ROUGE-1, ROUGE-2, ROUGE-L, BLEU, BERTScore, Compression Ratio và Processing Time.
 
-## Features
+---
 
-- **Auto-summarization** — Sidebar injected into news pages with LLM-generated summaries, category tags, and estimated reading time
-- **Token streaming** — Summaries stream token-by-token for faster perceived response
-- **Fact-checking** — Select any text on the page to trigger a search-augmented fact-check with scoring and reasoning
-- **Intelligent routing** — Automatically routes articles to the optimal model based on text complexity, with a full fallback chain
-- **Output fusion** — Evaluation mode runs multiple models in parallel and selects the best summary via BERTScore
-- **Multi-provider LLM support** — Switch between OpenAI, Google Gemini, Anthropic Claude, and HuggingFace models from a settings UI, with per-model parameter tuning
-- **Evaluation metrics** — Every summarization is automatically scored (ROUGE-1/2/L, BLEU, BERTScore F1, compression rate, latency) and persisted to Supabase
-- **Cost tracking** — Token usage and estimated API cost tracked per request across all providers
-- **Metrics dashboard** — `/metrics` page to browse, filter, and compare evaluation results across models
-- **Settings page** — `/settings` page to select active model, tune parameters, and configure routing behavior
-- **Live debug feed** — `/live` page streaming backend log events in real time
-- **Action tracking** — `/dashboard` recording all extension actions with source URLs and model used
+## Nhóm thực hiện
 
-## Repository Structure
+| STT | Họ và tên        | MSSV     |
+| --- | ---------------- | -------- |
+| 1   | Phạm Vân Anh     | 22028099 |
+| 2   | Bùi Đức Duy      | 22021201 |
+| 3   | Lê Văn Thắng     | 20228313 |
+| 4   | Nguyễn Tiến Mạnh | 24020220 |
 
-```
-├── extension/          # Plasmo browser extension (React + TypeScript + Tailwind CSS)
-│   ├── components/     # UI components, modals, icons
-│   ├── contents/       # Content scripts injected into news pages
-│   ├── background.ts   # Service worker
-│   └── popup.tsx       # Extension popup
-├── backend/            # Next.js 14 (App Router) API server + admin pages
-│   ├── app/
-│   │   ├── api/        # API routes (summarize, fact-check, metrics, settings, routing, dashboard, logs)
-│   │   ├── debug/      # Debug testing page
-│   │   ├── metrics/    # Evaluation metrics dashboard
-│   │   ├── settings/   # Model configuration + routing settings UI
-│   │   └── dashboard/  # Action tracking page
-│   ├── services/       # Business logic layer
-│   ├── domain/         # Types and Zod schemas
-│   ├── config/         # Environment and app configuration
-│   └── supabase/       # Database migrations (001–017)
-├── bert/               # BERTScore microservice (FastAPI + Python + PhoBERT)
-├── shared/             # Shared TypeScript types
-├── metrics_reports/    # Original eval-metrics CSV pipeline (5 topic categories)
-└── fusion_reports/     # MoA fusion + LLM-judge batch outputs
-```
+---
 
-## Tech Stack
+## Tổng quan
 
-| Layer              | Technology                                                            |
-| ------------------ | --------------------------------------------------------------------- |
-| Browser extension  | [Plasmo](https://www.plasmo.com/), React 18, TypeScript, Tailwind CSS |
-| Backend API        | Next.js 14 (App Router), TypeScript, Zod                              |
-| Database           | Supabase (PostgreSQL)                                                 |
-| LLM providers      | OpenAI, Google Gemini, Anthropic Claude, HuggingFace Inference        |
-| Search             | Tavily                                                                |
-| Content extraction | `@mozilla/readability` + JSDOM                                        |
-| Lexical metrics    | Custom ROUGE implementation, `bleu-score`                             |
-| Semantic metrics   | BERTScore microservice (FastAPI + `vinai/phobert-base`)               |
+Bài toán tóm tắt văn bản tiếng Việt có hai hướng tiếp cận chính:
 
-### Supported Models
+- **Trích xuất (Extractive)** — Chọn các câu quan trọng nhất từ văn bản gốc (TextRank, LexRank). Nhanh, không cần GPU, nhưng kết quả kém tự nhiên.
+- **Trừu tượng hóa (Abstractive)** — Sinh văn bản tóm tắt mới dựa trên nội dung (ViT5). Linh hoạt hơn, trôi chảy hơn, nhưng yêu cầu tài nguyên tính toán lớn hơn.
 
-| Provider      | Models                                                                                              | Type                 |
-| ------------- | --------------------------------------------------------------------------------------------------- | -------------------- |
-| OpenAI        | GPT-4o Mini, GPT-4o, GPT-4.1 Mini, GPT-4.1, o4 Mini, o3 Mini                                        | Standard + Reasoning |
-| Google Gemini | Gemini 2.0 Flash Lite, 2.0 Flash, 2.5 Flash, 2.5 Pro, 3.1 Flash Lite, Flash Latest, 3 Flash Preview | Standard             |
-| Anthropic     | Claude Haiku 4.5, Sonnet 4.5, Sonnet 4.6, Opus 4.6                                                  | Standard             |
-| HuggingFace   | ViT5-large (Vietnamese news summarization)                                                          | Base                 |
+Dự án chạy cả hai hướng trên cùng bộ dữ liệu, sau đó so sánh định lượng để rút ra nhận xét về sự đánh đổi giữa chất lượng, tốc độ và độ bám từ ngữ gốc.
 
-> **Note:** PhoGPT-4B-Chat (`vinai/PhoGPT-4B-Chat`) is registered as a routing candidate but is not yet deployed — it is not available on HuggingFace's free Inference API. See [#28](https://github.com/thnglee/fiber/issues/28) for deployment plans. The fallback chain routes medium-complexity articles to GPT-4o in the meantime.
+---
 
-Reasoning models (o4-mini, o3-mini) automatically skip unsupported parameters like temperature and penalties. Missing API keys return clear error messages instead of crashing.
-
-## Architecture
+## Cấu trúc repository
 
 ```
-Browser Extension (Plasmo)
-  │  content script injects summary sidebar & fact-check UI
-  │
-  ▼
-Backend (Next.js API)
-  ├── /api/summarize        LLM summarization (streaming or batch)
-  │     │
-  │     ├── routing_mode: auto       → complexity-based model selection
-  │     ├── routing_mode: evaluation → run all models, pick best by BERTScore
-  │     └── routing_mode: forced     → use specified model directly
-  │
-  ├── /api/fact-check       search-augmented fact verification
-  ├── /api/settings         model configuration CRUD
-  ├── /api/settings/routing routing mode + complexity thresholds config
-  ├── /api/routing          routing analytics (model distribution, fallback rates)
-  ├── /api/metrics          evaluation data with filtering
-  ├── /api/dashboard        action tracking
-  ├── /api/evaluate         trigger metrics computation
-  └── /api/logs/stream      SSE debug feed
-        │
-        ▼
-  services/
-  ├── routing.service.ts    complexity classifier + model selector + fallback chain
-  ├── fusion.service.ts     parallel model execution + BERTScore-based winner selection
-  ├── llm.service.ts        provider dispatch (OpenAI / Gemini / Anthropic / HuggingFace)
-  ├── summarize.service.ts  orchestrates summarization flow
-  ├── fact-check.service.ts search → LLM pipeline
-  └── bert.service.ts       calls BERTScore microservice
-        │
-        ▼
-  Supabase
-    ├── model_configurations    models with capability metadata + cost info
-    ├── evaluation_metrics      ROUGE, BLEU, BERTScore, cost, latency per run
-    ├── routing_decisions       complexity classification + model selection log
-    ├── model_comparison_results  evaluation mode side-by-side results
-    ├── app_settings            routing mode + threshold configuration
-    └── dashboard_actions       extension user action log
-
-BERTScore Microservice (FastAPI)
-  └── POST /calculate-score    vinai/phobert-base for Vietnamese semantic similarity
+├── main.py                          # Entry point: chạy ViT5 / extractive trên vietnews
+│
+├── models/
+│   ├── install/                     # Script tải mô hình về local
+│   │   ├── install_vit5.py          # Tải VietAI/vit5-large-vietnews-summarization
+│   │   ├── install_mt5.py           # Tải mT5
+│   │   ├── install_t5vi.py          # Tải t5-small-vi-summarization
+│   │   └── install_qwen.py          # Tải Qwen2.5-1.5B-Instruct
+│   └── use_models/
+│       ├── load_models.py           # Nạp model, tokenizer, hàm summarize seq2seq / causal
+│       └── summary_vietnews.py      # Chạy ViT5 trên toàn bộ tập test vietnews
+│
+├── utils/
+│   ├── textrank.py                  # Thuật toán TextRank (extractive baseline)
+│   └── lexrank.py                   # Thuật toán LexRank (extractive baseline)
+│
+├── dataset/
+│   ├── vietnews/                    # Bộ dữ liệu chính (test.jsonl)
+│   ├── ViMs/                        # Bộ dữ liệu phụ
+│   └── VietnameseMDS/               # Bộ dữ liệu phụ
+│
+├── output/
+│   └── summary/
+│       ├── vit5/                    # Kết quả tóm tắt của ViT5
+│       ├── textrank/                # Kết quả tóm tắt của TextRank
+│       └── lexrank/                 # Kết quả tóm tắt của LexRank
+│
+├── bert/                            # BERTScore microservice (FastAPI + PhoBERT)
+├── backend/                         # Next.js backend — API + metrics dashboard
+├── w-latex-reports/                 # Báo cáo LaTeX bài tập lớn
+└── w-slides-presentation/           # Slide thuyết trình
 ```
 
-### Routing Mechanism
+---
 
-The routing system automatically selects the best model based on article complexity:
+## Mô hình và thuật toán
 
-| Complexity | Token Threshold | Preferred Model | Fallback Chain    |
-| ---------- | --------------- | --------------- | ----------------- |
-| Short      | ≤ 400 tokens    | ViT5            | → PhoGPT → GPT-4o |
-| Medium     | ≤ 1500 tokens   | PhoGPT          | → GPT-4o          |
-| Long       | > 1500 tokens   | GPT-4o          | —                 |
+### Mô hình (Abstractive)
 
-Three routing modes are available:
+| Mô hình                                               | Kiến trúc                  | Ghi chú                                                   |
+| ----------------------------------------------------- | -------------------------- | --------------------------------------------------------- |
+| **ViT5** (`VietAI/vit5-large-vietnews-summarization`) | Encoder-Decoder (T5-based) | Mô hình chính của bài tập lớn; đã fine-tune trên vietnews |
+| mT5                                                   | Encoder-Decoder            | Mô hình phụ                                               |
+| t5-small-vi                                           | Encoder-Decoder            | Mô hình phụ                                               |
+| Qwen2.5-1.5B-Instruct                                 | Decoder-only (Causal LM)   | Mô hình phụ                                               |
 
-- **auto** — Complexity-based model selection with automatic fallback (default for normal usage)
-- **evaluation** — Runs all candidate models in parallel, scores each summary with BERTScore, and returns the highest-scoring result (for thesis experiments)
-- **forced** — Uses whatever model is specified or currently active (for manual testing)
+> ViT5 dùng tiền tố `"vietnews: <nội dung> </s>"` khi inference, theo đúng cách fine-tune gốc.
 
-## Supported News Sites
+### Thuật toán (Extractive)
 
-- [Tuoi Tre](https://tuoitre.vn)
-- [Thanh Nien](https://thanhnien.vn)
-- [VietnamNet](https://vietnamnet.vn)
-- [Lao Dong](https://laodong.vn)
-- [Tien Phong](https://tienphong.vn)
-- [VTV News](https://vtv.vn)
-- [Nguoi Lao Dong](https://nld.com.vn)
+| Thuật toán   | Mô tả                                                                |
+| ------------ | -------------------------------------------------------------------- |
+| **TextRank** | Xây đồ thị câu dựa trên độ tương đồng TF-IDF, xếp hạng bằng PageRank |
+| **LexRank**  | Tương tự TextRank nhưng dùng độ tương đồng cosine từ TF-IDF matrix   |
 
-## Getting Started
+---
 
-### Prerequisites
+## Bộ dữ liệu
 
-- Node.js 18+ and npm
-- Python 3.10+ (only for the BERTScore microservice)
-- A Supabase project with migrations applied (`backend/supabase/migrations/`)
-- API keys: at minimum OpenAI + Tavily + Supabase; optionally Gemini, Anthropic, and HuggingFace
+**Bộ dữ liệu chính**: [vietnews](https://huggingface.co/datasets/vietnews) — tập tin tức báo chí tiếng Việt.
 
-### 1. Backend
+- Định dạng: JSONL (`test.jsonl`), mỗi dòng có trường `article` (văn bản gốc) và `abstract` (tóm tắt tham chiếu).
+- Đặt tại: `dataset/vietnews/test.jsonl`
+
+---
+
+## Độ đo đánh giá
+
+| Độ đo                 | Mô tả                                                     |
+| --------------------- | --------------------------------------------------------- |
+| **ROUGE-1**           | Overlap unigram giữa tóm tắt sinh ra và tham chiếu        |
+| **ROUGE-2**           | Overlap bigram                                            |
+| **ROUGE-L**           | Chuỗi con chung dài nhất (LCS)                            |
+| **BLEU**              | Độ chính xác n-gram có penalty độ dài                     |
+| **BERTScore**         | Độ tương đồng ngữ nghĩa dùng PhoBERT (vinai/phobert-base) |
+| **Compression Ratio** | `len(tóm tắt) / len(gốc)` — đo mức độ rút gọn             |
+| **Processing Time**   | Thời gian sinh mỗi bản tóm tắt (giây/mẫu)                 |
+
+> **Lưu ý phương pháp luận**: ROUGE, BLEU và BERTScore được tính so với bản tóm tắt tham chiếu (`abstract`) trong vietnews. Các độ đo này đo _độ bám từ ngữ_, không trực tiếp đo chất lượng ngữ nghĩa hay mức độ trôi chảy.
+
+---
+
+## Cài đặt và chạy
+
+### Yêu cầu
+
+- Python 3.10+
+- GPU (khuyến nghị) hoặc CPU
+- ~5 GB disk space cho ViT5-large
+
+### 1. Cài đặt dependencies
 
 ```bash
-cd backend
-npm install
+pip install torch transformers datasets rouge-score nltk
 ```
 
-Create `backend/.env`:
-
-```env
-# Required
-OPENAI_API_KEY=
-TAVILY_API_KEY=
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-
-# Optional — additional LLM providers
-GEMINI_API_KEY=
-ANTHROPIC_API_KEY=
-HF_API_KEY=              # HuggingFace token for ViT5/PhoGPT routing
-
-# Optional — defaults
-OPENAI_MODEL=gpt-4o-mini
-OPENAI_TEMPERATURE=0.7
-BERT_SERVICE_URL=          # URL of BERTScore microservice
-```
+Hoặc dùng file requirements (nếu có):
 
 ```bash
-npm run dev
-# → http://localhost:3000
+pip install -r requirements.txt
 ```
 
-### 2. Extension
+### 2. Tải mô hình về local
 
 ```bash
-cd extension
-npm install
+# Tải ViT5 (mô hình chính)
+python models/install/install_vit5.py
+
+# Tải các mô hình khác (tuỳ chọn)
+python models/install/install_mt5.py
+python models/install/install_t5vi.py
+python models/install/install_qwen.py
 ```
 
-Optionally create `extension/.env`:
+Mô hình được lưu vào `models/vit5/`, `models/mt5/`, v.v.
 
-```env
-PLASMO_PUBLIC_API_URL=http://localhost:3000/api
+### 3. Chuẩn bị dataset
+
+Đặt file `test.jsonl` của vietnews vào:
+
 ```
+dataset/vietnews/test.jsonl
+```
+
+### 4. Chạy ViT5 trên vietnews
 
 ```bash
-npm run dev
-# Plasmo opens a browser with the extension loaded and hot reload enabled
+python main.py
 ```
 
-### 3. BERTScore Microservice (optional)
+Hoặc gọi trực tiếp từ code:
+
+```python
+from models.use_models.summary_vietnews import run_vit5_on_vietnews_test
+
+run_vit5_on_vietnews_test(
+    dataset_path="dataset/vietnews/test.jsonl",
+    output_dir="output/summary/vit5/vietnews_test",
+    start_index=0,       # Bắt đầu từ mẫu nào
+    max_samples=500,     # None = chạy toàn bộ
+)
+```
+
+Kết quả được lưu vào `output/summary/vit5/vietnews_test/`, mỗi mẫu một file `.txt` gồm: văn bản gốc, tóm tắt tham chiếu, tóm tắt do ViT5 sinh, và thời gian xử lý.
+
+### 5. Chạy extractive baseline
+
+```python
+from utils.textrank import run_textrank_on_vietnews
+from utils.lexrank import run_lexrank_on_vietnews
+from pathlib import Path
+
+# TextRank
+run_textrank_on_vietnews(
+    dataset_path=Path("dataset/vietnews/test.jsonl"),
+    output_dir=Path("output/summary/textrank/vietnews_test"),
+)
+
+# LexRank
+run_lexrank_on_vietnews(
+    dataset_path=Path("dataset/vietnews/test.jsonl"),
+    output_dir=Path("output/summary/lexrank/vietnews_test"),
+)
+```
+
+---
+
+## BERTScore microservice (tuỳ chọn)
+
+Dịch vụ tính BERTScore dùng `vinai/phobert-base`, triển khai bằng FastAPI:
 
 ```bash
 cd bert
@@ -210,49 +211,34 @@ uvicorn main:app --host 0.0.0.0 --port 7860
 # → http://localhost:7860
 ```
 
-Set `BERT_SERVICE_URL=http://localhost:7860` in `backend/.env`. Also deployable to [Hugging Face Spaces](https://huggingface.co/spaces) using the included `Dockerfile`.
+Có thể deploy lên [Hugging Face Spaces](https://huggingface.co/spaces) bằng `Dockerfile` đi kèm.
 
-## API Endpoints
+---
 
-| Method    | Endpoint                | Description                                                                      |
-| --------- | ----------------------- | -------------------------------------------------------------------------------- |
-| `POST`    | `/api/summarize`        | Summarize an article. Body: `{ url?, content?, stream?, model?, routing_mode? }` |
-| `POST`    | `/api/fact-check`       | Fact-check selected text. Body: `{ text, model? }`                               |
-| `GET`     | `/api/settings`         | Get active model + all available model configs                                   |
-| `PATCH`   | `/api/settings/active`  | Switch active model. Body: `{ model }`                                           |
-| `PATCH`   | `/api/settings/config`  | Update model parameters. Body: `{ model, temperature?, ... }`                    |
-| `GET/PUT` | `/api/settings/routing` | Get or update routing config (mode, thresholds)                                  |
-| `GET`     | `/api/routing`          | Routing analytics: model distribution, fallback rates, avg BERTScore             |
-| `GET`     | `/api/metrics`          | Fetch paginated evaluation metrics (filterable by mode, model)                   |
-| `GET`     | `/api/dashboard`        | Fetch recent extension actions                                                   |
-| `GET`     | `/api/logs/stream`      | SSE debug log stream                                                             |
+## Backend & Metrics Dashboard (tuỳ chọn)
 
-All request/response shapes are validated with Zod schemas defined in `backend/domain/schemas.ts`.
+Thư mục `backend/` chứa một Next.js API server phục vụ dashboard theo dõi kết quả đánh giá:
 
-## Evaluation Metrics
+```bash
+cd backend
+npm install
+# Tạo file .env với SUPABASE_URL, SUPABASE_ANON_KEY, ...
+npm run dev
+# → http://localhost:3000
+```
 
-Each summarization stores the following in the `evaluation_metrics` table:
+Dashboard hiển thị các kết quả ROUGE/BLEU/BERTScore theo từng mô hình và lượt chạy, lưu trữ trong Supabase (PostgreSQL).
 
-| Metric                                | Description                                                                                          |
-| ------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `rouge_1` / `rouge_2` / `rouge_l`     | Lexical overlap (unigram, bigram, LCS)                                                               |
-| `bleu`                                | 4-gram BLEU precision                                                                                |
-| `bert_score`                          | Semantic similarity F1 via PhoBERT microservice                                                      |
-| `compression_rate`                    | Summary length / original length                                                                     |
-| `latency`                             | Time to first token (streaming) or total time (batch) in ms                                          |
-| `model`                               | LLM model used (e.g., `gpt-4o-mini`, `gemini-2.5-flash`, `VietAI/vit5-large-vietnews-summarization`) |
-| `prompt_tokens` / `completion_tokens` | Token usage                                                                                          |
-| `estimated_cost_usd`                  | Computed from token counts and per-model pricing                                                     |
-| `mode`                                | `"streaming"` or `"batch"`                                                                           |
-| `routing_id`                          | Links to the routing decision that selected this model                                               |
+---
 
-Evaluation datasets cover 5 Vietnamese news categories: thoi_su (current affairs), phap_luat (law), kinh_te (economics), giao_duc (education), van_hoa (culture).
+## Tài liệu
 
-## Security Notes
+| Thư mục                  | Nội dung                                                           |
+| ------------------------ | ------------------------------------------------------------------ |
+| `w-latex-reports/`       | Báo cáo bài tập lớn (LaTeX) — build bằng `latexmk -pdf thesis.tex` |
+| `w-slides-presentation/` | Slide thuyết trình                                                 |
 
-- API keys live only in the backend `.env`. The extension calls the backend — it never holds secrets.
-- Supabase service role key is used server-side only via `getSupabaseAdmin()`.
-- The backend currently ships with permissive CORS for development. Lock this down before any public deployment.
+---
 
 ## License
 
