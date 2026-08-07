@@ -1,2 +1,0 @@
-CLUSTER ID: 94
-CLUSTER NAME: Quản lý các cơ sở khám bệnh tư nhân

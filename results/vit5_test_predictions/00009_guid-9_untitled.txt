@@ -1,0 +1,14 @@
+INDEX:
+9
+GUID:
+9
+TITLE:
+
+VĂN BẢN GỐC:
+Khi đo, không nên mang giày, và phải đứng thẳng. Dùng cân đã được kiểm định chính xác để cân, bạn có thể lấy số đo theo pound hoặc kg. Tìm bảng chỉ số BMI đáng tin cậy, gióng chiều cao và cân nặng của bạn để tìm điểm giao nhau. Chỉ số tại điểm giao nhau này chính là chỉ số BMI của bạn, hoặc chỉ số khối lượng cơ thể của bạn. Bạn có thể xem bảng BMI trực tuyến tại đây. Chỉ số BMI của chúng ta có xu hướng tự nhiên tăng nhẹ khi chúng ta lớn tuổi. Chỉ số BMI của trẻ em và lứa tuổi thanh thiếu niên: chỉ số BMI của trẻ em phải được tính theo bảng có độ tuổi và giới tính phù hợp. Nếu không, kết quả sẽ không chính xác. Bạn có thể dùng công cụ tính trực tuyến để tính chỉ số BMI. Kích vào đường link cho người trưởng thành và cho trẻ em - thanh thiếu nên để tính. Chỉ số BMI của bạn là tỷ lệ chiều cao cơ thể của bạn so với trọng lượng của cở thể. Cơ thể của bạn được gồm chất béo, xương, máu, cơ bắp, và nhiều mô khác góp phần quạn trọng vào trọng lượng, và chỉ số BMI của bạn. Tỷ lệ BMI không liên quan trực tiếp đến tỷ lệ phần trăm lượng mỡ cơ thể, nhưng là một cách để theo dõi mức độ gầy hay béo của bạn. Bên dưới thống kê độ gầy béo theo chỉ số BMI cho n gười trưởng thành. Chỉ số của BMI <18,5: thiếu cân. 18,5-24,9: trong phạm vi "bình thường". 25-29,9: thừa cân. > 30: béo phì. Một số người có nhiều cơ bắp, mặc dù không béo, nhưng vẫn được sếp vào thừa cân vì cơ bắp khiến họ nặng cân. Sau khi có chỉ số BMI, bạn có thể nhờ bác sĩ giải thích chỉ số này cho bạn. Nếu bạn không tập thể dục và không tăng cơ nhưng tăng cân, có khả năng đó là do chất béo tăng lên. Nếu bạn tăng cân trong khi tập thể dục và ăn uống lành mạnh, thì có thể đó chủ yếu là trọng lượng cơ bắp và chỉ có một phần nhỏ là chất béo. Nếu bạn đang giảm cân, đồng thời bạn có thể giảm cả cơ và chất béo.
+TÓM TẮT THAM CHIẾU:
+Bài viết này hướng dẫn cách tính chỉ số khối cơ thể (BMI) để đánh giá tình trạng cân nặng. Để đo chính xác, bạn cần cân và đo chiều cao, sau đó tra cứu bảng BMI hoặc dùng công cụ tính trực tuyến. BMI là tỷ lệ giữa chiều cao và cân nặng, phản ánh lượng mỡ trong cơ thể. Chỉ số BMI khác nhau tùy theo lứa tuổi và giới tính, và có các mức phân loại gầy, bình thường, thừa cân và béo phì. Việc theo dõi BMI giúp bạn đánh giá tình trạng sức khỏe và đưa ra các điều chỉnh về chế độ ăn uống và tập luyện.
+TÓM TẮT DO VIT5 SINH:
+Bài viết này tập trung vào mức độ gầy hay béo của người trưởng thành và lứa tuổi thanh thiếu niên. Cân nặng là một phương pháp theo dõi tình trạng gầy béo, đặc biệt là ở trẻ em. Bác sĩ có thể giải thích bằng kích vào đường link để tính chỉ số bMI. Bên dưới, bảng BMI trực tuyến chính là tỷ lệ chiều cao cơ thể của bạn so với trọng lượng cơ thể. Bệnh nhân có thể được sếp vào thừa cân, đồng thời giảm cân. Các biện pháp này được sử dụng để giảm cơ và chất Béo.
+THỜI GIAN TÓM TẮT:
+14.0684 giây

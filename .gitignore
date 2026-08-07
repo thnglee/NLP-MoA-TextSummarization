@@ -55,10 +55,11 @@ yarn-debug.log*
 
 zzz.txt
 
-models/qwen/
-models/vit5/
-models/mt5/
-models/t5vi/
+models/
 
-dataset/vietnews/
-dataset/vietnamese-summarization-dataset-0001/
+datasets/
+
+training/
+
+.venv/
+venv/
