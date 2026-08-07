@@ -121,7 +121,7 @@ SKIP_EXISTING = True
 
 # None = chạy toàn bộ 1953 mẫu.
 # Ví dụ 20 = chỉ test 20 mẫu đầu.
-MAX_SAMPLES = None
+MAX_SAMPLES = 300
 
 
 # ============================================================
@@ -216,11 +216,11 @@ def load_jsonl(
 
 
 # ============================================================
-# 9. HÀM TÓM TẮT BẰNG NISHIKYEN
+# 9. HÀM TÓM TẮT BẰNG sft_model
 # ============================================================
 
 @torch.inference_mode()
-def summarize_nishikyen(
+def summarize_sft_model(
     article: str,
 ) -> str:
 
@@ -298,17 +298,11 @@ def save_result_txt(
         "TÓM TẮT THAM CHIẾU:\n"
         f"{reference}\n"
 
-        "TÓM TẮT DO VIT5 SINH:\n"
+        "TÓM TẮT DO MODEL SINH:\n"
         f"{generated}\n"
 
         "THỜI GIAN TÓM TẮT:\n"
         f"{elapsed_seconds:.4f} giây\n"
-
-        "TỪ KHÓA HƯỚNG DẪN:\n"
-        "Không sử dụng\n"
-
-        "ĐIỂM RERANK:\n"
-        "Không sử dụng\n"
     )
 
     # Ghi file tạm trước
@@ -359,7 +353,7 @@ error_count = 0
 for index, record in enumerate(
     tqdm(
         records,
-        desc="NishiKyen test",
+        desc="sft_model test",
     )
 ):
 
@@ -437,7 +431,7 @@ for index, record in enumerate(
 
         started_at = time.perf_counter()
 
-        generated = summarize_nishikyen(
+        generated = summarize_sft_model(
             article
         )
 
@@ -485,7 +479,7 @@ for index, record in enumerate(
 
 print("\n" + "=" * 80)
 
-print("HOÀN TẤT TEST NISHIKYEN")
+print("HOÀN TẤT TEST sft_model")
 
 print("=" * 80)
 

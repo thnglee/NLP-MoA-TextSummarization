@@ -8,11 +8,7 @@ VĂN BẢN GỐC:
 Lợn chăn nuôi trong một trang trại kiểu mới ở Bắc Kinh hôm 30/4 .Ổ dịch mới được phát hiện ở huyện Nghị An , thành phố Đồng Lăng , tỉnh An Huy .63 trong số 219 con lợn trong một trang trại bị nhiễm bệnh và 23 con đã chết , theo báo cáo của Trung tâm kiểm soát dịch bệnh động vật Trung Quốc .Theo Xinhua , chính quyền địa phương đã ban lệnh ứng phó khẩn cấp để ngăn chặn , tiêu huỷ và khử trùng tại ổ dịch .Tả lợn châu Phi là một bệnh truyền nhiễm rất dễ lây lan ở lợn nhưng không gây hại cho người hoặc động vật khác .Dịch tả bùng phát ở Trung Quốc từ tháng 8 , lan sang 18 trang trại và lò mổ thuộc 6 tỉnh .Giới chức nước này đã tiêu huỷ hơn 38.000 con lợn , đồng thời cấm vận chuyển lợn tại ổ dịch .Các nhà chức trách Lào hôm qua thông báo ngừng nhập khẩu các sản phẩm liên quan tới lợn có xuất xứ Trung Quốc .Tổ chức Nông Lương Thế giới ( FAO ) cảnh báo dịch tả lợn châu Phi " gần như chắc chắn " sẽ tấn công các nước khác , chủ yếu qua các sản phẩm thịt lợn đã hoặc chưa qua chế biến .Việc kiểm soát dịch rất khó khăn bởi virus tả lợn có thể tồn tại nhiều tháng trong sản phẩm thịt và thức ăn chăn nuôi .
 TÓM TẮT THAM CHIẾU:
 Dịch tả lợn châu Phi đã bùng phát tại một trang trại ở Bắc Kinh. Ổ dịch mới được phát hiện tại tỉnh An Huy, 63/219 con lợn bị nhiễm bệnh và 23 con đã chết. Chính quyền địa phương đã ứng phó khẩn cấp, tiêu hủy và khử trùng. Dịch tả lợn châu Phi rất dễ lây lan nhưng không gây hại cho người. Dịch đã lan sang 18 trang trại và lò mổ thuộc 6 tỉnh, hơn 38.000 con lợn đã bị tiêu hủy và Lào đã ngừng nhập khẩu các sản phẩm từ Trung Quốc. Tổ chức Nông Lương Thế giới cảnh báo dịch sẽ tấn công các nước khác, do virus có thể tồn tại lâu trong sản phẩm thịt và thức ăn chăn nuôi.
-TÓM TẮT DO VIT5 SINH:
+TÓM TẮT DO MODEL SINH:
 Lợn chăn nuôi là một bệnh truyền nhiễm do virus tả lợn gây ra ở Trung Quốc. Bệnh được phát hiện ở Bắc Kinh vào ngày 30/4, với 63 trong số 219 con lợn bị nhiễm và 23 con đã chết. Chính quyền địa phương đã ban hành các biện pháp để ngăn chặn, tiêu hủy và khử trùng ổ dịch. Các nhà chức trách Lào đã tập trung vào việc kiểm soát và kiểm soát dịch bệnh. Việc kiểm soát dịch gặp nhiều khó khăn do sự lây lan của virus.
 THỜI GIAN TÓM TẮT:
-3.0154 giây
-TỪ KHÓA HƯỚNG DẪN:
-Không sử dụng
-ĐIỂM RERANK:
-Không sử dụng
+3.3483 giây

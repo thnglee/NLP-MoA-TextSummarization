@@ -8,11 +8,7 @@ VĂN BẢN GỐC:
 Sử dụng trong y tế Rabeprazole, giống như các thuốc ức chế bơm proton khác như omeprazole, được sử dụng cho mục đích ức chế axit dạ dày. Tác dụng này có lợi cho việc điều trị và phòng ngừa các tình trạng trong đó axit dạ dày trực tiếp làm nặng thêm các triệu chứng, chẳng hạn như loét tá tràng và dạ dày. Trong bối cảnh của bệnh trào ngược dạ dày thực quản (GERD), bệnh lý sinh lý được đặc trưng bởi sự tiếp xúc kéo dài với axit dạ dày trong thực quản (thường là do thay đổi trong dạ dày và/hoặc giải phẫu thực quản, chẳng hạn như gây ra bởi béo bụng), Ức chế có thể cung cấp cứu trợ triệu chứng. Ức chế axit cũng rất hữu ích khi tăng sản xuất axit trong dạ dày, bao gồm cả các tình trạng tiết axit dạ dày dư thừa (điều kiện quá mẫn) như hội chứng Zollinger-Ellison, nhiều u tuyến nội tiết và nhiễm độc tế bào toàn thân. == Tham khảo ==
 TÓM TẮT THAM CHIẾU:
 Rabeprazole, tương tự như các thuốc ức chế bơm proton khác, được dùng để ức chế axit dạ dày. Việc này giúp điều trị và ngăn ngừa các bệnh lý do axit dạ dày, chẳng hạn như loét tá tràng và dạ dày. Trong bệnh trào ngược dạ dày thực quản (GERD), Rabeprazole giúp giảm triệu chứng do axit dạ dày trào lên thực quản. Ngoài ra, nó còn hữu ích khi tăng sản xuất axit dạ dày trong các tình trạng tiết axit dư thừa, như hội chứng Zollinger-Ellison và nhiều u tuyến nội tiết.
-TÓM TẮT DO VIT5 SINH:
+TÓM TẮT DO MODEL SINH:
 Rabeprazole, tương tự như các loại thuốc ức chế bơm proton, được sử dụng cho mục đích ức chế axit dạ dày. Tác dụng này có lợi cho việc điều trị và phòng ngừa các bệnh lý liên quan, bao gồm cả bịnh lý sinh lý (GERD). Ức chế axit có thể giúp cứu trợ triệu chứng, nhưng cũng có thể gây ra các biến chứng nghiêm trọng như nhiễm trùng tế bào.
 THỜI GIAN TÓM TẮT:
-2.7306 giây
-TỪ KHÓA HƯỚNG DẪN:
-Không sử dụng
-ĐIỂM RERANK:
-Không sử dụng
+3.2364 giây

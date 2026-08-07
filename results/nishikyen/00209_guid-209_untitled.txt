@@ -1,0 +1,14 @@
+INDEX:
+209
+GUID:
+209
+TITLE:
+
+VĂN BẢN GỐC:
+Ngày N 19/7 , một hãng N taxi ở Quảng Nam cho biết N vừa khen thưởng V tài xế N Nguyễn Văn Thương do hỗ trợ sản phụ N “ vượt cạn N ” thành công V . Anh N Thương đến V thăm V hai mẹ N con N chị Ly ở bệnh viện N . Trước N đó sáng N 16/7 , anh Thương chở V sản phụ N Huỳnh Thị Ly ( huyện N Tiên Phước ) đi V thành phố N Tam Kỳ để sinh V con N . Chạy V được khoảng A 10 km , hành khách N chuyển dạ V . Tài xế V vội A tấp V xe N vào lề đường N , hỗ trợ sản phụ N sinh V bé N trai N nặng A 3,4 kg . Ngay N sau N đó , tài xế N Thương chở V hai mẹ con N đến Bệnh viện N Đa khoa N Quảng Nam . Sau N ba ngày N chăm sóc V , chị Ly và cháu bé N đã bình phục V .
+TÓM TẮT THAM CHIẾU:
+Vào ngày 19/7, hãng taxi N ở Quảng Nam đã khen thưởng tài xế Nguyễn Văn Thương vì đã hỗ trợ thành công một sản phụ "vượt cạn". Anh Thương đã đến thăm hai mẹ con chị Ly tại bệnh viện. Trước đó, vào sáng 16/7, anh Thương chở sản phụ Huỳnh Thị Ly đi sinh. Khi xe chạy được khoảng 10km, sản phụ chuyển dạ. Tài xế đã dừng xe và hỗ trợ sinh bé trai nặng 3,4kg. Sau đó, tài xế đã đưa hai mẹ con đến bệnh viện. Sau ba ngày chăm sóc, cả hai mẹ con đã bình phục.
+TÓM TẮT DO MODEL SINH:
+Vào ngày 19/7, một tài xế taxi ở Quảng Nam đã hỗ trợ sản phụ Huỳnh Thị Ly "vượt cạn" thành công. Trước đó, anh Thương đã chở chị Ly đi từ Tam Kỳ để sinh con. Sau khi chạy được 10km, chị Ly và cháu bé nặng 3,4kg. Sau ba ngày chăm sóc, cả hai mẹ con đã có những dấu hiệu bất thường.
+THỜI GIAN TÓM TẮT:
+2.5729 giây

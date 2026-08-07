@@ -8,11 +8,7 @@ VĂN BẢN GỐC:
 Phân bố và môi trường sống H. monopterygius có phân bố rộng nhưng các vùng phân bố lại đứt đoạn, nó sống ở vùng nước nhiệt đới ấm thuộc Úc. Vùng phân bố phía tây kéo dài từ Vịnh Saint Vincent tại Nam Úc tới Broome tại Tây Úc, vùng phân bố phía đông từ Eden ở New South Wales tới Đảo Heron ở Queensland. Nó không sống ở Victoria hay Tasmania. Loài cá này thường sống gần đáy biển, không sâu hơn 80 m (260 ft), mặc dù nó đã được ghi nhận ở độ sâu 240 m (790 ft). Môi trường sống ưa thích của nó là đáy cát hay đáy bùn, gồm bãi biển, cửa sông, và vịnh, và cũng có thể sống quanh vùng nhiều đá hay rạn san hô. Chú thích == Tham khảo ==
 TÓM TẮT THAM CHIẾU:
 Cá H. monopterygius có phân bố rộng ở vùng nước nhiệt đới ấm thuộc Úc, nhưng phân bố bị gián đoạn. Vùng phân bố phía tây kéo dài từ Vịnh Saint Vincent đến Broome, phía đông từ Eden đến Đảo Heron. Loài này không có ở Victoria và Tasmania. Chúng sống gần đáy biển, không quá 80m, ưa thích đáy cát, bùn ở bãi biển, cửa sông, vịnh, cũng như vùng đá và rạn san hô.
-TÓM TẮT DO VIT5 SINH:
+TÓM TẮT DO MODEL SINH:
 H. monopterygius, một loài cá nước nhiệt đới ấm thuộc Úc, nổi tiếng với sự phân bố và môi trường sống đa dạng. Loài cá này thường sống ở các khu vực ấm áp như Úc, đặc biệt là ở độ sâu 80 mét. Chúng có thể sống gần các bãi biển, bãi biển, và vịnh, cũng như đá hay rạn san hô.
 THỜI GIAN TÓM TẮT:
-2.4812 giây
-TỪ KHÓA HƯỚNG DẪN:
-Không sử dụng
-ĐIỂM RERANK:
-Không sử dụng
+2.6003 giây

@@ -60,3 +60,4 @@ datasets/
 training/
 
 .venv/
+venv/

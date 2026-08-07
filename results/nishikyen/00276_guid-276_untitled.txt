@@ -1,0 +1,14 @@
+INDEX:
+276
+GUID:
+276
+TITLE:
+
+VĂN BẢN GỐC:
+Theo nhóm nghiên cứu , nước tiểu của con người không chỉ là chất thải thuần tuý mà còn có thể được chế biến thành dạng vật chất rắn , giống như gạch , được gọi là " gạch sinh học " để ứng dụng trong xây dựng .Không giống như gạch nung thông thường , " gạch sinh học " không đòi hỏi quá trình nung ở nhiệt độ cao , đồng nghĩa với việc quá trình sản xuất chúng không thải ra môi trường hàng ngàn kg khí nhà kính .Trưởng nhóm nghiên cứu , tiến sĩ Dyllon Randall , vô tình khám phá ra " tiềm năng " của nước tiểu khi thu thập chất thải này để làm phân bón .Sau khi hoàn tất quá trình chiết xuất phân bón , Randall nhận ra rằng vẫn còn sót lại một chút chất dịch lỏng và đây chính là một thành phần quan trọng để sản xuất ra " gạch sinh học " , ông gọi đó là " vàng lỏng " .Trong " vàng lỏng " có chứa một hợp chất quan trọng được gọi là urê .Randall phát hiện ra rằng khi trộn lẫn dung dịch này với cát xốp có chứa một số loài vi khuẩn sản sinh ra enzym urease sẽ tạo ra một chất rắn có độ cứng rất cao .Khi các enzym urease tiết ra bởi vi khuẩn tiếp xúc với " vàng lỏng , chúng sẽ phân huỷ urê để tạo ra hợp chất canxi cacbonat CaCO3 ( Hợp chất có màu trắng và có độ cứng khá cao này là một thành phần quan trọng tạo nên vỏ trứng và vỏ ốc , sò , … ) có tác dụng gắn kết các hạt cát với nhau .Quá trình này được gọi là kết tủa cacbon vi khuẩn và thời gian hoạt động của vi khuẩn càng dài thì viên gạch càng bền chắc , Randall chia sẻ .Ưu điểm của loại gạch sản xuất từ nước tiểu là không yêu cầu quy trình nung đốt , song để sản xuất một mẻ gạch loại này cần từ 2-6 ngày , và nhóm nghiên cứu cần tăng tốc quá trình này nếu muốn áp dụng vào thực tế .Theo ước tính , nước tiểu chiếm chưa tới 1 % lượng nước thải sinh hoạt .Phần lớn phốt pho có mặt trong nước tiểu có thể được chuyển đổi thành calcium phosphate , một thành phần quan trọng trong phân bón .
+TÓM TẮT THAM CHIẾU:
+Nghiên cứu mới cho thấy nước tiểu có thể được chế biến thành vật liệu xây dựng, gọi là "gạch sinh học". Khác với gạch nung truyền thống, gạch sinh học không cần nung, giúp giảm phát thải khí nhà kính. Quá trình này bắt đầu từ việc chiết xuất phân bón từ nước tiểu, còn lại "vàng lỏng" chứa urê. Khi trộn với cát và vi khuẩn, urê bị phân hủy tạo canxi cacbonat, gắn kết cát thành gạch. Gạch này không cần nung và quá trình sản xuất kéo dài 2-6 ngày.
+TÓM TẮT DO MODEL SINH:
+Nước tiểu của con người không chỉ là chất thải thuần túy mà còn có thể chế biến thành nhiều dạng khác nhau. Tiến sĩ Dyllon Randall đã khám phá ra "tiềm năng" của nước tiểu khi thu thập chất thải này để làm phân bón. Quá trình này diễn ra trong quá trình sản xuất, bao gồm việc phân hủy urê để tạo ra hợp chât canxi cacbonat CaCO3. Kết quả cho thấy, quá trình chế biến cần thời gian và cần thêm thời gian để áp dụng vào thực tế.
+THỜI GIAN TÓM TẮT:
+3.4042 giây
