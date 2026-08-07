@@ -1,7 +1,8 @@
 % !TEX root = ../thesis.tex
-\chapter{Thiết kế và xây dựng hệ thống}
+\chapter{Phân tích cài đặt chương trình}
 
-Chương này hiện thực hóa các nền tảng lý thuyết đã được trình bày trong Chương~2 thành một hệ thống phần mềm hoàn chỉnh mang tên Fiber --- một tiện ích trình duyệt hỗ trợ tóm tắt tự động tin tức tiếng Việt. Nội dung chương được tổ chức theo trình tự từ phân tích yêu cầu đến đánh giá: Mục~3.1 phân tích các yêu cầu chức năng và phi chức năng; Mục~3.2 giới thiệu kiến trúc tổng quan hệ thống; Mục~3.3 trình bày module tóm tắt văn bản; Mục~3.4 mô tả pipeline dung hợp đa tác nhân MoA --- đóng góp kỹ thuật cốt lõi của khóa luận; và Mục~3.5 chi tiết khung đánh giá ba trục --- đóng góp chính về mặt phương pháp luận.
+Chương này hiện thực hóa các nền tảng lý thuyết đã được trình bày trong Chương~2 thành một pipeline thực nghiệm hoàn chỉnh nhằm so sánh hiệu năng của mô hình ViT5 với các thuật toán tóm tắt trích xuất trên bộ dữ liệu vietnews.
+Nội dung chương được tổ chức theo trình tự từ phân tích yêu cầu đến thiết kế: Mục~3.1 phân tích các yêu cầu chức năng và phi chức năng; Mục~3.2 trình bày tổng quan pipeline thực nghiệm; Mục~3.3 mô tả cài đặt và chạy mô hình ViT5 trên vietnews; Mục~3.4 trình bày cài đặt các thuật toán extractive; và Mục~3.5 mô tả thiết kế pipeline đánh giá tự động.
 
 \section{Phân tích yêu cầu hệ thống}
 

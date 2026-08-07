@@ -1,12 +1,11 @@
 % !TEX root = ../thesis.tex
 \chapter{Giới thiệu bài toán}
 
-Chương này đặt nền móng cho toàn bộ khóa luận bằng việc giới thiệu bài toán trọng tâm --- tóm tắt văn bản tin tức tiếng Việt
- --- cùng với kỹ thuật Mixture-of-Agents (MoA) được khóa luận lựa chọn làm phương pháp tiếp cận chính. 
- Trước tiên, Mục~1.1 trình bày định nghĩa bài toán tóm tắt văn bản và các thách thức đặc thù khi áp dụng cho tiếng Việt; 
- Mục~1.2 giới thiệu pipeline MoA với thiết kế phân tầng đa tác nhân; 
- và Mục~1.3 khảo sát các công trình liên quan trong nghiên cứu tiếng Việt lẫn quốc tế, 
- từ đó xác định ba khoảng trống nghiên cứu mà khóa luận nhắm tới khai thác.
+Chương này đặt nền móng cho toàn bộ báo cáo bằng việc giới thiệu bài toán trọng tâm ---
+tóm tắt văn bản tin tức tiếng Việt --- cùng với hai hướng tiếp cận chính: tóm tắt trích xuất (extractive) và tóm tắt trừa tượng hóa (abstractive) với mô hình ViT5.
+Trước tiên, Mục~1.1 trình bày định nghĩa bài toán tóm tắt văn bản và các thách thức đặc thù khi áp dụng cho tiếng Việt;
+Mục~1.2 giới thiệu bộ dữ liệu vietnews và mô hình ViT5 được sử dụng trong bài tập lớn;
+và Mục~1.3 khảo sát các công trình liên quan về tóm tắt tiếng Việt, từ đó xác định khoảng trống mà bài tập lớn nhắm tới.
 
 \section{Bài toán tóm tắt văn bản tự động}
 
@@ -60,9 +59,9 @@ Các tiêu đề giật gân, trích dẫn phiến diện và thông tin sai l�
 Kiểm chứng thủ công không đủ khả năng đáp ứng so với quy mô thông tin hiện tại; một công cụ hỗ trợ được tích hợp ngay trong trình duyệt, có khả năng
 gắn cờ các mệnh đề không có căn cứ, ngày càng trở nên có giá trị và ngày càng trở nên quan trọng hơn khi được gắn liền với bài toán tóm tắt tin tức.
 
-\section{Pipeline Mixture-of-Agents (MoA)}
+\section{Bộ dữ liệu vietnews và mô hình ViT5}
 
-Wang et al.\ đề xuất Mixture-of-Agents vào năm 2024 \cite{Wang2024}.
+\textit{(Phần này sẽ được bổ sung: giới thiệu bộ dữ liệu vietnews và mô hình ViT5 được sử dụng làm công cụ tóm tắt trừa tượng hóa chính trong bài tập lớn.)}
 Quan sát thực nghiệm trung tâm là một LLM đóng vai trò tác
 nhân tổng hợp cho ra câu trả lời tốt hơn khi được cung cấp nhiều
 câu trả lời ứng viên từ các LLM khác được coi là tác nhân đề xuất
@@ -100,8 +99,8 @@ có thể đạt được đối với tiếng Việt hay không, chính là câ
 thực nghiệm mà khóa luận này trả lời.
 
 \section{Các công trình liên quan và khoảng trống nghiên cứu}
-Khoá luận đồng thời cũng giới thiệu các công trình nghiên cứu tương tự đã xuất hiện cũng như xác định
-khoảng trống nghiên cứu: 
+Phần này điểm qua các nghiên cứu tương tự và xác định
+khoảng trống mà bài tập lớn này nhắm đến: 
 
 Google News Việt Nam và Báo Mới cung cấp tin tức
 tổng hợp với các đoạn mô tả ngắn, nhưng các đoạn đó là trích dẫn trực
@@ -139,4 +138,8 @@ ba khoảng trống nghiên cứu đó.
 
 \section{Tổng kết chương}
 
-Chương này đã thiết lập bức tranh toàn cảnh cho khóa luận thông qua ba nội dung chính. Thứ nhất, bài toán tóm tắt văn bản tự động được trình bày với các đặc thù của tiếng Việt bao gồm phân đoạn từ đa âm tiết, dấu phụ thanh điệu và sự khan hiếm corpus đánh giá có chú thích bởi con người. Thứ hai, kỹ thuật Mixture-of-Agents được giới thiệu với thiết kế phân tầng, trong đó tầng tác nhân đề xuất tạo ra các bản thảo độc lập và tầng tác nhân tổng hợp dung hợp chúng thành bản tóm tắt chất lượng cao hơn --- một kết quả đã được chứng minh trên các bộ đánh giá quốc tế nhưng chưa được kiểm chứng cho tiếng Việt. Thứ ba, qua khảo sát các công trình liên quan, chương đã xác định ba khoảng trống nghiên cứu: chưa có công trình nào áp dụng MoA cho tiếng Việt, kết hợp tóm tắt với kiểm chứng thông tin trong một tiện ích trình duyệt, hay đối chiếu tường minh ba phương pháp đánh giá trong một khuôn khổ thống nhất cho bài toán tóm tắt tiếng Việt. Các nền tảng lý thuyết cần thiết để xây dựng hệ thống lấp đầy những khoảng trống này sẽ được trình bày chi tiết trong Chương~2.
+Chương này đã thiết lập bức tranh toàn cảnh cho bài tập lớn thông qua ba nội dung chính.
+Thứ nhất, bài toán tóm tắt văn bản tự động được trình bày với các đặc thù của tiếng Việt bao gồm phân đoạn từ đa âm tiết, dấu phụ thanh điệu và sự khan hiếm corpus đánh giá có chú thích bởi con người.
+Thứ hai, bộ dữ liệu vietnews và mô hình ViT5 được giới thiệu là hai yếu tố cốt lõi của bài tập lớn.
+Thứ ba, qua khảo sát các công trình liên quan, chương đã xác định khoảng trống nghiên cứu mà bài tập lớn sẽ lấp đầy.
+Các nền tảng lý thuyết cần thiết sẽ được trình bày chi tiết trong Chương~2.

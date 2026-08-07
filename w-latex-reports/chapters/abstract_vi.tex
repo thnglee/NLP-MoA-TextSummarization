@@ -1,12 +1,12 @@
 % !TEX root = ../thesis.tex
-\chapter*{TÓM TẮT KHÓA LUẬN}
-\addcontentsline{toc}{chapter}{TÓM TẮT KHÓA LUẬN}
+\chapter*{TÓM TẮT BÁO CÁO}
+\addcontentsline{toc}{chapter}{TÓM TẮT BÁO CÁO}
 
-Sự bùng nổ của thông tin trực tuyến tại Việt Nam đã đặt ra nhu cầu cấp thiết về việc tóm tắt nhanh nội dung bài báo. Các hệ thống tóm tắt dựa trên một Mô hình ngôn ngữ lớn (LLM) đơn lẻ hiện nay vẫn cho ra kết quả không ổn định, trong khi kỹ thuật Mixture-of-Agents (MoA) --- kết hợp nhiều LLM thông qua kiến trúc đa tác nhân bao gồm các tác nhân đề xuất và tổng hợp --- chưa từng được nghiên cứu cho bài toán tóm tắt tin tức tiếng Việt. Bên cạnh đó, các hệ số đo lường phổ biến như ROUGE hay BERTScore chủ yếu đo độ trùng lặp với bài gốc, vốn kém hiệu quả trong việc phản ánh chất lượng khi mô hình được phép diễn giải lại và rút gọn ý tưởng.
+Bài toán tóm tắt văn bản tự động cho tiếng Việt vẫn còn nhiều thách thức, đặc biệt khi so sánh hiệu năng giữa các phương pháp tiếp cận khác nhau trên cùng một bộ dữ liệu chuẩn. Các phương pháp tóm tắt trích xuất (extractive) truyền thống tuy nhanh và không yêu cầu dữ liệu huấn luyện lớn, nhưng thường tạo ra các bản tóm tắt kém tự nhiên. Trong khi đó, các mô hình tóm tắt trừa tượng hóa (abstractive) dựa trên kiến trúc Transformer như ViT5 có khả năng sinh văn bản tóm tắt linh hoạt và trôi chảy hơn, nhưng cần nhiều tài nguyên tính toán hơn.
 
-Khóa luận này thực hiện ba đóng góp. Thứ nhất, giới thiệu hệ thống Fiber --- một tiện ích mở rộng trình duyệt có khả năng tóm tắt tin tức tiếng Việt theo thời gian thực, hỗ trợ các LLM đa nền tảng (OpenAI, Anthropic, Google). Thứ hai, áp dụng pipeline MoA cho bài toán tóm tắt tiếng Việt có neo ngữ cảnh gốc, bằng cách đưa trực tiếp bài viết nguồn vào tác nhân tổng hợp như một kết nối phần dư nhằm đảm bảo tính trung thực. Thứ ba, đề xuất khung đánh giá đa trục: Trục A (giữ lại nội dung: ROUGE, BERTScore), Trục B (chất lượng: đánh giá rubric và xếp hạng bởi LLM-Judge), và Trục C (đánh giá mù bởi con người), qua đó chỉ ra hạn chế của các hệ số overlap truyền thống.
+Báo cáo này thực hiện hai đóng góp chính. Thứ nhất, cài đặt và chạy mô hình \textbf{ViT5} trên bộ dữ liệu \textbf{vietnews} để sinh ra các bản tóm tắt trừa tượng hóa. Thứ hai, so sánh toàn diện kết quả của ViT5 với các thuật toán tóm tắt trích xuất thông qua bảy độ đo đánh giá: \textbf{ROUGE-1}, \textbf{ROUGE-2}, \textbf{ROUGE-L}, \textbf{BLEU}, \textbf{BERTScore}, \textbf{Compression Ratio} và \textbf{Processing Time}.
 
-Trên tập dữ liệu 154 bài báo, pipeline MoA cho kết quả tóm tắt vượt trội so với các mô hình đơn lẻ ($68,9\%$ tỷ lệ thắng). Các đánh giá định lượng và khảo sát độc lập trên 17 tình nguyện viên đều đồng thuận với kết quả này, đồng thời phản ánh rõ tác động của yếu tố chủ đề lên sở thích tiếp nhận thông tin của độc giả.
+Kết quả thực nghiệm trên bộ dữ liệu vietnews cho thấy sự đánh đổi rõ ràng giữa hai hướng tiếp cận: các thuật toán extractive có ưu thế về tốc độ xử lý và điểm ROUGE cao hơn do bám sát từ ngữ gốc, trong khi ViT5 tạo ra các bản tóm tắt trôi chảy hơn với điểm BERTScore cạnh tranh nhưng thời gian xử lý lâu hơn đáng kể.
 \vspace{0.4em}
 
-Từ khoá: Tóm tắt tin tức tiếng Việt, mô hình ngôn ngữ lớn, Mixture-of-Agents, tiện ích mở rộng trình duyệt, khung đánh giá đa trục.
+Từ khoá: Tóm tắt văn bản tiếng Việt, ViT5, tóm tắt trích xuất, tóm tắt trừa tượng hóa, vietnews, ROUGE, BERTScore.

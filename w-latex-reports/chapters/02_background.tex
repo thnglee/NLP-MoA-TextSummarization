@@ -1,12 +1,12 @@
 % !TEX root = ../thesis.tex
 \chapter{Cơ sở lý thuyết}
 
-Chương này xây dựng nền tảng lý thuyết cho toàn bộ hệ thống được triển khai trong Chương~3 và các thực nghiệm đánh giá trong Chương~4. Mục~2.1 trình bày kiến trúc Transformer cùng ba dòng mô hình ngôn ngữ lớn
-và liệt kê cụ thể các mô hình được sử dụng trong hệ thống. 
-Mục~2.2 là phần trọng tâm lý thuyết của chương, trình bày chi tiết ba trục đánh giá chất lượng tóm tắt.
- Mỗi khái niệm lý thuyết được gắn trực tiếp với một lựa chọn thiết kế cụ thể trong hệ thống.
+Chương này xây dựng nền tảng lý thuyết cho toàn bộ các thực nghiệm được triển khai trong Chương~3 và các kết quả đánh giá trong Chương~4.
+Mục~2.1 trình bày kiến trúc Transformer và mô hình ViT5 được sử dụng cho tóm tắt trừa tượng hóa.
+Mục~2.2 trình bày các thuật toán tóm tắt trích xuất được dùng làm baseline so sánh.
+Mục~2.3 là phần trọng tâm lý thuyết của chương, trình bày chi tiết hệ thống đo lường đánh giá chất lượng tóm tắt.
 
-\section{Các mô hình ngôn ngữ lớn}
+\section{Mô hình ViT5 và kiến trúc Transformer}
 
 \subsection{Kiến trúc Transformer}
 
@@ -20,21 +20,15 @@ Kiến trúc Transformer \cite{Vaswani2017} thay thế các mô hình chuỗi h�
 
 Các LLM hiện đại thuộc ba dòng kiến trúc như sau: 
 \begin{itemize}
-  \item Các mô hình chỉ bộ mã hóa (encoder-only) như BERT và PhoBERT \cite{Nguyen2020} tạo ra các embedding ngữ cảnh cho các token đầu vào; chúng được sử dụng trong khóa luận này như xương sống embedding cho BERTScore (Mục~2.2.3).
-  \item Các mô hình chỉ bộ giải mã (decoder-only) như GPT, Claude và Gemini tạo văn bản theo hướng tự hồi quy và được sử dụng làm tác nhân đề xuất và tác nhân tổng hợp của pipeline MoA (Chương~3).
-  \item Các mô hình bộ mã hóa--bộ giải mã (encoder-decoder) như T5 và ViT5 \cite{Nguyen2022} mã hóa đầu vào và điều kiện hóa việc tạo của bộ giải mã trên đó; ViT5 được sử dụng làm phương án dự phòng định tuyến cho các đầu vào tiếng Việt ngắn.
+  \item Các mô hình chỉ bộ mã hóa (encoder-only) như BERT và PhoBERT \cite{Nguyen2020} tạo ra các embedding ngữ cảnh cho các token đầu vào; chúng được sử dụng trong bài tập lớn này như xương sống embedding cho BERTScore (Mục~2.3.3).
+  \item Các mô hình bộ mã hóa--bộ giải mã (encoder-decoder) như T5 và ViT5 \cite{Nguyen2022} mã hóa đầu vào và điều kiện hóa việc tạo của bộ giải mã trên đó; ViT5 là mô hình tóm tắt trừa tượng hóa chính được sử dụng trong bài tập lớn.
 \end{itemize}
 
-\subsection{Các mô hình được sử dụng}
-Hệ thống của khoá luận hiện tại đang sử dụng các mô hình sau: 
-\begin{itemize}
-  \item \textbf{GPT-4o} (OpenAI, phiên bản 2024-08-06) --- tác nhân tổng hợp trong pipeline MoA và mô hình đơn lẻ cơ sở mạnh nhất trong phạm vi khoá luận.
-  \item \textbf{GPT-4o-mini} (OpenAI, phiên bản 2024-07-18) --- tác nhân đề xuất và mô hình giám khảo; LLM-Judge mặc định trong Trục~B.
-  \item \textbf{Claude Haiku 4.5} (Anthropic) --- tác nhân đề xuất; được đưa vào để mở rộng nhóm tác nhân đề xuất ra ngoài OpenAI.
-  \item \textbf{Gemini 2.5 Flash} (Google) --- tác nhân đề xuất; dòng thứ ba được sử dụng trong MoA.
-  \item \textbf{ViT5-large} (VinAI) --- phương án dự phòng định tuyến cho các đầu vào tiếng Việt ngắn trong lớp định tuyến dựa trên độ phức tạp.
-  \item \textbf{PhoBERT-base} (VinAI) --- bộ mã hóa ngữ cảnh cho BERTScore.
-\end{itemize}
+\subsection{Mô hình ViT5}
+ViT5 \cite{Nguyen2022} là mô hình ngôn ngữ tiếng Việt theo kiến trúc encoder-decoder, được huấn luyện trước trên corpus tiếng Việt quy mô lớn và có thể fine-tune cho bài toán tóm tắt trừa tượng hóa. Bài tập lớn này sử dụng ViT5 như mô hình tóm tắt chính, chạy inference trực tiếp trên bộ dữ liệu vietnews.
+
+\subsection{Các thuật toán tóm tắt trích xuất (Extractive)}
+\textit{(Phần này sẽ được bổ sung: mô tả các thuật toán extractive được dùng làm baseline.)}
 
 Tất cả mô hình trên khi gọi qua giao diện API đều được thiết lập ở các thông số cấu hình mặc định của nhà cung cấp. Chi tiết các thông số mặc định cụ thể cho từng mô hình được tổng hợp trong Bảng~\ref{tab:model_parameters}.
 
@@ -59,9 +53,9 @@ PhoBERT-base & Không áp dụng (N/A --- Trích xuất embedding làm vector đ
 
 Bên cạnh các mô hình chính, các mô hình khác được tinh chỉnh suy luận như OpenAI \texttt{o1-mini} đòi hỏi cơ chế xử lý đặc thù: các tham số temperature, top-$p$ và penalty không được hỗ trợ, và giao thức streaming khác với các mô hình chat-completion thông thường. Tầng dịch vụ trong Chương~3 sẽ trừu tượng hóa các khác biệt này để tất cả 14 mô hình được hỗ trợ có thể được chọn hoán đổi cho nhau trong quá trình thực thi.
 
-\section{Cơ sở đánh giá chất lượng tóm tắt}
+\section{Hệ đo lường đánh giá chất lượng tóm tắt}
 
-\subsection{Độ phủ nội dung (Trục A)}
+\subsection{Các độ đo ROUGE, BLEU, BERTScore, Compression Ratio và Processing Time}
 
 \begin{enumerate}[label=(\alph*), leftmargin=*]
 
@@ -173,4 +167,8 @@ Lưu ý quan trọng nhất của khóa luận này, được phát biểu lại
 
 \section{Tổng kết chương}
 
-Chương này đã cung cấp toàn bộ nền tảng lý thuyết cần thiết để hiểu và đánh giá hệ thống Fiber. Về mặt mô hình, chương đã trình bày kiến trúc Transformer và ba dòng LLM, trong đó các mô hình decoder-only (GPT-4o, Claude Haiku~4.5, Gemini~2.5~Flash) đóng vai trò tác nhân đề xuất và tổng hợp, còn PhoBERT (encoder-only) và ViT5 (encoder-decoder) phục vụ lần lượt cho tính toán BERTScore và phương án dự phòng định tuyến. Về mặt đánh giá, chương đã xây dựng hệ thống lý thuyết cho ba trục đo lường: Trục~A với các hệ số overlap (ROUGE, BLEU, BERTScore), Trục~B với phương pháp luận LLM-Judge (rubric theo FLASK, chấm điểm theo MT-Bench, so sánh cặp theo AlpacaEval, và đánh giá tính xác thực ở cấp mệnh đề), cùng Trục~C với xếp hạng mù và hệ số Fleiss'~$\kappa$. Luận điểm lý thuyết then chốt nhất của chương --- các hệ số overlap được tính so với bài báo gốc đo khả năng giữ lại nội dung chứ không đo chất lượng tóm tắt --- chính là cơ sở lý luận cho việc thiết kế khung đánh giá đa trục thay vì phụ thuộc vào một trục duy nhất. Chương~3 sẽ trình bày cách các lý thuyết này được hiện thực hóa trong thiết kế và xây dựng hệ thống.
+Chương này đã cung cấp toàn bộ nền tảng lý thuyết cần thiết cho bài tập lớn.
+Về mặt mô hình, chương đã trình bày kiến trúc Transformer và mô hình ViT5 (encoder-decoder) --- công cụ tóm tắt trừa tượng hóa chính của bài tập lớn --- cùng các thuật toán extractive được dùng làm baseline.
+Về mặt đánh giá, chương đã xây dựng hệ thống lý thuyết cho các độ đo: ROUGE-1, ROUGE-2, ROUGE-L, BLEU, BERTScore (với PhoBERT), Compression Ratio và Processing Time.
+Luận điểm lý thuyết then chốt --- các hệ số overlap được tính so với bài báo gốc đo khả năng giữ lại nội dung chứ không đo chất lượng tóm tắt --- chính là cơ sở lý luận cho việc sử dụng nhiều độ đo kết hợp.
+Chương~3 sẽ trình bày cách các lý thuyết này được hiện thực hóa trong thiết kế thực nghiệm.

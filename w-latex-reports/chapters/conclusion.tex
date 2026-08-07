@@ -1,16 +1,16 @@
 % !TEX root = ../thesis.tex
-\chapter{Kết luận và hướng phát triển}
+\chapter{Kết luận}
 \label{ch:conclusion}
 
-\section{Tóm tắt các đóng góp}
+\section{Tóm tắt các kết quả chính}
 
-Khóa luận này nghiên cứu xem liệu kiến trúc đa tác nhân phối hợp (MoA) có giúp ích cho bài toán tóm tắt tin tức tiếng Việt hay không, và sâu sắc hơn là liệu các hệ số đánh giá thường dùng cho bài toán tóm tắt tiếng Việt hiện nay có đủ năng lực để phát hiện ra sự giúp ích đó hay không. Khóa luận mang lại ba đóng góp khoa học chính: 
+Bài tập lớn này đã thực hiện cài đặt và đánh giá mô hình ViT5 cho bài toán tóm tắt văn bản tiếng Việt trên bộ dữ liệu vietnews, kết hợp so sánh với các thuật toán tóm tắt trích xuất. Bài tập lớn mang lại ba đóng góp chính:
 
-\textbf{(1) Một hệ thống hoàn chỉnh phục vụ vận hành thực tế (Fiber).} Tiện ích mở rộng trên trình duyệt xây dựng bằng framework Plasmo, kết hợp dịch vụ backend Next.js triển khai lớp trừu tượng hóa LLM đa nhà cung cấp (hỗ trợ 14 mô hình từ OpenAI, Anthropic và Google), một microservice tính điểm BERTScore bằng ngôn ngữ Python trên nền tảng Hugging Face Spaces, và lớp cơ sở dữ liệu bền vững PostgreSQL quản lý bởi Supabase, đã hoạt động phối hợp để mang lại tính năng tóm tắt thời gian thực.
+\textbf{(1) Cài đặt và chạy mô hình ViT5.} Mô hình ViT5 được cài đặt và chạy inference trên bộ dữ liệu vietnews, sinh ra các bản tóm tắt trừa tượng hóa.
 
-\textbf{(2) Sự ứng dụng kiến trúc MoA cho bài toán tóm tắt có neo ngữ cảnh gốc.} Kiến trúc đề xuất--tổng hợp hai lớp của Wang et al.\ \cite{Wang2024} đã được tái hiện cấu trúc cho tiếng Việt với một cải tiến mang tính nguyên lý then chốt: bài viết nguồn được đưa trực tiếp vào gợi ý của mô hình tổng hợp dưới dạng một kết nối phần dư, tương đồng với Phương trình 1 của nghiên cứu gốc nhưng mở rộng từ chỉ gợi ý đơn thuần sang neo chặt ngữ cảnh nguồn. Kết quả thực nghiệm (Mục~4.2) chứng minh kết nối phần dư này là lựa chọn thiết kế mang tính quyết định: không có nó, mô hình tổng hợp chỉ thực hiện chắp vá bản thảo thay vì thực hiện biên tập và dung hợp chi tiết.
+\textbf{(2) So sánh với các thuật toán extractive.} Kết quả của ViT5 được đối chiếu với các thuật toán tóm tắt trích xuất thông qua các độ đo định lượng.
 
-\textbf{(3) Một khung đánh giá ba trục và phép phản biện thực nghiệm đối với đánh giá một trục.} Các hệ số đo lường khả năng giữ lại nội dung (Trục~A), chất lượng đánh giá bằng LLM-Judge và so sánh (Trục~B), cùng phương pháp đánh giá xếp hạng của con người kèm đo lường độ đồng thuận (Trục~C) được kết hợp chặt chẽ trong một khung đánh giá duy nhất. Thực nghiệm trên 154 bài viết từ \textit{tienphong.vn} chỉ ra bản tóm tắt dung hợp MoA vượt trội hơn mô hình đơn lẻ mạnh nhất trên mọi khía cạnh đánh giá. Sự đồng thuận về mặt chiều hướng trên cả ba góc nhìn độc lập cho phép đưa ra khuyến nghị khoa học vững chắc; bên cạnh đó, khoảng cách chênh lệch lớn giữa Trục B.2a ($68,9\%$) và Trục C ($40,9\%$), cùng hiện tượng đa dạng hành vi đọc của con người trên các chủ đề hành chính khô khan (chọn bản thảo ngắn nhất), chính là những phát hiện phương pháp luận có giá trị mà khung đánh giá ba trục mang lại.
+\textbf{(3) Đánh giá đa chiều.} Sử dụng đồng thời bảy độ đo bao gồm ROUGE-1, ROUGE-2, ROUGE-L, BLEU, BERTScore, Compression Ratio và Processing Time để có cái nhìn toàn diện về hiệu năng của từng phương pháp.
 
 \section{Hạn chế của đề tài}
 

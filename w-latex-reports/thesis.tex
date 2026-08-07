@@ -5,16 +5,16 @@
 % ============================================================
 \newcommand{\university}{ĐẠI HỌC QUỐC GIA HÀ NỘI \\ TRƯỜNG ĐẠI HỌC CÔNG NGHỆ}
 \newcommand{\universityen}{VIETNAM NATIONAL UNIVERSITY, HANOI \\ UNIVERSITY OF ENGINEERING AND TECHNOLOGY}
-\newcommand{\authorname}{Lê Văn Thắng}
-\newcommand{\authornameen}{Le Van Thang}
-\newcommand{\reporttitle}{NGHIÊN CỨU, XÂY DỰNG HỆ THỐNG TÓM TẮT \\ TIN TỨC TIẾNG VIỆT SỬ DỤNG \\ MÔ HÌNH NGÔN NGỮ LỚN}
-\newcommand{\reporttitleen}{RESEARCH AND DEVELOPMENT OF A \\ VIETNAMESE NEWS SUMMARIZATION SYSTEM \\ USING LARGE LANGUAGE MODELS}
-\newcommand{\reporttype}{BÁO CÁO BÀI TẬP LỚN MÔN XỬ LÝ NGÔN NGỮ TỰ NHIÊN}
-\newcommand{\reporttypeen}{NLP COURSE FINAL PROJECT REPORT}
-\newcommand{\major}{Ngành: Khoa học Máy tính}
-\newcommand{\majoren}{Major: Computer Science}
-\newcommand{\supervisor}{TS. Vương Thị Hồng}
-\newcommand{\supervisoren}{Dr. Vuong Thi Hong}
+\newcommand{\authorname}{Phạm Vân Anh - 22028099 \\ Bùi Đức Duy - 22021201 \\ Lê Văn Thắng - 20228313 \\ Nguyễn Tiến Mạnh - 24020220}
+\newcommand{\authornameen}{Pham Van Anh - 22028099 \\ Bui Duc Duy - 22021201 \\ Le Van Thang - 20228313 \\ Nguyen Tien Manh - 24020220}
+\newcommand{\reporttitle}{CÀI ĐẶT VÀ ĐÁNH GIÁ MÔ HÌNH ViT5 \\ CHO BÀI TOÁN TÓM TẮT VĂN BẢN TIẾNG VIỆT}
+\newcommand{\reporttitleen}{IMPLEMENTATION AND EVALUATION OF ViT5 MODEL \\ FOR VIETNAMESE TEXT SUMMARIZATION}
+\newcommand{\reporttype}{BÁO CÁO BÀI TẬP LỚN}
+\newcommand{\reporttypeen}{COURSE REPORT}
+\newcommand{\major}{Học phần: Xử lý ngôn ngữ tự nhiên}
+\newcommand{\majoren}{Course: Natural Language Processing}
+\newcommand{\supervisor}{TS. Trần Hồng Việt}
+\newcommand{\supervisoren}{Dr. Tran Hong Viet}
 \newcommand{\reportyear}{2026}
 \newcommand{\reportlocation}{HÀ NỘI}
 \newcommand{\reportlocationen}{HA NOI}
@@ -142,12 +142,11 @@
 \input{cover}\cleardoublepage
 
 \pagenumbering{roman}
+% Tỷ lệ đóng góp (đặt trước tóm tắt theo yêu cầu)
+\input{chapters/contribution}\cleardoublepage
+
 % Tóm tắt tiếng Việt
 \input{chapters/abstract_vi}\cleardoublepage
-% Lời cam đoan
-\input{chapters/assurance}\cleardoublepage
-% Lời cảm ơn
-\input{chapters/acknowledgement}\cleardoublepage
 
 % Mục lục
 \addcontentsline{toc}{chapter}{MỤC LỤC}
@@ -169,7 +168,6 @@
 
 % Nội dung chính
 \pagenumbering{arabic}
-\input{chapters/introduction}\cleardoublepage
 \input{chapters/01_introduction}\cleardoublepage
 \input{chapters/02_background}\cleardoublepage
 \input{chapters/03_system_design}\cleardoublepage
@@ -183,6 +181,5 @@
 
 % Phụ lục
 \input{chapters/appendix}\cleardoublepage
-\IfFileExists{thesis_modification.pdf}{\includepdf[pages=-]{thesis_modification.pdf}}{}
 
 \end{document}
