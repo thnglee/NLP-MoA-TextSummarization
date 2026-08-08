@@ -1,0 +1,118 @@
+{
+  "n_common_samples": 300,
+  "models": [
+    "HKL-ViT5",
+    "Nishikyen/vit5-vietnamese-news",
+    "thnhan/sft_model"
+  ],
+  "group1_lexical_overlap": {
+    "HKL-ViT5": {
+      "ROUGE-1": 0.5183602285119756,
+      "ROUGE-2": 0.2931904515232313,
+      "ROUGE-L": 0.34337486670966977
+    },
+    "Nishikyen/vit5-vietnamese-news": {
+      "ROUGE-1": 0.47067012826941074,
+      "ROUGE-2": 0.2510239481203134,
+      "ROUGE-L": 0.31479657231009905
+    },
+    "thnhan/sft_model": {
+      "ROUGE-1": 0.432096690258671,
+      "ROUGE-2": 0.22270263934506065,
+      "ROUGE-L": 0.27732196349677113
+    }
+  },
+  "group2_semantic_quality": {
+    "HKL-ViT5": {
+      "BERTScore Precision": 0.8996272623538971,
+      "BERTScore Recall": 0.9020495373010635,
+      "BERTScore F1": 0.9007882958650589
+    },
+    "Nishikyen/vit5-vietnamese-news": {
+      "BERTScore Precision": 0.8972373759746551,
+      "BERTScore Recall": 0.8896076150735219,
+      "BERTScore F1": 0.8933593398332595
+    },
+    "thnhan/sft_model": {
+      "BERTScore Precision": 0.8960467898845672,
+      "BERTScore Recall": 0.8789501253763835,
+      "BERTScore F1": 0.8873662489652634
+    }
+  },
+  "group3_factual_consistency": {
+    "HKL-ViT5": {
+      "Entity precision": 0.8180764774044033,
+      "Number consistency": 0.9853862212943633,
+      "Entity supported": 706,
+      "Entity generated": 863,
+      "Number supported": 472,
+      "Number generated": 479,
+      "Contradiction rate": 0.02112163146394756,
+      "Hallucination rate": 0.39038601602330664,
+      "Mean entailment probability": 0.6062967145173809,
+      "Mean contradiction probability": 0.022699069429815727,
+      "NLI claim count": 1373
+    },
+    "Nishikyen/vit5-vietnamese-news": {
+      "Entity precision": 0.7915531335149864,
+      "Number consistency": 0.964622641509434,
+      "Entity supported": 581,
+      "Entity generated": 734,
+      "Number supported": 409,
+      "Number generated": 424,
+      "Contradiction rate": 0.028996865203761754,
+      "Hallucination rate": 0.4553291536050157,
+      "Mean entailment probability": 0.5416144483889158,
+      "Mean contradiction probability": 0.033340500112985,
+      "NLI claim count": 1276
+    },
+    "thnhan/sft_model": {
+      "Entity precision": 0.7656716417910447,
+      "Number consistency": 0.9755011135857461,
+      "Entity supported": 513,
+      "Entity generated": 670,
+      "Number supported": 438,
+      "Number generated": 449,
+      "Contradiction rate": 0.03992901508429459,
+      "Hallucination rate": 0.484472049689441,
+      "Mean entailment probability": 0.5153041474038558,
+      "Mean contradiction probability": 0.04258455443191867,
+      "NLI claim count": 1127
+    }
+  },
+  "group4_performance": {
+    "HKL-ViT5": {
+      "Inference time": 8.053521,
+      "Inference time median": 5.7128,
+      "Inference time P95": 18.56201,
+      "Inference time std": 4.738170516932212,
+      "Total inference time": 2416.0562999999993,
+      "Throughput samples/s": 0.124169291915921
+    },
+    "Nishikyen/vit5-vietnamese-news": {
+      "Inference time": 3.5313013333333334,
+      "Inference time median": 3.50525,
+      "Inference time P95": 4.521059999999999,
+      "Inference time std": 0.5923092850289919,
+      "Total inference time": 1059.3904,
+      "Throughput samples/s": 0.2831817241311607
+    },
+    "thnhan/sft_model": {
+      "Inference time": 6.135827,
+      "Inference time median": 5.903499999999999,
+      "Inference time P95": 8.146560000000001,
+      "Inference time std": 1.3003012975092862,
+      "Total inference time": 1840.7481000000012,
+      "Throughput samples/s": 0.1629772156222788
+    }
+  },
+  "config": {
+    "bert_model": "xlm-roberta-base",
+    "nli_model": "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli",
+    "entity_backend": "underthesea",
+    "device": "cuda",
+    "contradiction_threshold": 0.5,
+    "entailment_threshold": 0.5,
+    "evidence_top_k": 3
+  }
+}
