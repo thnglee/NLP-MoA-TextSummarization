@@ -1,245 +1,196 @@
-# Tóm tắt văn bản tiếng Việt — ViT5 vs. Extractive
+# HLK-ViT5: Cải tiến mô hình ViT5 dựa trên kỹ thuật Chọn lọc ngữ cảnh dài và Reranking cho Bài toán Tóm tắt văn bản Tiếng Việt
 
-> **Bài tập lớn học phần Xử lý Ngôn ngữ Tự nhiên**  
-> Trường Đại học Công nghệ — Đại học Quốc gia Hà Nội  
-> Giáo viên hướng dẫn: TS. Trần Hồng Việt · 2026
-
-Dự án thực nghiệm so sánh hiệu năng giữa mô hình tóm tắt trừu tượng hóa **ViT5** và các thuật toán tóm tắt trích xuất (**TextRank**, **LexRank**) trên bộ dữ liệu **vietnews**. Kết quả được đánh giá qua 7 độ đo: ROUGE-1, ROUGE-2, ROUGE-L, BLEU, BERTScore, Compression Ratio và Processing Time.
-
----
-
-## Nhóm thực hiện
-
-| STT | Họ và tên        | MSSV     |
-| --- | ---------------- | -------- |
-| 1   | Phạm Vân Anh     | 22028099 |
-| 2   | Bùi Đức Duy      | 22021201 |
-| 3   | Lê Văn Thắng     | 20228313 |
-| 4   | Nguyễn Tiến Mạnh | 24020220 |
+> **Báo cáo Bài tập lớn Học phần Xử lý Ngôn ngữ Tự nhiên (NLP)**  
+> **Trường Đại học Công nghệ — Đại học Quốc gia Hà Nội (UET - VNU)**  
+> **Giáo viên hướng dẫn:** TS. Trần Hồng Việt  
+> **Năm học:** 2026
 
 ---
 
-## Tổng quan
+## 👥 Nhóm sinh viên thực hiện
 
-Bài toán tóm tắt văn bản tiếng Việt có hai hướng tiếp cận chính:
-
-- **Trích xuất (Extractive)** — Chọn các câu quan trọng nhất từ văn bản gốc (TextRank, LexRank). Nhanh, không cần GPU, nhưng kết quả kém tự nhiên.
-- **Trừu tượng hóa (Abstractive)** — Sinh văn bản tóm tắt mới dựa trên nội dung (ViT5). Linh hoạt hơn, trôi chảy hơn, nhưng yêu cầu tài nguyên tính toán lớn hơn.
-
-Dự án chạy cả hai hướng trên cùng bộ dữ liệu, sau đó so sánh định lượng để rút ra nhận xét về sự đánh đổi giữa chất lượng, tốc độ và độ bám từ ngữ gốc.
+| STT | Họ và tên | Mã sinh viên | Vai trò & Nhiệm vụ chính |
+| :---: | :--- | :---: | :--- |
+| 1 | **Phạm Vân Anh** | 22028099 | Tiền xử lý dữ liệu, trích xuất thực thể & xây dựng bộ độ đo NLI/Factuality |
+| 2 | **Bùi Đức Duy** | 22021201 | Thu thập Corpus tienphong.vn, huấn luyện mô hình ViT5-base & SFT Baseline |
+| 3 | **Lê Văn Thắng** | 22028313 | Thiết kế Pipeline HLK-ViT5 (Selective Long-Context, MMR, Reranker) & Script Đánh giá |
+| 4 | **Nguyễn Tiến Mạnh** | 24020220 | Thực nghiệm đối chứng, phân tích thống kê & Soạn thảo Báo cáo LaTeX / Slide |
 
 ---
 
-## Cấu trúc repository
+## 📌 Tổng quan đề tài
 
+Tóm tắt văn bản tự động (Abstractive Text Summarization) cho tiếng Việt ngữ cảnh dài vẫn còn chịu hai rào cản lớn:
+1. **Giới hạn cửa sổ ngữ cảnh (Context Window Limitation):** Các mô hình `ViT5-base` chuẩn bị giới hạn đầu vào 256–512 tokens, dẫn đến hiện tượng trích đoạn đầu (*lead bias*) và bỏ sót dữ kiện quan trọng ở giữa/cuối bài báo.
+2. **Ảo giác thông tin & Mất nhất quán thực thể (Hallucination & Factual Inconsistency):** Mô hình sinh câu có xu hướng bịa thêm thông tin hoặc nhầm lẫn giữa các con số, tên riêng so với bài gốc.
+
+Dự án đề xuất kiến trúc **HLK-ViT5**, một pipeline cải tiến 13 bước toàn diện giúp mở rộng đầu vào lên **1024 tokens** mà không bị dính dư thừa ngữ nghĩa, đồng thời tích hợp bộ lọc xếp hạng lại tính xác thực (*Heuristic Factuality Reranker*) để kéo giảm tối đa hiện tượng ảo giác.
+
+---
+
+## 🚀 Các điểm cải tiến kỹ thuật cốt lõi (Core Contributions)
+
+- **Selective Long-Context (Input up to 1024 Tokens):**
+  - **Sentence-aware Chunking:** Phân đoạn văn bản dựa trên ranh giới câu chuẩn xác.
+  - **1-Sentence Overlapping:** Giữ 1 câu đè giữa các chunk kề nhau ($\le 256$ token) để bảo toàn tính liên kết.
+  - **Salience Scoring & MMR:** Chấm điểm nổi bật (Coverage + Salience + Position) và lọc qua thuật toán *Maximal Marginal Relevance (MMR)* chọn ra tối đa 4 chunk đại diện nhất từ toàn văn bài báo mà không trùng lặp.
+- **Keyword-conditioned Generation:** Nhúng danh sách từ khóa chủ đề trực tiếp vào đầu chuỗi prompt ViT5 để định hướng cơ chế chú ý (Cross-Attention).
+- **Heuristic Factuality Reranking:** Sinh $N=5$ bản tóm tắt ứng viên và xếp hạng lại dựa trên độ chính xác danh từ riêng (*Entity Precision*) và tính nhất quán con số (*Number Consistency*).
+
+---
+
+## 🔄 Kiến trúc Pipeline HLK-ViT5 (13 Bước)
+
+```mermaid
+flowchart TD
+    A[Văn bản bài báo gốc] --> B[1. Chuẩn hóa & Xử lý khoảng trắng]
+    B --> C[2. Tách câu chuẩn]
+    C --> D[3. Tạo Chunk <= 256 token - Overlap 1 câu]
+    D --> E[4. Chấm điểm Chunk: Coverage, Salience, Position]
+    E --> F[5. Lọc MMR giảm trùng lặp ngữ nghĩa]
+    F --> G[6. Chọn Max 4 Chunk & Khôi phục vị trí ban đầu]
+    G --> H[7. Ghép Input Prompt: Keywords + Context <= 1024]
+    H --> I[8. Mô hình ViT5-base Fine-tuned]
+    I --> J[9. Sinh N=5 Candidates tóm tắt]
+    J --> K[10. Heuristic Factuality Reranker]
+    K --> L[11. Lọc Entity & Number Consistency]
+    L --> M[12. Xuất bản tóm tắt tối ưu cuối cùng]
 ```
-├── main.py                          # Entry point: chạy ViT5 / extractive trên vietnews
-│
-├── models/
-│   ├── install/                     # Script tải mô hình về local
-│   │   ├── install_vit5.py          # Tải VietAI/vit5-large-vietnews-summarization
-│   │   ├── install_mt5.py           # Tải mT5
-│   │   ├── install_t5vi.py          # Tải t5-small-vi-summarization
-│   │   └── install_qwen.py          # Tải Qwen2.5-1.5B-Instruct
-│   └── use_models/
-│       ├── load_models.py           # Nạp model, tokenizer, hàm summarize seq2seq / causal
-│       └── summary_vietnews.py      # Chạy ViT5 trên toàn bộ tập test vietnews
+
+---
+
+## 📊 Kết quả thực nghiệm đối chứng (Benchmark Results)
+
+Được đánh giá độc lập trên **300 mẫu báo chí tiếng Việt** (từ domain *tienphong.vn*) đối chiếu với 2 mô hình baseline mã nguồn mở:
+- **`Nishikyen/vit5-vietnamese-news`** (ViT5-base fine-tune chuẩn)
+- **`thnhan/sft_model`** (ViT5-base SFT)
+
+### Bảng tổng hợp 4 nhóm chỉ số đánh giá (Evaluation Summary)
+
+| Nhóm chỉ số | Độ đo | HKL-ViT5 (Ours) | Nishikyen/vit5-news | thnhan/sft_model | Đánh giá / Ý nghĩa |
+| :--- | :--- | :---:| :---:| :---:| :--- |
+| **1. Lexical Overlap** | **ROUGE-1** | **0.5184** | 0.4707 | 0.4321 | **Dẫn đầu (+4.77% ROUGE-1)** nhờ bao quát ngữ cảnh toàn văn |
+| | **ROUGE-2** | **0.2932** | 0.2510 | 0.2227 | Khôi phục chính xác các cụm bigram quan trọng |
+| | **ROUGE-L** | **0.3434** | 0.3148 | 0.2773 | Chuỗi con chung dài nhất đạt độ bám từ cao nhất |
+| **2. Semantic Quality** | **BERTScore F1** | **0.9008** | 0.8934 | 0.8874 | Tương đồng ngữ nghĩa tốt nhất (PhoBERT / XLM-R) |
+| | **BERTScore Recall**| **0.9020** | 0.8896 | 0.8790 | Đảm bảo bao hàm đầy đủ các ý chính |
+| **3. Factuality** | **Entity Precision**| **81.81%** | 79.16% | 76.57% | Xác nhận chính xác 706/863 thực thể (UNDERTHESEA) |
+| | **Number Consistency**| **98.54%**| 96.46% | 97.55% | Tiệm cận tuyệt đối (472/479 con số chính xác) |
+| | **Contradiction Rate**| **2.11%**  | 2.90%  | 3.99%  | Mâu thuẫn logic cực thấp (mDeBERTa NLI) |
+| | **Hallucination Rate**| **39.04%** | 45.53% | 48.45% | **Kéo giảm ảo giác ~6.5%** nhờ bộ Reranker |
+| **4. Performance** | **Inference Time** | 8.0535 s | **3.5313 s** | 6.1358 s | Đánh đổi thời gian chạy 5 candidates để lấy chất lượng |
+
+---
+
+## 📁 Cấu trúc thư mục dự án (Repository Structure)
+
+```text
+NLP-MoA-TextSummarization/
+├── README.md                           # Thuyết minh dự án & Hướng dẫn sử dụng
+├── HLK_ViT5.ipynb                      # Jupyter Notebook huấn luyện fine-tune & thử nghiệm
+├── HLK-ViT5_Project_Overview.md        # Tổng quan thiết kế kỹ thuật HLK-ViT5
+├── requirements.txt                    # Danh sách thư viện Python phụ thuộc
 │
 ├── utils/
-│   ├── textrank.py                  # Thuật toán TextRank (extractive baseline)
-│   └── lexrank.py                   # Thuật toán LexRank (extractive baseline)
-│
-├── dataset/
-│   ├── vietnews/                    # Bộ dữ liệu chính (test.jsonl)
-│   ├── ViMs/                        # Bộ dữ liệu phụ
-│   └── VietnameseMDS/               # Bộ dữ liệu phụ
+│   ├── evaluate_3_models.py            # Script tự động tính 4 nhóm độ đo trên 300 mẫu test
+│   ├── textrank.py                     # Thuật toán TextRank baseline
+│   └── lexrank.py                      # Thuật toán LexRank baseline
 │
 ├── output/
-│   └── summary/
-│       ├── vit5/                    # Kết quả tóm tắt của ViT5
-│       ├── textrank/                # Kết quả tóm tắt của TextRank
-│       └── lexrank/                 # Kết quả tóm tắt của LexRank
+│   └── evaluation/                     # Kết quả thực nghiệm định lượng
+│       ├── evaluation_report.md        # Báo cáo đánh giá tổng hợp Markdown
+│       ├── evaluation_report.txt       # Báo cáo đánh giá dạng Text
+│       ├── metrics_summary.json        # File JSON lưu thông số chi tiết của 3 mô hình
+│       └── per_sample_metrics.csv      # Bảng kết quả chấm điểm từng mẫu (300 rows x 33 cols)
 │
-├── bert/                            # BERTScore microservice (FastAPI + PhoBERT)
-├── backend/                         # Next.js backend — API + metrics dashboard
-├── w-latex-reports/                 # Báo cáo LaTeX bài tập lớn
-└── w-slides-presentation/           # Slide thuyết trình
+├── results/                            # Kết quả tóm tắt dạng TXT của 3 mô hình
+│   ├── vit5-base-HLK-0001/             # Đầu ra của HKL-ViT5 (test_predictions_txt/)
+│   ├── nishikyen/                      # Đầu ra của Nishikyen/vit5-vietnamese-news
+│   └── sft_model/                      # Đầu ra của thnhan/sft_model
+│
+├── w-latex-reports/                    # Báo cáo Bài tập lớn LaTeX (PDF 26 trang)
+│   ├── thesis.pdf                      # PDF Báo cáo chính thức
+│   ├── thesis.tex                      # File LaTeX tổng
+│   ├── cover.tex                       # Trang bìa chuẩn UET
+│   ├── references.bib                  # Thư viện trích dẫn BibTeX
+│   └── chapters/                       # 6 Chương báo cáo theo cấu trúc IMRaD
+│
+└── w-slides-presentation/              # Slide thuyết trình báo cáo
 ```
 
 ---
 
-## Mô hình và thuật toán
+## 🛠️ Hướng dẫn cài đặt và Tái lập thực nghiệm (Reproducibility Guide)
 
-### Mô hình (Abstractive)
+### 1. Yêu cầu môi trường
 
-| Mô hình                                               | Kiến trúc                  | Ghi chú                                                   |
-| ----------------------------------------------------- | -------------------------- | --------------------------------------------------------- |
-| **ViT5** (`VietAI/vit5-large-vietnews-summarization`) | Encoder-Decoder (T5-based) | Mô hình chính của bài tập lớn; đã fine-tune trên vietnews |
-| mT5                                                   | Encoder-Decoder            | Mô hình phụ                                               |
-| t5-small-vi                                           | Encoder-Decoder            | Mô hình phụ                                               |
-| Qwen2.5-1.5B-Instruct                                 | Decoder-only (Causal LM)   | Mô hình phụ                                               |
+- Python $\ge 3.10$
+- PyTorch $\ge 2.1.2$ (khuyên dùng CUDA GPU $\ge 12GB$ VRAM)
+- Thư viện NLP: `transformers`, `datasets`, `underthesea`, `bert-score`, `sentencepiece`
 
-> ViT5 dùng tiền tố `"vietnews: <nội dung> </s>"` khi inference, theo đúng cách fine-tune gốc.
-
-### Thuật toán (Extractive)
-
-| Thuật toán   | Mô tả                                                                |
-| ------------ | -------------------------------------------------------------------- |
-| **TextRank** | Xây đồ thị câu dựa trên độ tương đồng TF-IDF, xếp hạng bằng PageRank |
-| **LexRank**  | Tương tự TextRank nhưng dùng độ tương đồng cosine từ TF-IDF matrix   |
-
----
-
-## Bộ dữ liệu
-
-**Bộ dữ liệu chính**: [vietnews](https://huggingface.co/datasets/vietnews) — tập tin tức báo chí tiếng Việt.
-
-- Định dạng: JSONL (`test.jsonl`), mỗi dòng có trường `article` (văn bản gốc) và `abstract` (tóm tắt tham chiếu).
-- Đặt tại: `dataset/vietnews/test.jsonl`
-
----
-
-## Độ đo đánh giá
-
-| Độ đo                 | Mô tả                                                     |
-| --------------------- | --------------------------------------------------------- |
-| **ROUGE-1**           | Overlap unigram giữa tóm tắt sinh ra và tham chiếu        |
-| **ROUGE-2**           | Overlap bigram                                            |
-| **ROUGE-L**           | Chuỗi con chung dài nhất (LCS)                            |
-| **BLEU**              | Độ chính xác n-gram có penalty độ dài                     |
-| **BERTScore**         | Độ tương đồng ngữ nghĩa dùng PhoBERT (vinai/phobert-base) |
-| **Compression Ratio** | `len(tóm tắt) / len(gốc)` — đo mức độ rút gọn             |
-| **Processing Time**   | Thời gian sinh mỗi bản tóm tắt (giây/mẫu)                 |
-
-> **Lưu ý phương pháp luận**: ROUGE, BLEU và BERTScore được tính so với bản tóm tắt tham chiếu (`abstract`) trong vietnews. Các độ đo này đo _độ bám từ ngữ_, không trực tiếp đo chất lượng ngữ nghĩa hay mức độ trôi chảy.
-
----
-
-## Cài đặt và chạy
-
-### Yêu cầu
-
-- Python 3.10+
-- GPU (khuyến nghị) hoặc CPU
-- ~5 GB disk space cho ViT5-large
-
-### 1. Cài đặt dependencies
+### 2. Cài đặt các thư viện cần thiết
 
 ```bash
-pip install torch transformers datasets rouge-score nltk
-```
-
-Hoặc dùng file requirements (nếu có):
-
-```bash
+git clone https://github.com/thnglee/NLP-MoA-TextSummarization.git
+cd NLP-MoA-TextSummarization
 pip install -r requirements.txt
 ```
 
-### 2. Tải mô hình về local
+### 3. Tái lập quá trình đánh giá tự động 3 mô hình (Evaluation Benchmark)
+
+Để tính toán lại toàn bộ 4 nhóm chỉ số (ROUGE, BERTScore, Entity Precision, Number Consistency, NLI Hallucination, Inference Time) trên 300 mẫu kiểm thử:
 
 ```bash
-# Tải ViT5 (mô hình chính)
-python models/install/install_vit5.py
-
-# Tải các mô hình khác (tuỳ chọn)
-python models/install/install_mt5.py
-python models/install/install_t5vi.py
-python models/install/install_qwen.py
+python utils/evaluate_3_models.py \
+    --results-dir results \
+    --output-dir output/evaluation \
+    --device cuda \
+    --bert-batch-size 8 \
+    --nli-batch-size 8
 ```
 
-Mô hình được lưu vào `models/vit5/`, `models/mt5/`, v.v.
+> **Mẹo chạy nhanh trên CPU (Bỏ qua BERTScore & NLI heavy models):**
+> ```bash
+> python utils/evaluate_3_models.py --results-dir results --output-dir output/evaluation --skip-bertscore --skip-nli
+> ```
 
-### 3. Chuẩn bị dataset
+Kết quả tự động xuất ra thư mục `output/evaluation/` gồm `evaluation_report.md`, `metrics_summary.json` và `per_sample_metrics.csv`.
 
-Đặt file `test.jsonl` của vietnews vào:
+---
 
-```
-dataset/vietnews/test.jsonl
-```
+## 📄 Định dạng tệp kết quả tóm tắt (.txt)
 
-### 4. Chạy ViT5 trên vietnews
+Mỗi file kết quả tóm tắt kiểm thử được lưu trữ dưới chuẩn:
 
-```bash
-python main.py
-```
-
-Hoặc gọi trực tiếp từ code:
-
-```python
-from models.use_models.summary_vietnews import run_vit5_on_vietnews_test
-
-run_vit5_on_vietnews_test(
-    dataset_path="dataset/vietnews/test.jsonl",
-    output_dir="output/summary/vit5/vietnews_test",
-    start_index=0,       # Bắt đầu từ mẫu nào
-    max_samples=500,     # None = chạy toàn bộ
-)
-```
-
-Kết quả được lưu vào `output/summary/vit5/vietnews_test/`, mỗi mẫu một file `.txt` gồm: văn bản gốc, tóm tắt tham chiếu, tóm tắt do ViT5 sinh, và thời gian xử lý.
-
-### 5. Chạy extractive baseline
-
-```python
-from utils.textrank import run_textrank_on_vietnews
-from utils.lexrank import run_lexrank_on_vietnews
-from pathlib import Path
-
-# TextRank
-run_textrank_on_vietnews(
-    dataset_path=Path("dataset/vietnews/test.jsonl"),
-    output_dir=Path("output/summary/textrank/vietnews_test"),
-)
-
-# LexRank
-run_lexrank_on_vietnews(
-    dataset_path=Path("dataset/vietnews/test.jsonl"),
-    output_dir=Path("output/summary/lexrank/vietnews_test"),
-)
+```text
+INDEX:
+0
+GUID:
+tp-2026-0810-0001
+TITLE:
+Bộ Giáo dục và Đào tạo công bố phương án thi tốt nghiệp THPT từ năm 2025
+VĂN BẢN GỐC:
+Bộ Giáo dục và Đào tạo chính thức công bố phương án tổ chức kỳ thi tốt nghiệp THPT...
+TÓM TẮT THAM CHIẾU:
+Bộ GD&ĐT công bố phương án thi tốt nghiệp THPT từ năm 2025 với 4 môn thi...
+TÓM TẮT DO MODEL SINH:
+Bộ GD&ĐT ban hành phương án thi tốt nghiệp THPT 2025 gồm 2 môn bắt buộc và 2 môn tự chọn...
+THỜI GIAN TÓM TẮT:
+8.05 giây
+---Hết---
 ```
 
 ---
 
-## BERTScore microservice (tuỳ chọn)
+## 🎓 Sản phẩm bàn giao cho Giảng viên (Deliverables)
 
-Dịch vụ tính BERTScore dùng `vinai/phobert-base`, triển khai bằng FastAPI:
-
-```bash
-cd bert
-pip install -r requirements.txt
-uvicorn main:app --host 0.0.0.0 --port 7860
-# → http://localhost:7860
-```
-
-Có thể deploy lên [Hugging Face Spaces](https://huggingface.co/spaces) bằng `Dockerfile` đi kèm.
+1. 📄 **Báo cáo hoàn chỉnh (LaTeX PDF):** `w-latex-reports/thesis.pdf` (26 trang chuẩn khung IMRaD).
+2. 📊 **Báo cáo Đánh giá thực nghiệm chi tiết:** `output/evaluation/evaluation_report.md` & `metrics_summary.json`.
+3. 💻 **Mã nguồn Pipeline & Notebook:** `HLK_ViT5.ipynb` & `utils/evaluate_3_models.py`.
+4. 🖥️ **Slide thuyết trình báo cáo:** Thư mục `w-slides-presentation/`.
 
 ---
 
-## Backend & Metrics Dashboard (tuỳ chọn)
+## 📜 Giấy phép (License)
 
-Thư mục `backend/` chứa một Next.js API server phục vụ dashboard theo dõi kết quả đánh giá:
-
-```bash
-cd backend
-npm install
-# Tạo file .env với SUPABASE_URL, SUPABASE_ANON_KEY, ...
-npm run dev
-# → http://localhost:3000
-```
-
-Dashboard hiển thị các kết quả ROUGE/BLEU/BERTScore theo từng mô hình và lượt chạy, lưu trữ trong Supabase (PostgreSQL).
-
----
-
-## Tài liệu
-
-| Thư mục                  | Nội dung                                                           |
-| ------------------------ | ------------------------------------------------------------------ |
-| `w-latex-reports/`       | Báo cáo bài tập lớn (LaTeX) — build bằng `latexmk -pdf thesis.tex` |
-| `w-slides-presentation/` | Slide thuyết trình                                                 |
-
----
-
-## License
-
-MIT
+Dự án được phát hành dưới giấy phép [MIT License](LICENSE).
