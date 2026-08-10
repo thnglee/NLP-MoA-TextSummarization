@@ -122,7 +122,7 @@ NLP-MoA-TextSummarization/
 
 ---
 
-## 🛠️ Hướng dẫn cài đặt và Tái lập thực nghiệm (Reproducibility Guide)
+## 🛠️ Hướng dẫn cài đặt & Thiết lập thực nghiệm
 
 ### 1. Yêu cầu môi trường
 
@@ -185,9 +185,9 @@ THỜI GIAN TÓM TẮT:
 
 ---
 
-## 🎓 Sản phẩm bàn giao cho Giảng viên (Deliverables)
+## 🎓 Sản phẩm:
 
-1. 📄 **Báo cáo hoàn chỉnh (LaTeX PDF):** `w-latex-reports/thesis.pdf` (26 trang chuẩn khung IMRaD).
+1. 📄 **Báo cáo hoàn chỉnh (LaTeX PDF):** `w-latex-reports/thesis.pdf`
 2. 📊 **Báo cáo Đánh giá thực nghiệm chi tiết:** `output/evaluation/evaluation_report.md` & `metrics_summary.json`.
 3. 💻 **Mã nguồn Pipeline & Notebook:** `HLK_ViT5.ipynb` & `utils/evaluate_3_models.py`.
 4. 🖥️ **Slide thuyết trình báo cáo:** Thư mục `w-slides-presentation/`.
