@@ -1,0 +1,47 @@
+% !TEX root = ../thesis.tex
+\chapter{Bình luận và phân tích}
+
+Chương này đi sâu diễn giải và phân tích bản chất đằng sau các kết quả thu được.
+Mục~5.1 phân tích nguyên nhân hiệu năng của HLK-ViT5;
+Mục~5.2 thực hiện phân tích các dạng lỗi phổ biến (Error Analysis);
+Mục~5.3 thảo luận về sự đánh đổi giữa tốc độ và chất lượng (Performance Trade-off);
+Mục~5.4 phân tích các hạn chế của đề tài; và Mục~5.5 tổng kết chương.
+
+\section{Phân tích ý nghĩa kết quả}
+
+Hiệu năng ấn tượng của HLK-ViT5 đến từ sự phối hợp nhịp nhàng giữa ba cải tiến kiến trúc chính:
+
+\begin{itemize}
+  \item \textbf{Đóng góp của cơ chế Selective Long-Context:} Việc mở rộng input lên 1024 tokens thông qua thuật toán lọc nén MMR giúp mô hình bao quát thông tin từ cả 3 phần: Mở bài, Thân bài và Kết bài. Trong khi các mô hình baseline như \texttt{Nishikyen} hay \texttt{thnhan} chỉ đọc được 256/512 token đầu tiên (bị dính thiên kiến lead bias), HLK-ViT5 không bỏ lỡ các số liệu tổng kết hoặc thông điệp chính nằm ở cuối bài báo dài.
+  \item \textbf{Đóng góp của Keyword Conditioning:} Việc đưa danh sách từ khóa vào trước ngữ cảnh giúp định hướng cơ chế chú ý (Cross-Attention) của Decoder ViT5. Mô hình giảm bớt việc lan man sang các chi tiết phụ và tập trung sinh ra bản tóm tắt xoay quanh các thực thể và chủ đề cốt lõi.
+  \item \textbf{Đóng góp của Heuristic Factuality Reranker:} Việc sinh ra $N=5$ ứng viên và lọc lại bằng điểm số nhất quán thực thể (Entity consistency) và con số (Number accuracy) đã tạo ra một chốt chặn hiệu quả. Cơ chế này giúp kéo giảm đáng kể tỷ lệ ảo giác (Hallucination Rate) so với việc chỉ dùng giải thuật Beam Search đơn thuần.
+\end{itemize}
+
+\section{Phân tích lỗi (Error Analysis)}
+
+Mặc dù đạt kết quả tích cực, qua quá trình kiểm thử chi tiết, nghiên cứu nhận diện 3 dạng lỗi phổ biến mà HLK-ViT5 có thể gặp phải:
+
+\begin{enumerate}[label=\arabic*.]
+  \item \textbf{Lỗi trích chọn Chunk chứa từ khóa nhiễu (Keyword Noise Error):} Trong một số bài báo có phong cách viết hoa mỹ hoặc chứa nhiều từ cảm thán, thuật toán MMR có thể chọn nhầm các chunk chứa từ khóa xuất hiện nhiều lần nhưng không mang hàm lượng thông tin cao, dẫn đến bản tóm tắt bị thiếu ý chính.
+  \item \textbf{Lỗi tách từ và tên riêng phức tạp (Complex Entity Split Error):} Một số danh từ riêng tiếng Việt kéo dài hoặc tên tổ chức nước ngoài được phiên âm không chuẩn có thể bị bộ phân đoạn câu/từ chia gãy, làm giảm điểm Entity Precision ở bước Reranker.
+  \item \textbf{Lỗi ranh giới con số (Numeric Boundary Error):} Trong các bài báo tài chính chứa nhiều chuỗi số liệu (ví dụ: so sánh doanh thu các quý), mô hình đôi khi ghép nhầm con số của chỉ số này cho chỉ số khác nếu hai con số đứng quá gần nhau trong cùng một chunk.
+\end{enumerate}
+
+\section{Phân tích sự đánh đổi hiệu năng (Performance Trade-off)}
+
+Quá trình tích hợp các bước xử lý tiền suy luận (Sentence Chunking, Scoring, MMR) và hậu suy luận (Factuality Reranking trên $N=5$ ứng viên) làm tăng độ phức tạp tính toán của HLK-ViT5. 
+
+Tuy nhiên, sự gia tăng về thời gian suy luận (Inference Time) là hoàn toàn xứng đáng so với lợi ích thu được: bản tóm tắt đạt độ chính xác dữ kiện cao hơn vượt trội và bảo toàn được ngữ cảnh toàn văn. Đối với bài toán tóm tắt tin tức báo chí, độ tin cậy thông tin (Factuality) luôn được ưu tiên hàng đầu so với tốc độ xử lý miligiây.
+
+\section{Hạn chế của nghiên cứu}
+
+Nghiên cứu còn tồn tại hai hạn chế chính:
+
+\begin{itemize}
+  \item \textbf{Giới hạn miền dữ liệu (Domain Specificity):} Bộ dữ liệu thực nghiệm 15.620 mẫu hiện mới được thu thập từ domain tin tức báo chí \textit{tienphong.vn}. Hiệu năng của HLK-ViT5 trên các miền văn bản đặc thù khác như văn bản pháp luật, báo cáo y khoa hay tài liệu kỹ thuật vẫn cần được kiểm chứng thêm.
+  \item \textbf{Kích thước mô hình nền:} Mô hình hiện sử dụng xương sống là `VietAI/ViT5-base` (220M tham số). Việc mở rộng lên `ViT5-large` hoặc kết hợp với các mô hình ngôn ngữ lớn (LLM) tiếng Việt thế hệ mới chưa được triển khai do giới hạn về hạ tầng GPU.
+\end{itemize}
+
+\section{Tổng kết chương}
+
+Chương này đã diễn giải nguyên nhân giúp HLK-ViT5 đạt hiệu năng cao, phân tích 3 dạng lỗi phổ biến, thảo luận bài toán đánh đổi giữa tốc độ và chất lượng, đồng thời thừa nhận các hạn chế về miền dữ liệu và kích thước mô hình. Chương~6 sẽ tổng kết toàn bộ đề tài và nêu hướng phát triển.

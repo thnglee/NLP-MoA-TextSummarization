@@ -3,12 +3,12 @@
 % ============================================================
 % CẤU HÌNH THÔNG TIN THAM SỐ HÓA (METADATA CONFIGURATION)
 % ============================================================
-\newcommand{\university}{ĐẠI HỌC QUỐC GIA HÀ NỘI \\ TRƯỜNG ĐẠI HỌC CÔNG NGHỆ}
-\newcommand{\universityen}{VIETNAM NATIONAL UNIVERSITY, HANOI \\ UNIVERSITY OF ENGINEERING AND TECHNOLOGY}
-\newcommand{\authorname}{Phạm Vân Anh - 22028099 \\ Bùi Đức Duy - 22021201 \\ Lê Văn Thắng - 20228313 \\ Nguyễn Tiến Mạnh - 24020220}
-\newcommand{\authornameen}{Pham Van Anh - 22028099 \\ Bui Duc Duy - 22021201 \\ Le Van Thang - 20228313 \\ Nguyen Tien Manh - 24020220}
-\newcommand{\reporttitle}{CÀI ĐẶT VÀ ĐÁNH GIÁ MÔ HÌNH ViT5 \\ CHO BÀI TOÁN TÓM TẮT VĂN BẢN TIẾNG VIỆT}
-\newcommand{\reporttitleen}{IMPLEMENTATION AND EVALUATION OF ViT5 MODEL \\ FOR VIETNAMESE TEXT SUMMARIZATION}
+\newcommand{\university}{ĐẠI HỌC QUỐC GIA HÀ NỘI \newline TRƯỜNG ĐẠI HỌC CÔNG NGHỆ}
+\newcommand{\universityen}{VIETNAM NATIONAL UNIVERSITY, HANOI \newline UNIVERSITY OF ENGINEERING AND TECHNOLOGY}
+\newcommand{\authorname}{Phạm Vân Anh - 22028099 \newline Bùi Đức Duy - 22021201 \newline Lê Văn Thắng - 20228313 \newline Nguyễn Tiến Mạnh - 24020220}
+\newcommand{\authornameen}{Pham Van Anh - 22028099 \newline Bui Duc Duy - 22021201 \newline Le Van Thang - 20228313 \newline Nguyen Tien Manh - 24020220}
+\newcommand{\reporttitle}{CẢI TIẾN MÔ HÌNH ViT5 DỰA TRÊN KỸ THUẬT CHỌN LỌC NGỮ CẢNH DÀI VÀ RERANKING CHO BÀI TOÁN TÓM TẮT VĂN BẢN TIẾNG VIỆT}
+\newcommand{\reporttitleen}{IMPROVING ViT5 MODEL VIA SELECTIVE LONG-CONTEXT AND FACTUALITY RERANKING FOR VIETNAMESE TEXT SUMMARIZATION}
 \newcommand{\reporttype}{BÁO CÁO BÀI TẬP LỚN}
 \newcommand{\reporttypeen}{COURSE REPORT}
 \newcommand{\major}{Học phần: Xử lý ngôn ngữ tự nhiên}
@@ -134,7 +134,7 @@
 \addbibresource{references.bib}
 
 % ============================================================
-% DOCUMENT BODY
+% DOCUMENT BODY (CẤU TRÚC IMRaD chuẩn)
 % ============================================================
 \begin{document}
 
@@ -142,10 +142,10 @@
 \input{cover}\cleardoublepage
 
 \pagenumbering{roman}
-% Tỷ lệ đóng góp (đặt trước tóm tắt theo yêu cầu)
+% Tỷ lệ đóng góp
 \input{chapters/contribution}\cleardoublepage
 
-% Tóm tắt tiếng Việt
+% Tóm tắt báo cáo
 \input{chapters/abstract_vi}\cleardoublepage
 
 % Mục lục
@@ -166,13 +166,14 @@
 % Danh mục ký hiệu và chữ viết tắt
 \input{chapters/glossary}\cleardoublepage
 
-% Nội dung chính
+% Nội dung chính — Cấu trúc IMRaD
 \pagenumbering{arabic}
-\input{chapters/01_introduction}\cleardoublepage
-\input{chapters/02_background}\cleardoublepage
-\input{chapters/03_system_design}\cleardoublepage
-\input{chapters/04_experiments}\cleardoublepage
-\input{chapters/conclusion}\cleardoublepage
+\input{chapters/01_introduction}\cleardoublepage   % I — Introduction
+\input{chapters/02_background}\cleardoublepage     % Theoretical Foundation / Background
+\input{chapters/03_system_design}\cleardoublepage  % M — Methods / Proposed System
+\input{chapters/04_experiments}\cleardoublepage    % R — Results
+\input{chapters/05_discussion}\cleardoublepage     % D — Discussion & Error Analysis
+\input{chapters/conclusion}\cleardoublepage        % Conclusion & Future Work
 
 % Tài liệu tham khảo
 \printbibliography[title={TÀI LIỆU THAM KHẢO}]

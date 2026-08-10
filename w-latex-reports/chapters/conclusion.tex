@@ -1,34 +1,25 @@
 % !TEX root = ../thesis.tex
-\chapter{Kết luận}
+\chapter{Kết luận và hướng phát triển}
 \label{ch:conclusion}
 
-\section{Tóm tắt các kết quả chính}
+\section{Tóm tắt các kết quả và đóng góp chính}
 
-Bài tập lớn này đã thực hiện cài đặt và đánh giá mô hình ViT5 cho bài toán tóm tắt văn bản tiếng Việt trên bộ dữ liệu vietnews, kết hợp so sánh với các thuật toán tóm tắt trích xuất. Bài tập lớn mang lại ba đóng góp chính:
+Báo cáo bài tập lớn này đã nghiên cứu, cải tiến và đánh giá thành công mô hình **HLK-ViT5** cho bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài từ dữ liệu báo chí điện tử. Đề tài mang lại ba đóng góp chính:
 
-\textbf{(1) Cài đặt và chạy mô hình ViT5.} Mô hình ViT5 được cài đặt và chạy inference trên bộ dữ liệu vietnews, sinh ra các bản tóm tắt trừa tượng hóa.
+\begin{enumerate}[label=\arabic*.]
+  \item \textbf{Giải quyết rào cản ngữ cảnh dài (Selective Long-Context):} Thiết kế và cài đặt thành công pipeline 13 bước kết hợp chia đoạn bảo toàn câu (\textit{Sentence-aware Chunking}), khoảng đè 1 câu (\textit{Overlapping}), chấm điểm nổi bật (\textit{Salience Scoring}) và lọc không trùng lặp (\textit{MMR}). Kỹ thuật này giúp mở rộng cửa sổ ngữ cảnh đầu vào ViT5 lên 1024 tokens mà vẫn đảm bảo tính cô đọng thông tin.
+  \item \textbf{Kiểm soát tính xác thực và ảo giác (Factuality Reranker):} Tích hợp cơ chế điều kiện hóa từ khóa (\textit{Keyword Conditioning}) và xây dựng bộ xếp hạng lại ứng viên tóm tắt dựa trên độ chính xác thực thể và tính nhất quán con số, kéo giảm đáng kể hiện tượng ảo giác trong sinh văn bản tiếng Việt.
+  \item \textbf{Đánh giá hệ thống trên Corpus nội địa:} Thực nghiệm toàn diện trên bộ dữ liệu 15.620 mẫu từ \textit{tienphong.vn}, đối chiếu HLK-ViT5 với hai baseline \texttt{Nishikyen} và \texttt{thnhan} trên bộ đo lường 4 nhóm: Lexical Overlap (ROUGE), Semantic Quality (BERTScore), Factual Consistency và Inference Time.
+\end{enumerate}
 
-\textbf{(2) So sánh với các thuật toán extractive.} Kết quả của ViT5 được đối chiếu với các thuật toán tóm tắt trích xuất thông qua các độ đo định lượng.
+\section{Hướng phát triển tương lai}
 
-\textbf{(3) Đánh giá đa chiều.} Sử dụng đồng thời bảy độ đo bao gồm ROUGE-1, ROUGE-2, ROUGE-L, BLEU, BERTScore, Compression Ratio và Processing Time để có cái nhìn toàn diện về hiệu năng của từng phương pháp.
+Từ các kết quả và hạn chế đã chỉ ra ở Chương~5, nghiên cứu đề xuất ba hướng phát triển tiếp theo:
 
-\section{Hạn chế của đề tài}
-
-Khóa luận còn tồn tại ba hạn chế giới hạn phạm vi khẳng định của các luận điểm, tất cả đều đã được thừa nhận trong Chương~4 và được tổng hợp lại ở đây:
 \begin{itemize}
-  \item Cấu hình MoA hạn chế: Hệ thống sử dụng một tầng duy nhất với ba mô hình đề xuất. Nghiên cứu của Wang et al.\ \cite{Wang2024} (Bảng 3 và 4) chỉ ra rằng hiệu năng tăng đơn điệu theo độ sâu của tầng tác nhân và số lượng mô hình đề xuất.
-  \item Quy mô nghiên cứu con người và động lực của người đánh giá: Nghiên cứu có sự tham gia của $17$ người đánh giá độc lập. Dù đủ lớn để xác định các xu hướng chung, việc phụ thuộc vào nhóm người tham gia ngẫu nhiên này có thể tạo ra các yếu tố nhiễu do sở thích cá nhân đối với chủ đề bài báo và hiện tượng mệt mỏi nhận thức phát sinh trong các phiên đánh giá kéo dài, gây ảnh hưởng đến độ ổn định của số liệu đo lường.
-  \item Các hệ số trùng lặp tính trực tiếp với văn bản nguồn: Các hệ số ROUGE / BLEU / BERTScore được tính toán trực tiếp với bài viết gốc, không phải so với bản tóm tắt chuẩn do con người viết, vì hiện tại chưa có bộ dữ liệu benchmark tóm tắt tiếng Việt nào được chú thích bởi con người ở quy mô tương tự. Việc đối chiếu chéo đa trục chính là chốt chặn thực nghiệm nhằm tránh việc diễn giải quá đà các kết quả trên Trục A.
-\end{itemize}
-
-\section{Hướng phát triển}
-
-Từ các hạn chế trên, khoá luận đề xuất các hướng phát triển sau:
-  
-\begin{itemize}
-  \item Mở rộng Trục C ở quy mô lớn: Thu hút thêm nhiều người đánh giá độc lập để mở rộng quy mô hiện tại ($17$ người đánh giá) ra toàn bộ cơ sở dữ liệu bài viết thực nghiệm. Cơ sở hạ tầng hệ thống hiện tại đã sẵn sàng để hỗ trợ mở rộng quy mô này, từ đó tinh chỉnh tốt hơn các phép đo đồng thuận giữa các người đánh giá và kiểm soát hiện tượng mệt mỏi nhận thức.
-  \item Các kiến trúc MoA nhiều tầng hơn: Thêm một tầng tổng hợp thứ hai và / hoặc mở rộng số lượng mô hình đề xuất lên năm hoặc sáu mô hình khác nhau. Từ đó xác thực luận điểm tăng trưởng hiệu năng đơn điệu của nghiên cứu gốc \cite{Wang2024} đối với tiếng Việt.
-  \item Các tác nhân đề xuất tích hợp RAG: Mỗi mô hình đề xuất có thể tự chủ động truy xuất các thông tin ngữ cảnh nền liên quan (các bài báo cùng ngày, cùng chủ đề) thông qua Tavily; mô hình tổng hợp sau đó sẽ dung hợp để tạo ra bản tóm tắt bao hàm đầy đủ các bối cảnh lịch sử liên quan mà người đọc không cần phải rời mắt khỏi bài báo chính.
+  \item \textbf{Mở rộng sang kiến trúc ViT5-large và LLM tiếng Việt:} Đưa pipeline Selective Long-Context và Reranking áp dụng cho mô hình `ViT5-large` hoặc các LLM tiếng Việt tiên tiến như PhoGPT, Vistral để nâng cao hơn nữa khả năng diễn giải ngữ nghĩa.
+  \item \textbf{Tối ưu hóa tốc độ suy luận (Real-time Pipeline):} Tối ưu thuật toán MMR và song song hóa bước Reranker bằng kỹ thuật Batch Inference hoặc ONNX Runtime, hướng tới việc triển khai mô hình dưới dạng RESTful API hoặc Tiện ích mở rộng trình duyệt (Browser Extension) hoạt động thời gian thực.
+  \item \textbf{Mở rộng miền dữ liệu đánh giá:} Thu thập và kiểm thử HLK-ViT5 trên các miền văn bản chuyên biệt như văn bản luật, báo cáo tài chính và hồ sơ y tế tiếng Việt để đánh giá khả năng tổng quát hóa của phương pháp đề xuất.
 \end{itemize}
 
 \vspace{0.6em}

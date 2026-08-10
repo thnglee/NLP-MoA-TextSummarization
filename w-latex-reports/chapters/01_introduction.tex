@@ -1,145 +1,59 @@
 % !TEX root = ../thesis.tex
-\chapter{Giới thiệu bài toán}
+\chapter{Giới thiệu}
 
-Chương này đặt nền móng cho toàn bộ báo cáo bằng việc giới thiệu bài toán trọng tâm ---
-tóm tắt văn bản tin tức tiếng Việt --- cùng với hai hướng tiếp cận chính: tóm tắt trích xuất (extractive) và tóm tắt trừa tượng hóa (abstractive) với mô hình ViT5.
-Trước tiên, Mục~1.1 trình bày định nghĩa bài toán tóm tắt văn bản và các thách thức đặc thù khi áp dụng cho tiếng Việt;
-Mục~1.2 giới thiệu bộ dữ liệu vietnews và mô hình ViT5 được sử dụng trong bài tập lớn;
-và Mục~1.3 khảo sát các công trình liên quan về tóm tắt tiếng Việt, từ đó xác định khoảng trống mà bài tập lớn nhắm tới.
+Chương này đặt nền móng cho toàn bộ báo cáo bằng việc giới thiệu bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài, phân tích những thách thức cốt lõi của các mô hình Sequence-to-Sequence hiện nay và trình bày giải pháp cải tiến HLK-ViT5 dựa trên kiến trúc ViT5-base.
+Mục~1.1 trình bày bối cảnh và động lực nghiên cứu; Mục~1.2 khảo sát các công trình liên quan và xác định khoảng trống nghiên cứu; Mục~1.3 nêu rõ mục tiêu và các đóng góp khoa học chính; Mục~1.4 mô tả cấu trúc tổng quan của báo cáo; và Mục~1.5 tổng kết chương.
 
-\section{Bài toán tóm tắt văn bản tự động}
+\section{Bối cảnh và động lực nghiên cứu}
 
-Tóm tắt văn bản tự động là bài toán tạo ra một phiên bản ngắn hơn
-của văn bản nguồn mà vẫn bảo toàn thông tin thiết yếu. Cho một tài
-liệu đầu vào $D$, bộ tóm tắt $f$ tạo ra bản tóm tắt $S = f(D)$
-sao cho $|S| \ll |D|$ và $S$ giữ lại các dữ kiện then chốt của $D$.
+Trong kỷ nguyên bùng nổ thông tin số, khối lượng tin tức báo chí tiếng Việt được xuất bản hàng ngày trên các trang báo điện tử lớn như \textit{tienphong.vn} gia tăng với tốc độ phi mã. Việc tiếp nhận và xử lý lượng thông tin đồ sộ này đặt ra nhu cầu cấp thiết về các công cụ tóm tắt văn bản tự động (Automatic Text Summarization). Tóm tắt văn bản hỗ trợ người đọc nhanh chóng nắm bắt các dữ kiện then chốt mà không cần đọc toàn văn bài báo dài.
 
-Các hệ thống tóm tắt thường được phân loại theo hai trục:
+Các phương pháp tóm tắt được chia thành hai nhóm chính: tóm tắt trích xuất (extractive summarization) và tóm tắt trừu tượng hóa (abstractive summarization). Nếu như các phương pháp trích xuất chỉ đơn thuần lựa chọn và chắp vá các câu nguyên văn từ bài gốc, thì tóm tắt trừu tượng hóa dựa trên các mô hình ngôn ngữ tiền huấn luyện (Pre-trained Language Models) có khả năng diễn giải, cô đọng và sinh ra các bản tóm tắt trôi chảy, tự nhiên như con người biên soạn. Tại Việt Nam, mô hình ViT5 \cite{Nguyen2022} dựa trên kiến trúc T5 Encoder-Decoder đã chứng minh hiệu năng ấn tượng trong nhiều tác vụ sinh ngôn ngữ tự nhiên.
+
+Tuy nhiên, khi áp dụng mô hình ViT5-base vào bài toán tóm tắt tin tức báo chí thực tế, nghiên cứu nhận thấy hai thách thức lớn chưa được giải quyết triệt để:
 
 \begin{itemize}
-  \item {Trích xuất so với trừu tượng hóa:}
-        Hệ thống trích xuất chọn lựa các câu (hoặc đoạn câu) hiện có
-        từ văn bản gốc. Hệ thống trừu tượng hóa tạo ra văn bản mới
-        và có thể diễn giải lại, sắp xếp lại thứ tự hoặc kết hợp
-        các ý tưởng. Các bộ tóm tắt dựa trên LLM hiện đại chủ yếu
-        là kiểu trừu tượng hóa.
-  \item {Đơn tài liệu so với đa tài liệu:}
-        Hệ thống đơn tài liệu tóm tắt một bài báo riêng lẻ; hệ thống
-        đa tài liệu tổng hợp thông tin từ nhiều bài báo liên quan. Hệ
-        thống trong khóa luận này là đơn tài liệu, nhưng pipeline MoA
-        có thể được hiểu như một bộ tổng hợp đa nguồn suy biến, trong
-        đó ``nhiều nguồn'' chính là các bản thảo LLM khác nhau của cùng
-        một bài báo.
+  \item \textbf{Giới hạn cửa sổ ngữ cảnh (Context Window Limitation):} Các mô hình ViT5-base chuẩn thường đặt độ dài đầu vào tối đa là 256 hoặc 512 tokens. Đối với các bài báo chí dài (thường vượt quá 1000 từ), việc cắt bỏ phần sau văn bản khiến mô hình mắc phải thiên kiến trích đoạn đầu (lead bias) và bỏ sót các thông tin diễn biến, kết luận quan trọng ở phần giữa hoặc cuối bài.
+  \item \textbf{Hiện tượng ảo giác và mất nhất quán dữ kiện (Hallucination \& Factual Inconsistency):} Các mô hình trừu tượng hóa có xu hướng "bịa" ra thông tin hoặc làm sai lệch các thực thể (tên người, địa danh, tổ chức) và các con số thống kê so với văn bản gốc. Điều này làm giảm nghiêm trọng độ tin cậy của bản tóm tắt trong báo chí.
 \end{itemize}
 
-Tiếng Việt đặt ra ba thách thức cho việc đánh giá chất lượng kết quả tóm tắt:
-\begin{itemize}
-  \item {Phân đoạn từ:} Tiếng Việt được viết
-        với khoảng trắng giữa các âm tiết, không phải giữa các từ; một từ
-        khái niệm có thể kéo dài hai đến ba âm tiết
-        (\textit{tóm tắt}, \textit{kiểm chứng}). Các hệ số overlap từ vựng
-        được tính trên đơn vị token khoảng trắng sẽ hệ thống hóa việc
-        không ghi nhận công cho các cách diễn đạt lại tái cấu trúc thuật
-        ngữ đa âm tiết.
-  \item {Dấu phụ và thanh điệu:} Tiếng Việt có sáu thanh từ vựng,
-        được mã hóa dưới dạng dấu phụ trên nguyên âm; kho từ vựng của bộ
-        mã hóa phân mảnh các ký tự có dấu sẽ mất đi độ chi tiết ngữ nghĩa.
-  \item {Khan hiếm corpus đánh giá:} So với tiếng Anh
-        (CNN/DailyMail, XSum, MultiNews), tiếng Việt không có bộ đánh giá
-        tóm tắt được chú thích bởi con người so với 
-        các bản tóm tắt tham chiếu. Đây là lý do thực tế khiến ROUGE/BLEU/
-        BERTScore trong nghiên cứu tiếng Việt thường được tính
-        so với bài báo gốc`', không phải so với bản tóm tắt tham
-        chiếu của con người --- một lưu ý phương pháp luận sẽ được đề cập
-        lại ở Chương~4.
-\end{itemize}
-
-Bên cạnh nhu cầu đọc thông tin nhanh, người đọc ngày nay cũng ngày một nâng cao nhận thức về tính xác thực của thông tin.
-Các tiêu đề giật gân, trích dẫn phiến diện và thông tin sai lệch lan truyền trên mạng xã hội và các tổng hợp tin tức ngày càng tinh vi và khó phân biệt.
-Kiểm chứng thủ công không đủ khả năng đáp ứng so với quy mô thông tin hiện tại; một công cụ hỗ trợ được tích hợp ngay trong trình duyệt, có khả năng
-gắn cờ các mệnh đề không có căn cứ, ngày càng trở nên có giá trị và ngày càng trở nên quan trọng hơn khi được gắn liền với bài toán tóm tắt tin tức.
-
-\section{Bộ dữ liệu vietnews và mô hình ViT5}
-
-\textit{(Phần này sẽ được bổ sung: giới thiệu bộ dữ liệu vietnews và mô hình ViT5 được sử dụng làm công cụ tóm tắt trừa tượng hóa chính trong bài tập lớn.)}
-Quan sát thực nghiệm trung tâm là một LLM đóng vai trò tác
-nhân tổng hợp cho ra câu trả lời tốt hơn khi được cung cấp nhiều
-câu trả lời ứng viên từ các LLM khác được coi là tác nhân đề xuất
- --- kể cả khi các LLM kia riêng
-lẻ yếu hơn chính tác nhân tổng hợp. Các tác giả gọi đây là
-khả năng hợp tác của các LLM.
-
-MoA là một cấu trúc phân tầng. Tầng $\ell$ gồm $n$ tác nhân
-$\{A_{\ell,1}, \ldots, A_{\ell,n}\}$; mỗi tác nhân ở tầng $\ell+1$
-nhận lời nhắc cùng với đầu ra của tất cả các tác nhân ở tầng $\ell$.
-Về mặt hình thức, tác nhân $i$ ở tầng $\ell+1$ tạo ra
-
-\[
-y_{\ell+1,i} \;=\; A_{\ell+1,i}\!\left(\,[y_{\ell,1}, y_{\ell,2},
-\ldots, y_{\ell,n}]\,+\,x\right),
-\]
-
-\noindent trong đó $x$ là lời nhắc của người dùng và $+$ biểu thị
-phép nối chuỗi. Trong phiên bản hai tầng (được sử dụng trong khóa
-luận này), tầng~1 là tầng tác nhân đề xuất và tầng~2 là một
-tác nhân tổng hợp duy nhất.
-
-Trên bộ đánh giá AlpacaEval~2.0, một cấu hình MoA với sáu tác nhân
-đề xuất mã nguồn mở và một tác nhân tổng hợp đạt tỷ lệ thắng LC(length-controlled) là
-$65,1\%$, vượt qua GPT-4o ($57,5\%$) theo cùng giao thức đánh giá.
-Hiệu suất tăng đơn điệu theo số lượng tầng và số lượng tác nhân đề
-xuất mỗi tầng (Bảng~3--4 của \cite{Wang2024}).
-
-Bài báo MoA đánh giá trên các bộ đánh giá tuân thủ hướng dẫn
-(AlpacaEval, MT-Bench, FLASK) trong đó LLM-Judge --- không phải
-độ overlap với bất kỳ văn bản nguồn nào --- là tiêu chuẩn đánh giá.
-Liệu MoA có thể áp dụng được đối với trường hợp tóm tắt có neo ngữ cảnh gốc
-(nơi tồn tại một bài báo nguồn và có thể đo được độ overlap), và kết quả tương tự 
-có thể đạt được đối với tiếng Việt hay không, chính là câu hỏi
-thực nghiệm mà khóa luận này trả lời.
+Động lực của đề tài này là xây dựng một pipeline cải tiến có tên **HLK-ViT5**, giúp mô hình ViT5-base vượt qua rào cản độ dài đầu vào bằng cơ chế chọn lọc ngữ cảnh thông minh (Selective Long-Context) và đảm bảo tính trung thực thông tin thông qua bộ lọc xếp hạng lại dữ kiện (Heuristic Factuality Reranking).
 
 \section{Các công trình liên quan và khoảng trống nghiên cứu}
-Phần này điểm qua các nghiên cứu tương tự và xác định
-khoảng trống mà bài tập lớn này nhắm đến: 
 
-Google News Việt Nam và Báo Mới cung cấp tin tức
-tổng hợp với các đoạn mô tả ngắn, nhưng các đoạn đó là trích dẫn trực
-tiếp từ đoạn dẫn đầu bài, không phải bản tóm tắt biên tập trừu tượng.
-Nghiên cứu học thuật về tóm tắt tiếng Việt đã sử dụng ViT5
-\cite{Nguyen2022} cho nhiệm vụ sinh văn bản tóm tắt trừu tượng, được đánh giá
-hoàn toàn bằng thang điểm ROUGE so với bản tóm tắt tham chiếu (khi có)
-hoặc so với bài báo gốc (phổ biến hơn).
+Bài toán tóm tắt văn bản tiếng Việt đã thu hút nhiều công trình nghiên cứu trong những năm gần đây:
 
-ClaimBuster (UT Arlington) được xây dựng tập trung cho các bài 
-phát biểu chính trị tiếng Anh; trong khi Google Fact
-Check Tools API tổng hợp các phán quyết từ các tổ chức kiểm chứng
-thông tin hiện có. Cả hai đều không nhắm vào tiếng Việt, và cả hai
-đều không hoạt động ở cấp bài báo cho người đọc thông thường.
+\begin{itemize}
+  \item \textbf{Mô hình ViT5 và các biến thể Fine-tune:} Nguyen et al. \cite{Nguyen2022} giới thiệu ViT5 tiền huấn luyện trên corpus tiếng Việt quy mô lớn. Sau đó, nhiều mô hình fine-tune mã nguồn mở như \texttt{Nishikyen/vit5-vietnamese-news} và \texttt{thnhan/sft\_model} đã được triển khai cho tóm tắt tin tức. Tuy nhiên, các mô hình này chủ yếu áp dụng quy trình fine-tune chuẩn (SFT) trên chuỗi cắt ngắn, chưa giải quyết triệt để bài toán ngữ cảnh dài toàn văn.
+  \item \textbf{Kỹ thuật nén ngữ cảnh và chọn lọc đoạn văn (Chunk Selection):} Nhiều nghiên cứu trên thế giới đã sử dụng các thuật toán như MMR (Maximal Marginal Relevance) hay Salience Scoring để nén tài liệu trước khi đưa vào LLM/Seq2Seq. Tuy nhiên, việc kết hợp giữa chia đoạn bảo toàn câu (Sentence-aware Chunking), đè câu liên kết (Overlap) và điều kiện hóa từ khóa (Keyword Conditioning) cho mô hình ViT5 tiếng Việt vẫn chưa được nghiên cứu hệ thống.
+  \item \textbf{Đánh giá và kiểm soát tính xác thực (Factuality Control):} Hầu hết các bài báo hiện nay chỉ dừng lại ở việc báo cáo chỉ số ROUGE và BERTScore. Việc đưa ra một quy trình reranking chuyên biệt nhằm kiểm soát tính nhất quán của thực thể (Entity consistency) và con số (Number consistency) cho tiếng Việt vẫn là một khoảng trống lớn.
+\end{itemize}
 
-Các tiện ích TLDR This, Summari và
-Reader Mode nhúng bản tóm tắt trong trang trên các trang web
-tùy ý nhưng ưu tiên tiếng Anh và không cung cấp tính năng kiểm chứng thông
-tin. NewsGuard và Bias Buddy đánh giá độ tin cậy
-của nhà xuất bản, không phải bài báo riêng lẻ, và dựa trên
-đánh giá thủ công thay vì xác minh từng bài báo.
+Từ khảo sát trên, đề tài xác định **khoảng trống nghiên cứu** cốt lõi: *Chưa có một kiến trúc pipeline ViT5 tiếng Việt tích hợp đồng thời cơ chế chọn lọc ngữ cảnh dài không dư thừa (Selective Long-Context up to 1024 tokens) và bộ lọc kiểm soát ảo giác (Factuality Reranking).*
 
-Zheng et al.\ \cite{Zheng2023} giới thiệu MT-Bench và phương pháp
-Chatbot Arena, chứng minh rằng một LLM mạnh (GPT-4) đạt mức độ đồng thuận
-khoảng $\sim$80\% so với thị hiếu của con người (xấp xỉ
-mức mà hai người đánh giá đồng ý với nhau). FLASK \cite{Ye2023} bổ trợ phương pháp này thông qua đánh giá rubric chi tiết theo nhiều thang điểm khác nhau. AlpacaEval \cite{Dubois2024} bổ sung thêm kỹ thuật ngẫu nhiên hóa vị trí
-và kiểm soát độ dài để giảm thiểu hai thiên kiến đã biết của LLM-as-Judge. Module đánh giá Trục~B của khóa luận này được xây dựng trên các
-phương pháp nếu trên.
+\section{Mục tiêu và đóng góp chính}
 
-Khoá luận phát hiện các công trình được kể trên chưa có công trình nào trước đây (i)~áp dụng
-Mixture-of-Agents cho tiếng Việt, (ii)~kết hợp việc triển khai sản phẩm dưới dạng tiện ích trình duyệt với kiểm chứng thông tin và tóm tắt trên tin tức
-tiếng Việt, hoặc (iii)~ đối chiếu một cách tường minh ba phương pháp đánh giá:  độ chồng chéo, LLM-Judge và đánh giá con người trong một khuôn khổ \textit{ba trục} duy nhất
-cho bài toán tóm tắt tiếng Việt. Khóa luận này sẽ nhắm tới việc khai thác và lấp đầy 
-ba khoảng trống nghiên cứu đó.
+Mục tiêu chính của đề tài là thiết kế, cài đặt và đánh giá mô hình **HLK-ViT5** cho bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài từ báo điện tử \textit{tienphong.vn}.
+
+Đề tài đóng góp bốn điểm mới về mặt kỹ thuật và thực nghiệm:
+
+\begin{enumerate}[label=\arabic*.]
+  \item \textbf{Cơ chế Selective Long-Context:} Thiết kế pipeline chia đoạn bảo toàn câu (\textit{Sentence-aware Chunking}), giao đè 1 câu (\textit{Overlapping}), chấm điểm nổi bật (\textit{Salience Scoring}) kết hợp thuật toán \textit{MMR} để chọn ra tối đa 4 đoạn ngữ cảnh quan trọng nhất từ toàn văn bài báo, cho phép mở rộng đầu vào ViT5 lên 1024 tokens mà không làm mất tính liên kết.
+  \item \textbf{Kỹ thuật Keyword-conditioned Generation:} Trích xuất từ khóa chủ đề và nhúng trực tiếp vào đầu chuỗi prompt đầu vào của ViT5 để định hướng mô hình tập trung vào các nội dung trọng tâm.
+  \item \textbf{Heuristic Factuality Reranker:} Xây dựng bộ lọc xếp hạng lại đa ứng viên sinh ra từ ViT5, ưu tiên các bản tóm tắt bảo toàn chính xác danh từ riêng và số liệu thực tế.
+  \item \textbf{Đánh giá đa chiều trên Corpus nội địa:} Thực nghiệm trên bộ dữ liệu 15.620 mẫu báo chí từ domain \textit{tienphong.vn}, so sánh toàn diện với hai baseline \texttt{Nishikyen} và \texttt{thnhan} trên 4 nhóm độ đo (Lexical Overlap, Semantic Quality, Factual Consistency, và Inference Time).
+\end{enumerate}
+
+\section{Cấu trúc báo cáo}
+
+Báo cáo được tổ chức theo cấu trúc IMRaD chuẩn gồm 6 chương:
+Chương~1 giới thiệu tổng quan đề tài, mục tiêu và đóng góp.
+Chương~2 xây dựng cơ sở lý thuyết về ViT5, kiến trúc Transformer, các thuật toán nén ngữ cảnh và hệ đo lường đánh giá.
+Chương~3 trình bày chi tiết phương pháp đề xuất HLK-ViT5, kiến trúc pipeline 13 bước và thiết lập thực nghiệm.
+Chương~4 báo cáo kết quả thực nghiệm định lượng trên bộ dữ liệu kiểm thử.
+Chương~5 phân tích, bình luận ý nghĩa kết quả, phân tích lỗi và thảo luận hạn chế.
+Chương~6 kết luận và đề xuất các hướng phát triển tương lai.
 
 \section{Tổng kết chương}
 
-Chương này đã thiết lập bức tranh toàn cảnh cho bài tập lớn thông qua ba nội dung chính.
-Thứ nhất, bài toán tóm tắt văn bản tự động được trình bày với các đặc thù của tiếng Việt bao gồm phân đoạn từ đa âm tiết, dấu phụ thanh điệu và sự khan hiếm corpus đánh giá có chú thích bởi con người.
-Thứ hai, bộ dữ liệu vietnews và mô hình ViT5 được giới thiệu là hai yếu tố cốt lõi của bài tập lớn.
-Thứ ba, qua khảo sát các công trình liên quan, chương đã xác định khoảng trống nghiên cứu mà bài tập lớn sẽ lấp đầy.
-Các nền tảng lý thuyết cần thiết sẽ được trình bày chi tiết trong Chương~2.
+Chương này đã làm rõ động lực phát triển mô hình HLK-ViT5 nhằm khắc phục hai hạn chế lớn của ViT5-base: rào cản độ dài đầu vào và hiện tượng ảo giác dữ kiện. Chương cũng đã xác định khoảng trống nghiên cứu, phát biểu 4 đóng góp kỹ thuật chính và phác thảo cấu trúc báo cáo. Các nền tảng lý thuyết cần thiết sẽ được trình bày chi tiết trong Chương~2.

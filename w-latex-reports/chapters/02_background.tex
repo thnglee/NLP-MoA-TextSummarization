@@ -1,174 +1,103 @@
 % !TEX root = ../thesis.tex
 \chapter{Cơ sở lý thuyết}
 
-Chương này xây dựng nền tảng lý thuyết cho toàn bộ các thực nghiệm được triển khai trong Chương~3 và các kết quả đánh giá trong Chương~4.
-Mục~2.1 trình bày kiến trúc Transformer và mô hình ViT5 được sử dụng cho tóm tắt trừa tượng hóa.
-Mục~2.2 trình bày các thuật toán tóm tắt trích xuất được dùng làm baseline so sánh.
-Mục~2.3 là phần trọng tâm lý thuyết của chương, trình bày chi tiết hệ thống đo lường đánh giá chất lượng tóm tắt.
+Chương này xây dựng nền tảng lý thuyết cho toàn bộ các mô hình và thuật toán được sử dụng trong HLK-ViT5.
+Mục~2.1 trình bày kiến trúc Transformer Encoder-Decoder và mô hình ViT5-base;
+Mục~2.2 trình bày các kỹ thuật nén ngữ cảnh và trích chọn thông tin như MMR và Keyword Conditioning;
+Mục~2.3 giới thiệu các mô hình baseline đối chứng;
+Mục~2.4 định nghĩa chi tiết 4 nhóm độ đo đánh giá chất lượng tóm tắt; và Mục~2.5 tổng kết chương.
 
-\section{Mô hình ViT5 và kiến trúc Transformer}
+\section{Mô hình ViT5 và Kiến trúc Transformer}
 
-\subsection{Kiến trúc Transformer}
+\subsection{Kiến trúc Transformer Encoder-Decoder}
 
-Kiến trúc Transformer \cite{Vaswani2017} thay thế các mô hình chuỗi hồi quy và tích chập cho các bài toán ngôn ngữ tự nhiên dựa trên cơ chế chú ý. Với truy vấn $Q$, khóa $K$ và giá trị $V$, chú ý tích vô hướng có tỷ lệ được định nghĩa như sau:
+Kiến trúc Transformer \cite{Vaswani2017} dựa trên cơ chế chú ý (Attention Mechanism), loại bỏ hoàn toàn các vòng lặp hồi quy (RNN) để cho phép tính toán song song hóa trên quy mô lớn. Đối với bài toán sinh văn bản dạng Sequence-to-Sequence, kiến trúc Encoder-Decoder bao gồm hai khối chính:
 
-\[
-\text{Attention}(Q,K,V) \;=\; \text{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}}\right) V,
-\]
-
-\noindent trong đó $d_k$ là chiều của khóa. Chú ý \textit{đa đầu} chiếu $Q, K, V$ vào $h$ không gian con, chạy chú ý trong từng không gian, và nối kết quả lại, cho phép mô hình chú ý đến các quan hệ vị trí khác nhau cùng lúc.
-
-Các LLM hiện đại thuộc ba dòng kiến trúc như sau: 
 \begin{itemize}
-  \item Các mô hình chỉ bộ mã hóa (encoder-only) như BERT và PhoBERT \cite{Nguyen2020} tạo ra các embedding ngữ cảnh cho các token đầu vào; chúng được sử dụng trong bài tập lớn này như xương sống embedding cho BERTScore (Mục~2.3.3).
-  \item Các mô hình bộ mã hóa--bộ giải mã (encoder-decoder) như T5 và ViT5 \cite{Nguyen2022} mã hóa đầu vào và điều kiện hóa việc tạo của bộ giải mã trên đó; ViT5 là mô hình tóm tắt trừa tượng hóa chính được sử dụng trong bài tập lớn.
+  \item \textbf{Bộ mã hóa (Encoder):} Tiếp nhận chuỗi token đầu vào $X = (x_1, x_2, \ldots, x_n)$, sử dụng các lớp chú ý bản thân đa đầu (Multi-Head Self-Attention) và mạng truyền thẳng (Feed-Forward Neural Network) để tạo ra tập hợp các biểu diễn ngữ cảnh ẩn $H = (h_1, h_2, \ldots, h_n)$.
+  \item \textbf{Bộ giải mã (Decoder):} Tự điều khiển sinh chuỗi đầu ra $Y = (y_1, y_2, \ldots, y_m)$ theo từng bước (autoregressive). Tại mỗi bước $t$, bộ giải mã kết hợp chú ý bản thân có mặt nạ (Masked Self-Attention) trên các token đã sinh $(y_1, \ldots, y_{t-1})$ và chú ý chéo (Cross-Attention) trên chuỗi ẩn $H$ của Encoder.
 \end{itemize}
 
-\subsection{Mô hình ViT5}
-ViT5 \cite{Nguyen2022} là mô hình ngôn ngữ tiếng Việt theo kiến trúc encoder-decoder, được huấn luyện trước trên corpus tiếng Việt quy mô lớn và có thể fine-tune cho bài toán tóm tắt trừa tượng hóa. Bài tập lớn này sử dụng ViT5 như mô hình tóm tắt chính, chạy inference trực tiếp trên bộ dữ liệu vietnews.
+Công thức chú ý tích vô hướng có tỷ lệ (Scaled Dot-Product Attention) với truy vấn $Q$, khóa $K$ và giá trị $V$ được định nghĩa:
 
-\subsection{Các thuật toán tóm tắt trích xuất (Extractive)}
-\textit{(Phần này sẽ được bổ sung: mô tả các thuật toán extractive được dùng làm baseline.)}
+\[
+\text{Attention}(Q,K,V) \;=\; \text{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}}\right) V
+\]
 
-Tất cả mô hình trên khi gọi qua giao diện API đều được thiết lập ở các thông số cấu hình mặc định của nhà cung cấp. Chi tiết các thông số mặc định cụ thể cho từng mô hình được tổng hợp trong Bảng~\ref{tab:model_parameters}.
+\noindent trong đó $d_k$ là chiều của khóa.
 
-\begin{table}[htbp]
-\centering
-\renewcommand{\arraystretch}{1.3} % Tăng khoảng cách chiều dọc giữa các hàng cho thoáng mắt
-\caption{Thông số cấu hình mặc định của các mô hình được sử dụng}
-\label{tab:model_parameters}
-% Sử dụng tabularx với chiều rộng bằng đúng chiều rộng văn bản (\textwidth)
-% Cột 1 căn trái (l), Cột 2 dùng kiểu (X) để tự động co giãn và xuống dòng
-\begin{tabularx}{\textwidth}{l X}
-\hline
-\textbf{Mô hình} & \textbf{Thông số cấu hình mặc định} \\ \hline
-GPT-4o & Temperature = 1.0, Top-$p$ = 1.0, Frequency Penalty = 0.0, Presence Penalty = 0.0 \\
-GPT-4o-mini & Temperature = 1.0, Top-$p$ = 1.0, Frequency Penalty = 0.0, Presence Penalty = 0.0 \\
-Claude Haiku 4.5 & Temperature = 1.0, Top-$p$ = 1.0 \\
-Gemini 2.5 Flash & Temperature = 1.0, Top-$p$ = 0.95 \\
-ViT5-large & Chiến lược giải mã mặc định (Greedy decoding) \\
-PhoBERT-base & Không áp dụng (N/A --- Trích xuất embedding làm vector đặc trưng) \\ \hline
-\end{tabularx}
-\end{table}
+\subsection{Mô hình tiền huấn luyện ViT5}
 
-Bên cạnh các mô hình chính, các mô hình khác được tinh chỉnh suy luận như OpenAI \texttt{o1-mini} đòi hỏi cơ chế xử lý đặc thù: các tham số temperature, top-$p$ và penalty không được hỗ trợ, và giao thức streaming khác với các mô hình chat-completion thông thường. Tầng dịch vụ trong Chương~3 sẽ trừu tượng hóa các khác biệt này để tất cả 14 mô hình được hỗ trợ có thể được chọn hoán đổi cho nhau trong quá trình thực thi.
+ViT5 \cite{Nguyen2022} là mô hình ngôn ngữ tiếng Việt được xây dựng dựa trên kiến trúc T5 (Text-to-Text Transfer Transformer). ViT5 chuyển đổi tất cả các tác vụ NLP (phân loại, dịch máy, tóm tắt) về dạng bài toán chuỗi-sang-chuỗi: nhận đầu vào là một chuỗi văn bản và sinh đầu ra là một chuỗi văn bản.
+
+Phiên bản \texttt{VietAI/ViT5-base} có 12 lớp Encoder, 12 lớp Decoder, chiều ẩn $d_{\text{model}} = 768$, 12 đầu chú ý và khoảng 220 triệu tham số. Mô hình được tiền huấn luyện trên tập dữ liệu tiếng Việt quy mô lớn với mục tiêu khôi phục token bị che (Span Corruption). ViT5 là mô hình nền tảng được chọn để xây dựng và tinh chỉnh trong đề tài HLK-ViT5.
+
+\section{Các kỹ thuật xử lý ngữ cảnh và trích chọn thông tin}
+
+\subsection{Sentence-aware Chunking và Overlapping}
+
+Khi độ dài bài báo vượt quá cửa sổ xử lý của Encoder, văn bản cần được phân rã thành các đoạn nhỏ (chunks). Kỹ thuật phân đoạn theo ranh giới câu (\textit{Sentence-aware Chunking}) đảm bảo không cắt đôi câu giữa chừng, giữ nguyên tính hoàn chỉnh cú pháp. Thêm vào đó, việc duy trì khoảng đè 1 câu (\textit{1-sentence Overlapping}) giữa hai chunk kề nhau giúp bảo toàn mối quan hệ tham chiếu ngữ nghĩa giữa các đoạn.
+
+\subsection{Maximal Marginal Relevance (MMR)}
+
+Thuật toán Maximal Marginal Relevance (MMR) được thiết kế nhằm chọn ra tập hợp các câu/đoạn văn có độ tương quan cao nhất với chủ đề nhưng đồng thời tối thiểu hóa sự trùng lặp thông tin nội bộ. Với tập hợp ứng viên $C$, tập đã chọn $S$, truy vấn/từ khóa $Q$, chỉ số MMR của một ứng viên $c_i \in C \setminus S$ được tính:
+
+\[
+\text{MMR}(c_i) \;=\; \arg\max_{c_i \in C \setminus S} \left[ \lambda \cdot \text{Sim}_1(c_i, Q) - (1 - \lambda) \cdot \max_{c_j \in S} \text{Sim}_2(c_i, c_j) \right]
+\]
+
+\noindent trong đó $\text{Sim}_1$ đo độ nổi bật của chunk so với bài báo/từ khóa, $\text{Sim}_2$ đo độ tương đồng giữa hai chunk, và $\lambda \in [0,1]$ là hệ số cân bằng giữa độ nổi bật và tính đa dạng.
+
+\subsection{Keyword-conditioned Generation}
+
+Keyword-conditioned Generation là kỹ thuật bổ sung danh sách từ khóa đại diện vào trước ngữ cảnh đầu vào của bộ mã hóa. Bằng cách định dạng chuỗi đầu vào dưới dạng:
+
+\begin{center}
+\texttt{Keywords: [từ\_khóa\_1, từ\_khóa\_2, ...] | Context: [nội\_dung\_đã\_lọc]}
+\end{center}
+
+\noindent mô hình ViT5 được gợi ý tập trung chú ý vào các thực thể và khái niệm trung tâm khi sinh bản tóm tắt.
+
+\section{Các mô hình đối chứng (Baselines)}
+
+Đề tài đưa hai mô hình mã nguồn mở hiện có vào so sánh đối chứng:
+
+\begin{itemize}
+  \item \textbf{\texttt{Nishikyen/vit5-vietnamese-news}:} Mô hình ViT5-base được fine-tune trên tập dữ liệu tin tức tiếng Việt theo phương pháp chuẩn hóa truyền thống với chiều dài input giới hạn 256/512 tokens.
+  \item \textbf{\texttt{thnhan/sft\_model}:} Mô hình ViT5-base được tinh chỉnh theo phương pháp SFT (Supervised Fine-Tuning) tập trung vào khả năng sinh câu trôi chảy.
+\end{itemize}
 
 \section{Hệ đo lường đánh giá chất lượng tóm tắt}
 
-\subsection{Các độ đo ROUGE, BLEU, BERTScore, Compression Ratio và Processing Time}
+Để đánh giá toàn diện HLK-ViT5, nghiên cứu xây dựng bộ đo lường 4 nhóm:
 
-\begin{enumerate}[label=(\alph*), leftmargin=*]
+\subsection{Nhóm 1: Lexical Overlap (Độ trùng lặp từ vựng)}
 
-    \item \textbf{ROUGE} \\
-    ROUGE \cite{Lin2004} (Recall-Oriented Understudy for Gisting Evaluation) đo độ overlap $n$-gram và chuỗi con chung dài nhất giữa bản tóm tắt ứng viên $C$ và tham chiếu $R$. Gọi $g_n$ là tập hợp các $n$-gram:
-    
-    \begin{align*}
-\text{ROUGE-}n_{\text{recall}} \;&=\; \frac{|g_n(C) \cap g_n(R)|}{|g_n(R)|}, \\
-\text{ROUGE-}n_{\text{prec}} \;&=\; \frac{|g_n(C) \cap g_n(R)|}{|g_n(C)|},
-\end{align*}
-    
-    \noindent và ROUGE-$n_{F1}$ là trung bình điều hòa của hai giá trị trên. ROUGE-1 và ROUGE-2 sử dụng đơn gram và hai gram tương ứng; ROUGE-L dựa trên chuỗi con chung dài nhất và thưởng cho độ overlap theo thứ tự.
-    
-    ROUGE được tính trên các token phân tách bằng khoảng trắng. Một từ tiếng Việt như \textit{kiểm chứng} là hai token, và một cách diễn đạt lại dùng từ \textit{thẩm định} để thay thế sẽ không được tính điểm, mặc dù ý nghĩa hoàn toàn tương đương. Đây là một lưu ý khi sử dụng ROUGE cho nghiên cứu tiếng Việt.
+\begin{itemize}
+  \item \textbf{ROUGE-1 / ROUGE-2:} Đo độ trùng lặp $n$-gram ($n=1, 2$) giữa bản tóm tắt mô hình $C$ và tham chiếu $R$.
+  \item \textbf{ROUGE-L:} Đo độ dài chuỗi con chung dài nhất (Longest Common Subsequence).
+\end{itemize}
 
-    \item \textbf{BLEU} \\
-    BLEU \cite{papineni2002bleu} là hệ số thiên về độ chính xác, ban đầu được thiết kế cho dịch máy. Với một tập $n$-gram, độ chính xác có hiệu chỉnh $p_n$ cắt bớt số đếm ở số đếm tham chiếu tối đa; BLEU kết hợp $p_1, \ldots, p_4$ như một trung bình nhân có trọng số và nhân với hệ số phạt ngắn $BP$:
-    
-    $$\text{BLEU} \;=\; BP \cdot \exp\!\left(\sum_{n=1}^{4} w_n \log p_n \right),
-    \qquad
-    BP \;=\; \min\!\left(1, \exp\!\left(1 - \tfrac{r}{c}\right)\right),$$
-    
-    \noindent trong đó $r$ là độ dài tham chiếu, $c$ là độ dài ứng viên và $w_n = 1/4$. Tương tự ROUGE, BLEU cũng mắc điểm yếu về sự thiếu ổn định trong việc phân tách token khi áp dụng với tiếng Việt.
+\subsection{Nhóm 2: Semantic Quality (Chất lượng ngữ nghĩa)}
 
-    \item \textbf{BERTScore (với PhoBERT)} \\
-    BERTScore \cite{Zhang2020} thay thế khớp $n$-gram bằng độ tương đồng cosine giữa các nhúng ngữ cảnh. Với mỗi token $c_i$ trong ứng viên, token khớp tốt nhất $r_j$ trong tham chiếu đóng góp một giá trị $\cos(\mathbf{e}(c_i), \mathbf{e}(r_j))$ vào điểm Precision của BERTScore; điểm Recall được định nghĩa đối xứng. Điểm cuối cùng $F_{\text{BERT}}$ là trung bình điều hòa của hai giá trị này.
-    
-    Trong khóa luận này, mô hình embedding được sử dụng là \texttt{vinai/}\allowbreak\texttt{phobert-}\allowbreak\texttt{base} với đầu vào được cắt ngắn xuống còn $256$ token trước khi tính điểm, vừa phù hợp cửa sổ ngữ cảnh của mô hình vừa chuẩn hóa chi phí một lần gọi đánh giá. BERTScore nắm bắt được sự tương đồng ngữ nghĩa mà các hệ số overlap bỏ sót, nhưng vẫn chấm điểm so với bài báo gốc, do đó nó kế thừa cùng một ý nghĩa về khả năng lưu trữ nội dung tương tự như ROUGE và BLEU.
+\begin{itemize}
+  \item \textbf{BERTScore (Precision, Recall, F1):} Sử dụng vector nhúng ngữ cảnh từ mô hình PhoBERT \cite{Nguyen2020} để tính độ tương đồng cosine tốt nhất giữa các token, phản ánh sự tương đồng ngữ nghĩa ngay cả khi từ ngữ được diễn đạt lại.
+\end{itemize}
 
-    \item \textbf{Tỷ lệ nén} \\
-    Tỷ lệ nén là $|S| / |D|$ biểu thị theo phần trăm, trong đó $|S|$ và $|D|$ là số token của bản tóm tắt và bài gốc. Đây không phải hệ số chất lượng, nhưng nó giải thích \textit{tại sao} các hệ số overlap hoạt động như vậy: một bản tóm tắt được tạo ra với tỷ lệ nén $30\%$ có ít từ, cụm từ để khớp hơn một bản tóm tắt chắp vá ở mức $50\%$, và do đó điểm trùng khớp sẽ giảm xuống ngay cả khi chất lượng thực tế của bản tóm tắt tăng lên.
+\subsection{Nhóm 3: Factual Consistency (Tính nhất quán sự thật)}
 
-\end{enumerate}
+\begin{itemize}
+  \item \textbf{Entity Precision:} Tỷ lệ phần trăm các thực thể (tên riêng, tổ chức, địa danh) xuất hiện trong bản tóm tắt được xác nhận có có mặt chính xác trong bài gốc.
+  \item \textbf{Number Consistency:} Tỷ lệ bảo toàn chính xác các con số và dữ liệu thống kê.
+  \item \textbf{Contradiction Rate / Hallucination Rate:} Tỷ lệ phần trăm các mệnh đề trong bản tóm tắt mâu thuẫn hoặc "bịa" thêm so với nguồn gốc.
+\end{itemize}
 
-Lưu ý quan trọng nhất của khóa luận này, được phát biểu lại chính thức như sau: ROUGE, BLEU và BERTScore được tính so với bài báo gốc đo khả năng giữ lại nội dung, không đo chất lượng tóm tắt. Khi hệ thống được phép (hoặc khuyến khích) diễn giải lại, một bản tóm tắt được biên tập kỹ lưỡng nhằm cải thiện độ mạch lạc sẽ có khả năng làm giảm độ trùng khớp token. Wang et al.\ \cite{Wang2024} bỏ qua vấn đề này bằng cách sử dụng LLM-Judge làm tiêu chuẩn đánh giá; lựa chọn tương tự được thực hiện trong Trục~B của khóa luận này.
+\subsection{Nhóm 4: Performance (Hiệu năng tính toán)}
 
-\subsection{Phương pháp luận LLM-Judge (Trục B)}
-
-\begin{enumerate}[label=(\alph*), leftmargin=*]
-
-    \item \textbf{Đánh giá rubric (theo FLASK)} \\
-    Một LLM-Judge rubric chấm điểm bản tóm tắt theo nhiều chiều có tên trên thang điểm nguyên. Theo FLASK \cite{Ye2023}, khóa luận này sử dụng năm chiều trên thang 1--5: \textit{tính trung thực (faithfulness)}, \textit{độ bao phủ (coverage)}, \textit{độ trôi chảy (fluency)}, \textit{tính súc tích (conciseness)} và \textit{tổng thể (overall)}. LLM-Judge được yêu cầu trả về kết quả dưới định dạng JSON bao gồm năm điểm số kèm theo một câu giải thích cho từng tiêu chí.
-
-    \item \textbf{Chấm điểm tuyệt đối (theo MT-Bench)} \\
-    Giao thức MT-Bench \cite{Zheng2023} yêu cầu LLM-Judge cho một điểm số tổng thể nguyên duy nhất trong $\{1,2,\ldots,10\}$. Cách này nhanh hơn rubric tuy nhiên lại không đánh giá chi tiết kết quả; vì thế được sử dụng bổ trợ cho rubric.
-
-    \item \textbf{So sánh từng cặp (theo AlpacaEval)} \\
-    Một LLM-Judge được hiển thị hai bản tóm tắt ứng viên $A$ và $B$ cho cùng bài gốc và được yêu cầu chọn bên thắng (hoặc hòa). Kết quả thực nghiệm của chính khoá luận này được trình bày dưới dạng so sánh cặp, bởi vì độ đồng thuận trong phương pháp đánh giá từng cặp cao hơn so với phương pháp chấm điểm tuyệt đối. Hai chi tiết giao thức quan trọng:
-
-    \begin{itemize}
-        \item Ngẫu nhiên hóa vị trí: Các LLM-Judge có xu hướng thiên vị đối với ứng viên trình bày đầu tiên. Do đó, mỗi lần gọi từng cặp gán ngẫu nhiên hai bản tóm tắt vào vị trí $A$ và $B$, và ánh xạ vị trí được ghi lại để ứng viên thắng được ghi nhận chính xác.
-        \item Ý nghĩa thống kê kiểm định dấu: Với $w$ thắng trên $n$ phán quyết quyết định (loại trừ hòa), giá trị $p$ của kiểm định dấu hai chiều là
-
-        $$p \;=\; 2 \cdot \Pr\!\left[\,X \geq \max(w, n - w) \;\mid\; X \sim \text{Bin}(n, 0{,}5)\right],$$
-
-        \noindent là xác suất của một kết quả ít nhất cực đoan như kết quả quan sát được dưới $H_0: P(\text{A thắng}) = 0{,}5$. Trong toàn bộ khóa luận này, $p < 0{,}05$ được coi là ngưỡng ``khó có thể là ngẫu nhiên''.
-    \end{itemize}
-
-    \item \textbf{Tỷ lệ thắng có kiểm soát độ dài (Dubois 2024)} \\
-    Các LLM-Judge có xu hướng thiên vị các phản hồi dài hơn \cite{Dubois2024}. Để kiểm soát điều này, các phán quyết từng cặp được phân nhóm theo tỷ lệ độ dài $|A|/|B|$:
-
-    \begin{itemize}
-        \item $|A|/|B| < 0{,}85$ --- $A$ ngắn hơn nhiều;
-        \item $0{,}85 \leq |A|/|B| \leq 1{,}15$ --- độ dài tương đương;
-        \item $|A|/|B| > 1{,}15$ --- $A$ dài hơn nhiều.
-    \end{itemize}
-
-    \noindent Tỷ lệ thắng phân nhóm theo độ dài lấy trung bình các tỷ lệ thắng trong từng nhóm thỏa mãn số đếm tối thiểu ($\text{MIN\_BUCKET\_N} = 5$). Nếu tỷ lệ thô và tỷ lệ phân nhóm đồng ý với nhau, thiên kiến độ dài của LLM-Judge bị bác bỏ và không ảnh hưởng đến kết quả.
-
-    \item \textbf{Đánh giá tính xác thực} \\
-    Tính xác thực được xử lý như một bài toán nhị phân trên từng mệnh đề. Cho một bản tóm tắt $S$ và bài gốc $D$, quá trình đánh giá tính xác thực đi qua các công đoạn:
-
-    \begin{itemize}
-        \item Phân tách mệnh đề: Phân rã $S$ thành các mệnh đề nhỏ $\{c_1, \ldots, c_k\}$ thông qua một lần gọi LLM có đầu ra có cấu trúc.
-        \item Phân loại chấp thuận: Phân loại mỗi $c_j$ thành \{\textit{được xác nhận}, \textit{bị bác bỏ}, \textit{không đề cập}\} so với $D$, sử dụng \texttt{gpt-4o-mini} với lược đồ JSON ràng buộc.
-        \item Tổng hợp: Báo cáo tỷ lệ xác nhận $|\{c_j : \text{được xác nhận}\}| / k$, số lượng mệnh đề bị bác bỏ (ảo giác thông tin), và lưu trữ các mệnh đề mâu thuẫn nguyên văn để kiểm tra thủ công.
-    \end{itemize}
-
-    Một bản tóm tắt với tỷ lệ chính xác $> 95\%$ và không có ảo giác thông tin được coi là trung thực ở cấp độ mệnh đề; thực nghiệm trong Chương~4 báo cáo cả giá trị trung bình và trường hợp xấu nhất cho từng phương pháp tiếp cận.
-
-\end{enumerate}
-
-\subsection{Đánh giá bởi con người (Trục C)}
-
-\begin{enumerate}[label=(\alph*), leftmargin=*]
-
-    \item \textbf{Xếp hạng mù $K$ chiều} \\
-    Trục~C sử dụng xếp hạng ẩn danh $K$ lựa chọn. Với mỗi bài báo, $K = 3$ bản tóm tắt ứng viên (bản dung hợp, GPT-4o đơn lẻ và một bản thảo tác nhân đề xuất) được trình bày cho người đánh giá dưới dạng \textit{Bản A, Bản B, Bản C}, với danh tính mô hình bị ẩn. Người đánh giá kéo thả các ứng viên vào thứ tự từ tốt nhất đến kém nhất và viết một câu giải thích bằng tiếng Việt cho mỗi ứng viên.
-
-    \item \textbf{Fleiss' Kappa} \\
-    Fleiss' $\kappa$ \cite{Landis1977} mở rộng Cohen's $\kappa$ cho $\geq 3$ người đánh giá. Với $N$ mẫu, $n$ người đánh giá mỗi mẫu và $k$ danh mục, $\kappa = (P - P_e) / (1 - P_e)$, trong đó $P$ là mức đồng thuận trung bình theo từng mẫu (trên các cặp người đánh giá) và $P_e$ là mức đồng thuận kỳ vọng ngẫu nhiên kỳ vọng dựa trên tần suất biên của các nhãn.
-
-    Các mức phân giải Landis--Koch được sử dụng trong khóa luận này:
-
-    \begin{center}
-    \begin{tabular}{ll}
-    $\kappa < 0$       & tệ hơn ngẫu nhiên \\
-    $0{,}00$--$0{,}20$ & đồng thuận rất ít \\
-    $0{,}21$--$0{,}40$ & đồng thuận vừa phải \\
-    $0{,}41$--$0{,}60$ & đồng thuận trung bình \\
-    $0{,}61$--$0{,}80$ & đồng thuận đáng kể \\
-    $0{,}81$--$1{,}00$ & đồng thuận gần như tuyệt đối \\
-    \end{tabular}
-    \end{center}
-
-    Với dữ liệu xếp hạng, $\kappa$ được tính trên các nhãn theo vị trí: với mỗi cặp (mục, hạng), ``nhãn phân loại'' được gán bởi một người đánh giá là ứng viên nhận hạng đó.
-
-\end{enumerate}
+\begin{itemize}
+  \item \textbf{Inference Time:} Thời gian xử lý trung bình (tính bằng giây) để tạo ra bản tóm tắt hoàn chỉnh cho một văn bản đầu vào.
+\end{itemize}
 
 \section{Tổng kết chương}
 
-Chương này đã cung cấp toàn bộ nền tảng lý thuyết cần thiết cho bài tập lớn.
-Về mặt mô hình, chương đã trình bày kiến trúc Transformer và mô hình ViT5 (encoder-decoder) --- công cụ tóm tắt trừa tượng hóa chính của bài tập lớn --- cùng các thuật toán extractive được dùng làm baseline.
-Về mặt đánh giá, chương đã xây dựng hệ thống lý thuyết cho các độ đo: ROUGE-1, ROUGE-2, ROUGE-L, BLEU, BERTScore (với PhoBERT), Compression Ratio và Processing Time.
-Luận điểm lý thuyết then chốt --- các hệ số overlap được tính so với bài báo gốc đo khả năng giữ lại nội dung chứ không đo chất lượng tóm tắt --- chính là cơ sở lý luận cho việc sử dụng nhiều độ đo kết hợp.
-Chương~3 sẽ trình bày cách các lý thuyết này được hiện thực hóa trong thiết kế thực nghiệm.
+Chương này đã cung cấp nền tảng lý thuyết về mô hình ViT5, kiến trúc Transformer Encoder-Decoder, thuật toán MMR, kỹ thuật Keyword Conditioning và hệ đo lường 4 nhóm. Chương~3 sẽ trình bày cách các lý thuyết này được tích hợp vào kiến trúc pipeline HLK-ViT5.
