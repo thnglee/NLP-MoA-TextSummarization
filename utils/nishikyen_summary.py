@@ -14,6 +14,8 @@ from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 PROJECT_ROOT = Path.cwd().resolve()
 
+MODEL_ID = "NishiKyen/vit5-vietnamese-news"
+
 MODEL_DIR = (
     PROJECT_ROOT
     / "models"
@@ -36,10 +38,6 @@ OUTPUT_DIR = (
 OUTPUT_DIR.mkdir(
     parents=True,
     exist_ok=True,
-)
-
-assert MODEL_DIR.exists(), (
-    f"Không tìm thấy model tại: {MODEL_DIR}"
 )
 
 assert TEST_FILE.exists(), (
@@ -70,20 +68,56 @@ if torch.cuda.is_available():
 # 3. LOAD TOKENIZER + MODEL
 # ============================================================
 
-print("Đang load tokenizer...")
-
-tokenizer = AutoTokenizer.from_pretrained(
-    str(MODEL_DIR),
-    use_fast=False,
-    local_files_only=True,
+HAS_LOCAL_MODEL = (
+    MODEL_DIR.exists()
+    and (MODEL_DIR / "config.json").exists()
 )
 
-print("Đang load model...")
+if HAS_LOCAL_MODEL:
 
-model = AutoModelForSeq2SeqLM.from_pretrained(
-    str(MODEL_DIR),
-    local_files_only=True,
-)
+    print("Sử dụng model local:", MODEL_DIR)
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        str(MODEL_DIR),
+        use_fast=False,
+        local_files_only=True,
+    )
+
+    model = AutoModelForSeq2SeqLM.from_pretrained(
+        str(MODEL_DIR),
+        local_files_only=True,
+    )
+
+else:
+
+    print(
+        "Không tìm thấy model local hoàn chỉnh."
+        "\nĐang tải từ Hugging Face:",
+        MODEL_ID,
+    )
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        MODEL_ID,
+        use_fast=False,
+    )
+
+    model = AutoModelForSeq2SeqLM.from_pretrained(
+        MODEL_ID,
+    )
+
+    MODEL_DIR.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    tokenizer.save_pretrained(MODEL_DIR)
+    model.save_pretrained(MODEL_DIR)
+
+    print(
+        "Đã lưu model tại:",
+        MODEL_DIR,
+    )
+
 
 model.to(device)
 model.eval()

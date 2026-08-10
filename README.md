@@ -95,8 +95,8 @@ NLP-MoA-TextSummarization/
 │
 ├── utils/
 │   ├── evaluate_3_models.py            # Script tự động tính 4 nhóm độ đo trên 300 mẫu test
-│   ├── textrank.py                     # Thuật toán TextRank baseline
-│   └── lexrank.py                      # Thuật toán LexRank baseline
+│   ├── nishikyen_summary.py            # Script gọi model NishiKyen/vit5-vietnamese-news để tạo 300 mẫu test
+│   └── sft_model_summary.py            # Script gọi model thnhan3/sft_model để tạo 300 mẫu test
 │
 ├── output/
 │   └── evaluation/                     # Kết quả thực nghiệm định lượng
@@ -138,7 +138,11 @@ cd NLP-MoA-TextSummarization
 pip install -r requirements.txt
 ```
 
-### 3. Tái lập quá trình đánh giá tự động 3 mô hình (Evaluation Benchmark)
+### 3. Cài đặt model từ huggingface
+
+`hf download tmanh217/hlk-vit5 --local-dir models/ViT5-base-HLK-0001`
+
+### 4. Tái lập quá trình đánh giá tự động 3 mô hình (Evaluation Benchmark)
 
 Để tính toán lại toàn bộ 4 nhóm chỉ số (ROUGE, BERTScore, Entity Precision, Number Consistency, NLI Hallucination, Inference Time) trên 300 mẫu kiểm thử:
 
