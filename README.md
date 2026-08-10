@@ -5,16 +5,18 @@
 > **Giáo viên hướng dẫn:** TS. Trần Hồng Việt  
 > **Năm học:** 2026
 
+🤗 **Hugging Face Model Hub:** [https://huggingface.co/tmanh217/hlk-vit5](https://huggingface.co/tmanh217/hlk-vit5)
+
 ---
 
 ## 👥 Nhóm sinh viên thực hiện
 
-| STT | Họ và tên            | Mã sinh viên | Vai trò & Nhiệm vụ chính                                           |
-| :-: | :------------------- | :----------: | :----------------------------------------------------------------- |
-|  1  | **Phạm Vân Anh**     |   22028099   | Xây dựng evaluation service, script đánh giá                       |
-|  2  | **Bùi Đức Duy**      |   22021201   | Phối hợp báo cáo & Thuyết trình                                    |
-|  3  | **Lê Văn Thắng**     |   22028313   | Thực nghiệm đối chứng & Thống kê và soạn thảo báo cáo              |
-|  4  | **Nguyễn Tiến Mạnh** |   24020220   | Thiết kế Pipeline HLK-ViT5 (Selective Long-Context, MMR, Reranker) |
+| STT | Họ và tên | Mã sinh viên | Vai trò \& Nhiệm vụ chính | Tỷ lệ (\%) |
+| :-: | :--- | :----------: | :--- | :---: |
+| 1 | **Phạm Vân Anh** | 22028099 | Xây dựng evaluation service, script đánh giá | 24% |
+| 2 | **Bùi Đức Duy** | 22021201 | Phối hợp báo cáo \& Thuyết trình | 24% |
+| 3 | **Lê Văn Thắng** | 22028313 | Thực nghiệm đối chứng \& Thống kê và soạn thảo báo cáo | 24% |
+| 4 | **Nguyễn Tiến Mạnh** | 24020220 | Thiết kế Pipeline HLK-ViT5 (Selective Long-Context, MMR, Reranker) | 28% |
 
 ---
 

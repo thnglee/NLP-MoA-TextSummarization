@@ -1,7 +1,7 @@
 % !TEX root = ../thesis.tex
 \chapter{Phương pháp đề xuất}
 
-Chương này trình bày chi tiết thiết kế và hiện thực hóa kiến trúc pipeline **HLK-ViT5**.
+Chương này trình bày chi tiết thiết kế và hiện thực hóa kiến trúc pipeline HLK-ViT5.
 Mục~3.1 tổng quan luồng xử lý toàn hệ thống;
 Mục~3.2 mô tả bộ dữ liệu thực nghiệm 15.620 mẫu từ \textit{tienphong.vn};
 Mục~3.3 chi tiết hóa 5 module cải tiến cốt lõi;
@@ -60,7 +60,7 @@ Luồng xử lý đi từ văn bản bài báo gốc, trải qua công đoạn t
 Nghiên cứu xây dựng và sử dụng bộ dữ liệu corpus tin tức tiếng Việt được thu thập trực tiếp từ trang báo điện tử \textit{tienphong.vn}. Bộ dữ liệu bao gồm các đặc điểm chính:
 
 \begin{itemize}
-  \item \textbf{Quy mô tập huấn luyện:} 15.620 cặp văn bản gốc và bản tóm tắt tiêu chuẩn (reference summary).
+  \item \textbf{Quy mô tập huấn luyện:} 15.620 cặp văn bản gốc và bản tóm tắt tiêu chuẩn.
   \item \textbf{Đặc trưng ngữ cảnh:} Độ dài văn bản gốc trung bình từ 800 đến 1.500 từ, bao phủ nhiều thể loại báo chí khác nhau như Thời sự, Kinh tế, Pháp luật, Văn hóa và Xã hội.
   \item \textbf{Chuẩn hóa dữ liệu:} Tất cả văn bản được xử lý khoảng trắng thừa, sửa lỗi mã hóa Unicode dựng sẵn và tách từ tiếng Việt.
 \end{itemize}
@@ -104,19 +104,21 @@ Bốn chunk chọn lọc được nối lại thành ngữ cảnh đại diện 
 
 Cấu trúc input này mở rộng cửa sổ ngữ cảnh hiệu quả của ViT5 lên đến 1024 tokens, cho phép mô hình tiếp nhận thông tin bao quát toàn văn bài báo.
 
-\subsection{Fine-tuning mô hình ViT5-base}
+\subsection{Fine-tuning mô hình ViT5-base và phát hành Checkpoint}
 
-Mô hình \texttt{VietAI/ViT5-base} được tinh chỉnh có giám sát (Supervised Fine-Tuning) trên tập 15.620 mẫu với hàm mất mát Cross-Entropy chuẩn cho bài toán sinh chuỗi:
+Mô hình \texttt{VietAI/ViT5-base} được tinh chỉnh có giám sát trên tập 15.620 mẫu với hàm mất mát Cross-Entropy chuẩn cho bài toán sinh chuỗi:
 
 \[
 \mathcal{L}_{\text{CE}}(\theta) \;=\; -\sum_{t=1}^{T} \log P_\theta(y_t \mid y_{<t}, \tilde{X}, K)
 \]
 
+Trọng số mô hình sau khi huấn luyện tinh chỉnh đã được đóng gói và phát hành công khai trên kho lưu trữ Hugging Face Hub tại địa chỉ: \url{https://huggingface.co/tmanh217/hlk-vit5}.
+
 \subsection{Candidate Generation và Heuristic Factuality Reranker}
 
-Trong giai đoạn suy luận (inference), thay vì chỉ sinh 1 bản tóm tắt bằng giải thuật Beam Search thông thường, ViT5-base được cấu hình sinh ra $N = 5$ ứng viên tóm tắt $\{Y_1, Y_2, \ldots, Y_N\}$.
+Trong giai đoạn suy luận, thay vì chỉ sinh 1 bản tóm tắt bằng giải thuật Beam Search thông thường, ViT5-base được cấu hình sinh ra $N = 5$ ứng viên tóm tắt $\{Y_1, Y_2, \ldots, Y_N\}$.
 
-Bộ xếp hạng lại **Heuristic Factuality Reranker** chấm điểm từng ứng viên $Y_i$ dựa trên hai tiêu chí:
+Bộ xếp hạng lại Heuristic Factuality Reranker chấm điểm từng ứng viên $Y_i$ dựa trên hai tiêu chí:
 
 \begin{itemize}
   \item \textbf{Entity Consistency Score:} Phạt nặng các ứng viên xuất hiện tập thực thể $E(Y_i)$ không nằm trong tập thực thể bài gốc $E(X)$.
@@ -136,9 +138,10 @@ Bảng~\ref{tab:training_hyperparams} tóm tắt các siêu tham số chính đ�
 \begin{tabularx}{\textwidth}{l X}
 \hline
 \textbf{Siêu tham số} & \textbf{Giá trị thiết lập} \\ \hline
-Mô hình nền (Base Model) & \texttt{VietAI/ViT5-base} (220M parameters) \\
-Độ dài đầu vào tối đa (Max Input Length) & 1024 tokens \\
-Độ dài đầu ra tối đa (Max Output Length) & 256 tokens \\
+Mô hình nền & \texttt{VietAI/ViT5-base} \\
+Hugging Face Checkpoint & \url{https://huggingface.co/tmanh217/hlk-vit5} \\
+Độ dài đầu vào tối đa & 1024 tokens \\
+Độ dài đầu ra tối đa & 256 tokens \\
 Tốc độ học (Learning Rate) & $5 \times 10^{-5}$ (với AdamW optimizer) \\
 Kích thước Batch (Batch Size) & 16 (với gradient accumulation) \\
 Số lượng Epochs & 5 epochs \\
@@ -149,4 +152,4 @@ Hệ số MMR ($\lambda$) & 0,7 \\ \hline
 
 \section{Tổng kết chương}
 
-Chương này đã chi tiết hóa kiến trúc 13 bước của HLK-ViT5, kết hợp giữa chia đoạn bảo toàn câu, nén ngữ cảnh MMR, Keyword Conditioning và Heuristic Factuality Reranker. Toàn bộ thiết lập này được huấn luyện trên 15.620 mẫu dữ liệu *tienphong.vn*. Chương~4 sẽ báo cáo kết quả thực nghiệm định lượng.
+Chương này đã chi tiết hóa kiến trúc 13 bước của HLK-ViT5, kết hợp giữa chia đoạn bảo toàn câu, nén ngữ cảnh MMR, Keyword Conditioning và Heuristic Factuality Reranker. Toàn bộ thiết lập này được huấn luyện trên 15.620 mẫu dữ liệu \textit{tienphong.vn}. Chương~4 sẽ báo cáo kết quả thực nghiệm định lượng.

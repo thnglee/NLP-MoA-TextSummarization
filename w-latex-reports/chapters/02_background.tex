@@ -11,14 +11,14 @@ Mục~2.4 định nghĩa chi tiết 4 nhóm độ đo đánh giá chất lượn
 
 \subsection{Kiến trúc Transformer Encoder-Decoder}
 
-Kiến trúc Transformer \cite{Vaswani2017} dựa trên cơ chế chú ý (Attention Mechanism), loại bỏ hoàn toàn các vòng lặp hồi quy (RNN) để cho phép tính toán song song hóa trên quy mô lớn. Đối với bài toán sinh văn bản dạng Sequence-to-Sequence, kiến trúc Encoder-Decoder bao gồm hai khối chính:
+Kiến trúc Transformer \cite{Vaswani2017} dựa trên cơ chế chú ý, loại bỏ hoàn toàn các vòng lặp hồi quy để cho phép tính toán song song hóa trên quy mô lớn. Đối với bài toán sinh văn bản dạng Sequence-to-Sequence, kiến trúc Encoder-Decoder bao gồm hai khối chính:
 
 \begin{itemize}
-  \item \textbf{Bộ mã hóa (Encoder):} Tiếp nhận chuỗi token đầu vào $X = (x_1, x_2, \ldots, x_n)$, sử dụng các lớp chú ý bản thân đa đầu (Multi-Head Self-Attention) và mạng truyền thẳng (Feed-Forward Neural Network) để tạo ra tập hợp các biểu diễn ngữ cảnh ẩn $H = (h_1, h_2, \ldots, h_n)$.
-  \item \textbf{Bộ giải mã (Decoder):} Tự điều khiển sinh chuỗi đầu ra $Y = (y_1, y_2, \ldots, y_m)$ theo từng bước (autoregressive). Tại mỗi bước $t$, bộ giải mã kết hợp chú ý bản thân có mặt nạ (Masked Self-Attention) trên các token đã sinh $(y_1, \ldots, y_{t-1})$ và chú ý chéo (Cross-Attention) trên chuỗi ẩn $H$ của Encoder.
+  \item \textbf{Bộ mã hóa (Encoder):} Tiếp nhận chuỗi token đầu vào $X = (x_1, x_2, \ldots, x_n)$, sử dụng các lớp chú ý bản thân đa đầu và mạng truyền thẳng để tạo ra tập hợp các biểu diễn ngữ cảnh ẩn $H = (h_1, h_2, \ldots, h_n)$.
+  \item \textbf{Bộ giải mã (Decoder):} Tự điều khiển sinh chuỗi đầu ra $Y = (y_1, y_2, \ldots, y_m)$ theo từng bước. Tại mỗi bước $t$, bộ giải mã kết hợp chú ý bản thân có mặt nạ trên các token đã sinh $(y_1, \ldots, y_{t-1})$ và chú ý chéo trên chuỗi ẩn $H$ của Encoder.
 \end{itemize}
 
-Công thức chú ý tích vô hướng có tỷ lệ (Scaled Dot-Product Attention) với truy vấn $Q$, khóa $K$ và giá trị $V$ được định nghĩa:
+Công thức chú ý tích vô hướng có tỷ lệ với truy vấn $Q$, khóa $K$ và giá trị $V$ được định nghĩa:
 
 \[
 \text{Attention}(Q,K,V) \;=\; \text{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}}\right) V
@@ -30,13 +30,13 @@ Công thức chú ý tích vô hướng có tỷ lệ (Scaled Dot-Product Attent
 
 ViT5 \cite{Nguyen2022} là mô hình ngôn ngữ tiếng Việt được xây dựng dựa trên kiến trúc T5 (Text-to-Text Transfer Transformer). ViT5 chuyển đổi tất cả các tác vụ NLP (phân loại, dịch máy, tóm tắt) về dạng bài toán chuỗi-sang-chuỗi: nhận đầu vào là một chuỗi văn bản và sinh đầu ra là một chuỗi văn bản.
 
-Phiên bản \texttt{VietAI/ViT5-base} có 12 lớp Encoder, 12 lớp Decoder, chiều ẩn $d_{\text{model}} = 768$, 12 đầu chú ý và khoảng 220 triệu tham số. Mô hình được tiền huấn luyện trên tập dữ liệu tiếng Việt quy mô lớn với mục tiêu khôi phục token bị che (Span Corruption). ViT5 là mô hình nền tảng được chọn để xây dựng và tinh chỉnh trong đề tài HLK-ViT5.
+Phiên bản \texttt{VietAI/ViT5-base} có 12 lớp Encoder, 12 lớp Decoder, chiều ẩn $d_{\text{model}} = 768$, 12 đầu chú ý và khoảng 220 triệu tham số. Mô hình được tiền huấn luyện trên tập dữ liệu tiếng Việt quy mô lớn với mục tiêu khôi phục token bị che. ViT5 là mô hình nền tảng được chọn để xây dựng và tinh chỉnh trong đề tài HLK-ViT5.
 
 \section{Các kỹ thuật xử lý ngữ cảnh và trích chọn thông tin}
 
 \subsection{Sentence-aware Chunking và Overlapping}
 
-Khi độ dài bài báo vượt quá cửa sổ xử lý của Encoder, văn bản cần được phân rã thành các đoạn nhỏ (chunks). Kỹ thuật phân đoạn theo ranh giới câu (\textit{Sentence-aware Chunking}) đảm bảo không cắt đôi câu giữa chừng, giữ nguyên tính hoàn chỉnh cú pháp. Thêm vào đó, việc duy trì khoảng đè 1 câu (\textit{1-sentence Overlapping}) giữa hai chunk kề nhau giúp bảo toàn mối quan hệ tham chiếu ngữ nghĩa giữa các đoạn.
+Khi độ dài bài báo vượt quá cửa sổ xử lý của Encoder, văn bản cần được phân rã thành các đoạn nhỏ (chunks). Kỹ thuật phân đoạn theo ranh giới câu đảm bảo không cắt đôi câu giữa chừng, giữ nguyên tính hoàn chỉnh cú pháp. Thêm vào đó, việc duy trì khoảng đè 1 câu giữa hai chunk kề nhau giúp bảo toàn mối quan hệ tham chiếu ngữ nghĩa giữa các đoạn.
 
 \subsection{Maximal Marginal Relevance (MMR)}
 
@@ -58,13 +58,13 @@ Keyword-conditioned Generation là kỹ thuật bổ sung danh sách từ khóa 
 
 \noindent mô hình ViT5 được gợi ý tập trung chú ý vào các thực thể và khái niệm trung tâm khi sinh bản tóm tắt.
 
-\section{Các mô hình đối chứng (Baselines)}
+\section{Các mô hình đối chứng}
 
 Đề tài đưa hai mô hình mã nguồn mở hiện có vào so sánh đối chứng:
 
 \begin{itemize}
   \item \textbf{\texttt{Nishikyen/vit5-vietnamese-news}:} Mô hình ViT5-base được fine-tune trên tập dữ liệu tin tức tiếng Việt theo phương pháp chuẩn hóa truyền thống với chiều dài input giới hạn 256/512 tokens.
-  \item \textbf{\texttt{thnhan/sft\_model}:} Mô hình ViT5-base được tinh chỉnh theo phương pháp SFT (Supervised Fine-Tuning) tập trung vào khả năng sinh câu trôi chảy.
+  \item \textbf{\texttt{thnhan/sft\_model}:} Mô hình ViT5-base được tinh chỉnh theo phương pháp SFT tập trung vào khả năng sinh câu trôi chảy.
 \end{itemize}
 
 \section{Hệ đo lường đánh giá chất lượng tóm tắt}
@@ -75,13 +75,13 @@ Keyword-conditioned Generation là kỹ thuật bổ sung danh sách từ khóa 
 
 \begin{itemize}
   \item \textbf{ROUGE-1 / ROUGE-2:} Đo độ trùng lặp $n$-gram ($n=1, 2$) giữa bản tóm tắt mô hình $C$ và tham chiếu $R$.
-  \item \textbf{ROUGE-L:} Đo độ dài chuỗi con chung dài nhất (Longest Common Subsequence).
+  \item \textbf{ROUGE-L:} Đo độ dài chuỗi con chung dài nhất.
 \end{itemize}
 
 \subsection{Nhóm 2: Semantic Quality (Chất lượng ngữ nghĩa)}
 
 \begin{itemize}
-  \item \textbf{BERTScore (Precision, Recall, F1):} Sử dụng vector nhúng ngữ cảnh từ mô hình PhoBERT \cite{Nguyen2020} để tính độ tương đồng cosine tốt nhất giữa các token, phản ánh sự tương đồng ngữ nghĩa ngay cả khi từ ngữ được diễn đạt lại.
+  \item \textbf{BERTScore:} Sử dụng vector nhúng ngữ cảnh từ mô hình PhoBERT \cite{Nguyen2020} để tính độ tương đồng cosine tốt nhất giữa các token, phản ánh sự tương đồng ngữ nghĩa ngay cả khi từ ngữ được diễn đạt lại.
 \end{itemize}
 
 \subsection{Nhóm 3: Factual Consistency (Tính nhất quán sự thật)}
@@ -89,7 +89,7 @@ Keyword-conditioned Generation là kỹ thuật bổ sung danh sách từ khóa 
 \begin{itemize}
   \item \textbf{Entity Precision:} Tỷ lệ phần trăm các thực thể (tên riêng, tổ chức, địa danh) xuất hiện trong bản tóm tắt được xác nhận có có mặt chính xác trong bài gốc.
   \item \textbf{Number Consistency:} Tỷ lệ bảo toàn chính xác các con số và dữ liệu thống kê.
-  \item \textbf{Contradiction Rate / Hallucination Rate:} Tỷ lệ phần trăm các mệnh đề trong bản tóm tắt mâu thuẫn hoặc "bịa" thêm so với nguồn gốc.
+  \item \textbf{Contradiction Rate / Hallucination Rate:} Tỷ lệ phần trăm các mệnh đề trong bản tóm tắt mâu thuẫn hoặc ``bịa'' thêm so với nguồn gốc.
 \end{itemize}
 
 \subsection{Nhóm 4: Performance (Hiệu năng tính toán)}

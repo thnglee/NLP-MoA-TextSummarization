@@ -6,42 +6,42 @@ Mục~1.1 trình bày bối cảnh và động lực nghiên cứu; Mục~1.2 kh
 
 \section{Bối cảnh và động lực nghiên cứu}
 
-Trong kỷ nguyên bùng nổ thông tin số, khối lượng tin tức báo chí tiếng Việt được xuất bản hàng ngày trên các trang báo điện tử lớn như \textit{tienphong.vn} gia tăng với tốc độ phi mã. Việc tiếp nhận và xử lý lượng thông tin đồ sộ này đặt ra nhu cầu cấp thiết về các công cụ tóm tắt văn bản tự động (Automatic Text Summarization). Tóm tắt văn bản hỗ trợ người đọc nhanh chóng nắm bắt các dữ kiện then chốt mà không cần đọc toàn văn bài báo dài.
+Trong kỷ nguyên bùng nổ thông tin số, khối lượng tin tức báo chí tiếng Việt được xuất bản hàng ngày trên các trang báo điện tử lớn như \textit{tienphong.vn} gia tăng với tốc độ phi mã. Việc tiếp nhận và xử lý lượng thông tin đồ sộ này đặt ra nhu cầu cấp thiết về các công cụ tóm tắt văn bản tự động. Tóm tắt văn bản hỗ trợ người đọc nhanh chóng nắm bắt các dữ kiện then chốt mà không cần đọc toàn văn bài báo dài.
 
-Các phương pháp tóm tắt được chia thành hai nhóm chính: tóm tắt trích xuất (extractive summarization) và tóm tắt trừu tượng hóa (abstractive summarization). Nếu như các phương pháp trích xuất chỉ đơn thuần lựa chọn và chắp vá các câu nguyên văn từ bài gốc, thì tóm tắt trừu tượng hóa dựa trên các mô hình ngôn ngữ tiền huấn luyện (Pre-trained Language Models) có khả năng diễn giải, cô đọng và sinh ra các bản tóm tắt trôi chảy, tự nhiên như con người biên soạn. Tại Việt Nam, mô hình ViT5 \cite{Nguyen2022} dựa trên kiến trúc T5 Encoder-Decoder đã chứng minh hiệu năng ấn tượng trong nhiều tác vụ sinh ngôn ngữ tự nhiên.
+Các phương pháp tóm tắt được chia thành hai nhóm chính: tóm tắt trích xuất và tóm tắt trừu tượng hóa. Nếu như các phương pháp trích xuất chỉ đơn thuần lựa chọn và chắp vá các câu nguyên văn từ bài gốc, thì tóm tắt trừu tượng hóa dựa trên các mô hình ngôn ngữ tiền huấn luyện có khả năng diễn giải, cô đọng và sinh ra các bản tóm tắt trôi chảy, tự nhiên như con người biên soạn. Tại Việt Nam, mô hình ViT5 \cite{Nguyen2022} dựa trên kiến trúc T5 Encoder-Decoder đã chứng minh hiệu năng ấn tượng trong nhiều tác vụ sinh ngôn ngữ tự nhiên.
 
 Tuy nhiên, khi áp dụng mô hình ViT5-base vào bài toán tóm tắt tin tức báo chí thực tế, nghiên cứu nhận thấy hai thách thức lớn chưa được giải quyết triệt để:
 
 \begin{itemize}
-  \item \textbf{Giới hạn cửa sổ ngữ cảnh (Context Window Limitation):} Các mô hình ViT5-base chuẩn thường đặt độ dài đầu vào tối đa là 256 hoặc 512 tokens. Đối với các bài báo chí dài (thường vượt quá 1000 từ), việc cắt bỏ phần sau văn bản khiến mô hình mắc phải thiên kiến trích đoạn đầu (lead bias) và bỏ sót các thông tin diễn biến, kết luận quan trọng ở phần giữa hoặc cuối bài.
-  \item \textbf{Hiện tượng ảo giác và mất nhất quán dữ kiện (Hallucination \& Factual Inconsistency):} Các mô hình trừu tượng hóa có xu hướng "bịa" ra thông tin hoặc làm sai lệch các thực thể (tên người, địa danh, tổ chức) và các con số thống kê so với văn bản gốc. Điều này làm giảm nghiêm trọng độ tin cậy của bản tóm tắt trong báo chí.
+  \item \textbf{Giới hạn cửa sổ ngữ cảnh:} Các mô hình ViT5-base chuẩn thường đặt độ dài đầu vào tối đa là 256 hoặc 512 tokens. Đối với các bài báo chí dài (thường vượt quá 1000 từ), việc cắt bỏ phần sau văn bản khiến mô hình mắc phải thiên kiến trích đoạn đầu và bỏ sót các thông tin diễn biến, kết luận quan trọng ở phần giữa hoặc cuối bài.
+  \item \textbf{Hiện tượng ảo giác và mất nhất quán dữ kiện:} Các mô hình trừu tượng hóa có xu hướng ``bịa'' ra thông tin hoặc làm sai lệch các thực thể (tên người, địa danh, tổ chức) và các con số thống kê so với văn bản gốc. Điều này làm giảm nghiêm trọng độ tin cậy của bản tóm tắt trong báo chí.
 \end{itemize}
 
-Động lực của đề tài này là xây dựng một pipeline cải tiến có tên **HKL-ViT5**, giúp mô hình ViT5-base vượt qua rào cản độ dài đầu vào bằng cơ chế chọn lọc ngữ cảnh thông minh (Selective Long-Context) và đảm bảo tính trung thực thông tin thông qua bộ lọc xếp hạng lại dữ kiện (Heuristic Factuality Reranking).
+Động lực của đề tài này là xây dựng một pipeline cải tiến có tên HKL-ViT5, giúp mô hình ViT5-base vượt qua rào cản độ dài đầu vào bằng cơ chế chọn lọc ngữ cảnh thông minh và đảm bảo tính trung thực thông tin thông qua bộ lọc xếp hạng lại dữ kiện.
 
 \section{Các công trình liên quan và khoảng trống nghiên cứu}
 
 Bài toán tóm tắt văn bản tiếng Việt đã thu hút nhiều công trình nghiên cứu trong những năm gần đây:
 
 \begin{itemize}
-  \item \textbf{Mô hình ViT5 và các biến thể Fine-tune:} Nguyen et al. \cite{Nguyen2022} giới thiệu ViT5 tiền huấn luyện trên corpus tiếng Việt quy mô lớn. Sau đó, nhiều mô hình fine-tune mã nguồn mở như \texttt{Nishikyen/vit5-vietnamese-news} và \texttt{thnhan/sft\_model} đã được triển khai cho tóm tắt tin tức. Tuy nhiên, các mô hình này chủ yếu áp dụng quy trình fine-tune chuẩn (SFT) trên chuỗi cắt ngắn, chưa giải quyết triệt để bài toán ngữ cảnh dài toàn văn.
-  \item \textbf{Kỹ thuật nén ngữ cảnh và chọn lọc đoạn văn (Chunk Selection):} Nhiều nghiên cứu trên thế giới đã sử dụng các thuật toán như MMR (Maximal Marginal Relevance) hay Salience Scoring để nén tài liệu trước khi đưa vào LLM/Seq2Seq. Tuy nhiên, việc kết hợp giữa chia đoạn bảo toàn câu (Sentence-aware Chunking), đè câu liên kết (Overlap) và điều kiện hóa từ khóa (Keyword Conditioning) cho mô hình ViT5 tiếng Việt vẫn chưa được nghiên cứu hệ thống.
-  \item \textbf{Đánh giá và kiểm soát tính xác thực (Factuality Control):} Hầu hết các bài báo hiện nay chỉ dừng lại ở việc báo cáo chỉ số ROUGE và BERTScore. Việc đưa ra một quy trình reranking chuyên biệt nhằm kiểm soát tính nhất quán của thực thể (Entity consistency) và con số (Number consistency) cho tiếng Việt vẫn là một khoảng trống lớn.
+  \item \textbf{Mô hình ViT5 và các biến thể Fine-tune:} Nguyen et al. \cite{Nguyen2022} giới thiệu ViT5 tiền huấn luyện trên corpus tiếng Việt quy mô lớn. Sau đó, nhiều mô hình fine-tune mã nguồn mở như \texttt{Nishikyen/vit5-vietnamese-news} và \texttt{thnhan/sft\_model} đã được triển khai cho tóm tắt tin tức. Tuy nhiên, các mô hình này chủ yếu áp dụng quy trình fine-tune chuẩn trên chuỗi cắt ngắn, chưa giải quyết triệt để bài toán ngữ cảnh dài toàn văn.
+  \item \textbf{Kỹ thuật nén ngữ cảnh và chọn lọc đoạn văn:} Nhiều nghiên cứu trên thế giới đã sử dụng các thuật toán như MMR hay Salience Scoring để nén tài liệu trước khi đưa vào LLM/Seq2Seq. Tuy nhiên, việc kết hợp giữa chia đoạn bảo toàn câu, đè câu liên kết và điều kiện hóa từ khóa cho mô hình ViT5 tiếng Việt vẫn chưa được nghiên cứu hệ thống.
+  \item \textbf{Đánh giá và kiểm soát tính xác thực:} Hầu hết các bài báo hiện nay chỉ dừng lại ở việc báo cáo chỉ số ROUGE và BERTScore. Việc đưa ra một quy trình reranking chuyên biệt nhằm kiểm soát tính nhất quán của thực thể và con số cho tiếng Việt vẫn là một khoảng trống lớn.
 \end{itemize}
 
-Từ khảo sát trên, đề tài xác định **khoảng trống nghiên cứu** cốt lõi: *Chưa có một kiến trúc pipeline ViT5 tiếng Việt tích hợp đồng thời cơ chế chọn lọc ngữ cảnh dài không dư thừa (Selective Long-Context up to 1024 tokens) và bộ lọc kiểm soát ảo giác (Factuality Reranking).*
+Từ khảo sát trên, đề tài xác định khoảng trống nghiên cứu cốt lõi: \textit{Chưa có một kiến trúc pipeline ViT5 tiếng Việt tích hợp đồng thời cơ chế chọn lọc ngữ cảnh dài không dư thừa và bộ lọc kiểm soát ảo giác.}
 
 \section{Mục tiêu và đóng góp chính}
 
-Mục tiêu chính của đề tài là thiết kế, cài đặt và đánh giá mô hình **HKL-ViT5** cho bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài từ báo điện tử \textit{tienphong.vn}.
+Mục tiêu chính của đề tài là thiết kế, cài đặt và đánh giá mô hình HKL-ViT5 cho bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài từ báo điện tử \textit{tienphong.vn}.
 
 Đề tài đóng góp bốn điểm mới về mặt kỹ thuật và thực nghiệm:
 
 \begin{enumerate}[label=\arabic*.]
-  \item \textbf{Cơ chế Selective Long-Context:} Thiết kế pipeline chia đoạn bảo toàn câu (\textit{Sentence-aware Chunking}), giao đè 1 câu (\textit{Overlapping}), chấm điểm nổi bật (\textit{Salience Scoring}) kết hợp thuật toán \textit{MMR} để chọn ra tối đa 4 đoạn ngữ cảnh quan trọng nhất từ toàn văn bài báo, cho phép mở rộng đầu vào ViT5 lên 1024 tokens mà không làm mất tính liên kết.
+  \item \textbf{Cơ chế Selective Long-Context:} Thiết kế pipeline chia đoạn bảo toàn câu, giao đè 1 câu, chấm điểm nổi bật kết hợp thuật toán MMR để chọn ra tối đa 4 đoạn ngữ cảnh quan trọng nhất từ toàn văn bài báo, cho phép mở rộng đầu vào ViT5 lên 1024 tokens mà không làm mất tính liên kết.
   \item \textbf{Kỹ thuật Keyword-conditioned Generation:} Trích xuất từ khóa chủ đề và nhúng trực tiếp vào đầu chuỗi prompt đầu vào của ViT5 để định hướng mô hình tập trung vào các nội dung trọng tâm.
   \item \textbf{Heuristic Factuality Reranker:} Xây dựng bộ lọc xếp hạng lại đa ứng viên sinh ra từ ViT5, ưu tiên các bản tóm tắt bảo toàn chính xác danh từ riêng và số liệu thực tế.
-  \item \textbf{Đánh giá đa chiều trên Corpus 300 mẫu:} Thực nghiệm trên tập kiểm thử 300 mẫu báo chí độc lập từ domain \textit{tienphong.vn}, so sánh toàn diện với hai baseline \texttt{Nishikyen} và \texttt{thnhan} trên 4 nhóm độ đo (Lexical Overlap, Semantic Quality, Factual Consistency, và Inference Time).
+  \item \textbf{Đánh giá đa chiều trên Corpus 300 mẫu:} Thực nghiệm trên tập kiểm thử 300 mẫu báo chí độc lập từ domain \textit{tienphong.vn}, so sánh toàn diện với hai baseline \texttt{Nishikyen} và \texttt{thnhan} trên 4 nhóm độ đo.
 \end{enumerate}
 
 \section{Cấu trúc báo cáo}

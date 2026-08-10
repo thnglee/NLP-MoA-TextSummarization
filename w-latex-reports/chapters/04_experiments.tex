@@ -1,7 +1,7 @@
 % !TEX root = ../thesis.tex
 \chapter{Kết quả thực nghiệm}
 
-Chương này báo cáo kết quả thực nghiệm định lượng chi tiết của mô hình **HKL-ViT5** và hai mô hình đối chứng trên tập dữ liệu đánh giá 300 mẫu báo chí tiếng Việt độc lập.
+Chương này báo cáo kết quả thực nghiệm định lượng chi tiết của mô hình HKL-ViT5 và hai mô hình đối chứng trên tập dữ liệu đánh giá 300 mẫu báo chí tiếng Việt độc lập.
 Mục~4.1 trình bày thiết lập đánh giá và cấu trúc định dạng dữ liệu đầu ra;
 Mục~4.2 báo cáo kết quả nhóm Lexical Overlap (ROUGE);
 Mục~4.3 báo cáo kết quả nhóm Semantic Quality (BERTScore);
@@ -12,12 +12,12 @@ Mục~4.5 báo cáo kết quả nhóm Performance (Hiệu năng suy luận); và
 
 \subsection{Tập dữ liệu kiểm thử và các mô hình so sánh}
 
-Quá trình đánh giá thực nghiệm được vận hành trên tập kiểm thử độc lập gồm **300 mẫu** bài báo thu thập từ trang báo điện tử \textit{tienphong.vn}. Ba mô hình được đưa vào đánh giá đối đầu trực tiếp trên cùng 300 mẫu kiểm thử này:
+Quá trình đánh giá thực nghiệm được vận hành trên tập kiểm thử độc lập gồm 300 mẫu bài báo thu thập từ trang báo điện tử \textit{tienphong.vn}. Ba mô hình được đưa vào đánh giá đối đầu trực tiếp trên cùng 300 mẫu kiểm thử này:
 
 \begin{enumerate}[label=\arabic*.]
-  \item \textbf{HKL-ViT5 (Phương pháp đề xuất):} Mô hình ViT5-base cải tiến kết hợp cơ chế Selective Long-Context (input lên đến 1024 tokens), Keyword Conditioning và Heuristic Factuality Reranking.
+  \item \textbf{HKL-ViT5 (Phương pháp đề xuất):} Mô hình ViT5-base cải tiến kết hợp cơ chế Selective Long-Context, Keyword Conditioning và Heuristic Factuality Reranking.
   \item \textbf{\texttt{Nishikyen/vit5-vietnamese-news}:} Mô hình ViT5-base fine-tune chuẩn trên dữ liệu tin tức tiếng Việt (độ dài ngữ cảnh 256/512 tokens).
-  \item \textbf{\texttt{thnhan/sft\_model}:} Mô hình ViT5-base tinh chỉnh theo phương pháp SFT (Supervised Fine-Tuning).
+  \item \textbf{\texttt{thnhan/sft\_model}:} Mô hình ViT5-base tinh chỉnh theo phương pháp SFT.
 \end{enumerate}
 
 \subsection{Cấu trúc định dạng đầu ra dữ liệu}
@@ -63,15 +63,15 @@ Bảng~\ref{tab:results_rouge} báo cáo điểm ROUGE-1, ROUGE-2 và ROUGE-L (t
 \end{table}
 
 \noindent \textbf{Phân tích kết quả:}
-Mô hình HKL-ViT5 dẫn đầu vượt trội trên cả 3 chỉ số ROUGE. Cụ thể, HKL-ViT5 đạt ROUGE-1 **0.5184** (cao hơn \texttt{Nishikyen} **+4.77\%** và cao hơn \texttt{thnhan} **+8.63\%**). Điểm ROUGE-2 đạt **0.2932** (tăng **+4.22\%**) và ROUGE-L đạt **0.3434** (tăng **+2.86\%**). Kết quả này minh chứng rằng việc nén ngữ cảnh toàn văn bằng MMR và Keyword Conditioning giúp mô hình khôi phục được nhiều n-gram quan trọng từ bài gốc mà các mô hình bị cắt ngắn đầu vào bỏ sót.
+Mô hình HKL-ViT5 dẫn đầu vượt trội trên cả 3 chỉ số ROUGE. Cụ thể, HKL-ViT5 đạt ROUGE-1 0.5184 (cao hơn \texttt{Nishikyen} +4.77\% và cao hơn \texttt{thnhan} +8.63\%). Điểm ROUGE-2 đạt 0.2932 (tăng +4.22\%) và ROUGE-L đạt 0.3434 (tăng +2.86\%). Kết quả này minh chứng rằng việc nén ngữ cảnh toàn văn bằng MMR và Keyword Conditioning giúp mô hình khôi phục được nhiều n-gram quan trọng từ bài gốc mà các mô hình bị cắt ngắn đầu vào bỏ sót.
 
 \section{Kết quả nhóm 2: Semantic Quality (BERTScore)}
 
-Bảng~\ref{tab:results_bertscore} báo cáo các chỉ số tương đồng ngữ nghĩa BERTScore (sử dụng mô hình mã hóa ngữ cảnh `xlm-roberta-base`).
+Bảng~\ref{tab:results_bertscore} báo cáo các chỉ số tương đồng ngữ nghĩa BERTScore (sử dụng mô hình mã hóa ngữ cảnh \texttt{xlm-roberta-base}).
 
 \begin{table}[H]
   \centering
-  \caption{Kết quả đánh giá nhóm Semantic Quality (BERTScore với `xlm-roberta-base`). \textbf{In đậm}: Kết quả tốt nhất.}
+  \caption{Kết quả đánh giá nhóm Semantic Quality (BERTScore với \texttt{xlm-roberta-base}). \textbf{In đậm}: Kết quả tốt nhất.}
   \label{tab:results_bertscore}
   \begin{tabularx}{\linewidth}{X CCC}
     \toprule
@@ -85,11 +85,11 @@ Bảng~\ref{tab:results_bertscore} báo cáo các chỉ số tương đồng ng�
 \end{table}
 
 \noindent \textbf{Phân tích kết quả:}
-Ở độ đo ngữ nghĩa BERTScore, HKL-ViT5 đạt F1 **0.9008**, thiết lập mức hiệu năng cao nhất trong 3 mô hình. Đặc biệt, chỉ số BERTScore Recall đạt **0.9020** (so với 0.8896 của \texttt{Nishikyen} và 0.8790 của \texttt{thnhan}), khẳng định rằng bản tóm tắt do HKL-ViT5 sinh ra bao hàm ngữ nghĩa toàn diện hơn đối với bài viết gốc.
+Ở độ đo ngữ nghĩa BERTScore, HKL-ViT5 đạt F1 0.9008, thiết lập mức hiệu năng cao nhất trong 3 mô hình. Đặc biệt, chỉ số BERTScore Recall đạt 0.9020 (so với 0.8896 của \texttt{Nishikyen} và 0.8790 của \texttt{thnhan}), khẳng định rằng bản tóm tắt do HKL-ViT5 sinh ra bao hàm ngữ nghĩa toàn diện hơn đối với bài viết gốc.
 
 \section{Kết quả nhóm 3: Factual Consistency (Tính nhất quán sự thật)}
 
-Bảng~\ref{tab:results_factuality} báo cáo các chỉ số về tính trung thực thực thể, tính chính xác số liệu, tỷ lệ mâu thuẫn và tỷ lệ ảo giác (sử dụng mô hình NLI `MoritzLaurer/mDeBERTa-v3-base-mnli-xnli` và trích xuất thực thể `underthesea`).
+Bảng~\ref{tab:results_factuality} báo cáo các chỉ số về tính trung thực thực thể, tính chính xác số liệu, tỷ lệ mâu thuẫn và tỷ lệ ảo giác (sử dụng mô hình NLI \texttt{MoritzLaurer/mDeBERTa-v3-base-mnli-xnli} và trích xuất thực thể \texttt{underthesea}).
 
 \begin{table}[H]
   \centering
@@ -106,7 +106,7 @@ Bảng~\ref{tab:results_factuality} báo cáo các chỉ số về tính trung t
   \end{tabularx}
 \end{table}
 
-Bảng~\ref{tab:results_factuality_supp} bổ sung các chỉ số thống kê về xác suất kéo theo logic (Entailment) và số lượng thực thể/con số được xác nhận thực tế.
+Bảng~\ref{tab:results_factuality_supp} bổ sung các chỉ số thống kê về xác suất kéo theo logic và số lượng thực thể/con số được xác nhận thực tế.
 
 \begin{table}[H]
   \centering
@@ -126,10 +126,10 @@ Bảng~\ref{tab:results_factuality_supp} bổ sung các chỉ số thống kê v
 \noindent \textbf{Phân tích kết quả:}
 HKL-ViT5 thể hiện ưu thế vượt trội trong việc bảo tồn tính xác thực:
 \begin{itemize}
-  \item **Entity Precision** đạt **81.81\%** (xác nhận 706/863 thực thể chính xác), vượt trội so với \texttt{Nishikyen} (79.16\%) và \texttt{thnhan} (76.57\%).
-  \item **Number Consistency** đạt mức tiệm cận tuyệt đối **98.54\%** (472/479 con số chính xác), hạn chế tối đa việc nhầm lẫn dữ liệu báo chí.
-  \item **Contradiction Rate** giảm xuống còn **2.11\%** (thấp hơn \texttt{thnhan} gần một nửa).
-  \item **Hallucination Rate** giảm đáng kể xuống **39.04\%** (so với 45.53\% của \texttt{Nishikyen} và 48.45\% của \texttt{thnhan}), chứng minh hiệu quả kéo giảm ảo giác của bộ Heuristic Factuality Reranker.
+  \item Entity Precision đạt 81.81\% (xác nhận 706/863 thực thể chính xác), vượt trội so với \texttt{Nishikyen} (79.16\%) và \texttt{thnhan} (76.57\%).
+  \item Number Consistency đạt mức tiệm cận tuyệt đối 98.54\% (472/479 con số chính xác), hạn chế tối đa việc nhầm lẫn dữ liệu báo chí.
+  \item Contradiction Rate giảm xuống còn 2.11\% (thấp hơn \texttt{thnhan} gần một nửa).
+  \item Hallucination Rate giảm đáng kể xuống 39.04\% (so với 45.53\% của \texttt{Nishikyen} và 48.45\% của \texttt{thnhan}), chứng minh hiệu quả kéo giảm ảo giác của bộ Heuristic Factuality Reranker.
 \end{itemize}
 
 \section{Kết quả nhóm 4: Performance (Hiệu năng suy luận)}

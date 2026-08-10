@@ -4,12 +4,12 @@
 
 \section{Tóm tắt các kết quả và đóng góp chính}
 
-Báo cáo bài tập lớn này đã nghiên cứu, cải tiến và đánh giá thành công mô hình **HLK-ViT5** cho bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài từ dữ liệu báo chí điện tử. Đề tài mang lại ba đóng góp chính:
+Báo cáo bài tập lớn này đã nghiên cứu, cải tiến và đánh giá thành công mô hình HLK-ViT5 cho bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài từ dữ liệu báo chí điện tử. Đề tài mang lại ba đóng góp chính:
 
 \begin{enumerate}[label=\arabic*.]
-  \item \textbf{Giải quyết rào cản ngữ cảnh dài (Selective Long-Context):} Thiết kế và cài đặt thành công pipeline 13 bước kết hợp chia đoạn bảo toàn câu (\textit{Sentence-aware Chunking}), khoảng đè 1 câu (\textit{Overlapping}), chấm điểm nổi bật (\textit{Salience Scoring}) và lọc không trùng lặp (\textit{MMR}). Kỹ thuật này giúp mở rộng cửa sổ ngữ cảnh đầu vào ViT5 lên 1024 tokens mà vẫn đảm bảo tính cô đọng thông tin.
-  \item \textbf{Kiểm soát tính xác thực và ảo giác (Factuality Reranker):} Tích hợp cơ chế điều kiện hóa từ khóa (\textit{Keyword Conditioning}) và xây dựng bộ xếp hạng lại ứng viên tóm tắt dựa trên độ chính xác thực thể và tính nhất quán con số, kéo giảm đáng kể hiện tượng ảo giác trong sinh văn bản tiếng Việt.
-  \item \textbf{Đánh giá hệ thống trên Corpus nội địa:} Thực nghiệm toàn diện trên bộ dữ liệu 15.620 mẫu từ \textit{tienphong.vn}, đối chiếu HLK-ViT5 với hai baseline \texttt{Nishikyen} và \texttt{thnhan} trên bộ đo lường 4 nhóm: Lexical Overlap (ROUGE), Semantic Quality (BERTScore), Factual Consistency và Inference Time.
+  \item \textbf{Giải quyết rào cản ngữ cảnh dài:} Thiết kế và cài đặt thành công pipeline 13 bước kết hợp chia đoạn bảo toàn câu, khoảng đè 1 câu, chấm điểm nổi bật và lọc không trùng lặp bằng MMR. Kỹ thuật này giúp mở rộng cửa sổ ngữ cảnh đầu vào ViT5 lên 1024 tokens mà vẫn đảm bảo tính cô đọng thông tin.
+  \item \textbf{Kiểm soát tính xác thực và ảo giác:} Tích hợp cơ chế điều kiện hóa từ khóa và xây dựng bộ xếp hạng lại ứng viên tóm tắt dựa trên độ chính xác thực thể và tính nhất quán con số, kéo giảm đáng kể hiện tượng ảo giác trong sinh văn bản tiếng Việt.
+  \item \textbf{Đánh giá hệ thống trên Corpus nội địa:} Thực nghiệm toàn diện trên bộ dữ liệu 15.620 mẫu từ \textit{tienphong.vn}, đối chiếu HLK-ViT5 với hai baseline \texttt{Nishikyen} và \texttt{thnhan} trên bộ đo lường 4 nhóm: Lexical Overlap, Semantic Quality, Factual Consistency và Inference Time.
 \end{enumerate}
 
 \section{Hướng phát triển tương lai}
@@ -17,8 +17,8 @@ Báo cáo bài tập lớn này đã nghiên cứu, cải tiến và đánh giá
 Từ các kết quả và hạn chế đã chỉ ra ở Chương~5, nghiên cứu đề xuất ba hướng phát triển tiếp theo:
 
 \begin{itemize}
-  \item \textbf{Mở rộng sang kiến trúc ViT5-large và LLM tiếng Việt:} Đưa pipeline Selective Long-Context và Reranking áp dụng cho mô hình `ViT5-large` hoặc các LLM tiếng Việt tiên tiến như PhoGPT, Vistral để nâng cao hơn nữa khả năng diễn giải ngữ nghĩa.
-  \item \textbf{Tối ưu hóa tốc độ suy luận (Real-time Pipeline):} Tối ưu thuật toán MMR và song song hóa bước Reranker bằng kỹ thuật Batch Inference hoặc ONNX Runtime, hướng tới việc triển khai mô hình dưới dạng RESTful API hoặc Tiện ích mở rộng trình duyệt (Browser Extension) hoạt động thời gian thực.
+  \item \textbf{Mở rộng sang kiến trúc ViT5-large và LLM tiếng Việt:} Đưa pipeline Selective Long-Context và Reranking áp dụng cho mô hình \texttt{ViT5-large} hoặc các LLM tiếng Việt tiên tiến như PhoGPT, Vistral để nâng cao hơn nữa khả năng diễn giải ngữ nghĩa.
+  \item \textbf{Tối ưu hóa tốc độ suy luận:} Tối ưu thuật toán MMR và song song hóa bước Reranker bằng kỹ thuật Batch Inference hoặc ONNX Runtime, hướng tới việc triển khai mô hình dưới dạng RESTful API hoặc Tiện ích mở rộng trình duyệt hoạt động thời gian thực.
   \item \textbf{Mở rộng miền dữ liệu đánh giá:} Thu thập và kiểm thử HLK-ViT5 trên các miền văn bản chuyên biệt như văn bản luật, báo cáo tài chính và hồ sơ y tế tiếng Việt để đánh giá khả năng tổng quát hóa của phương pháp đề xuất.
 \end{itemize}
 
