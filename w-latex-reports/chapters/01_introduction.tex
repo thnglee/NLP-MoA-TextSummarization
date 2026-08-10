@@ -1,7 +1,7 @@
 % !TEX root = ../thesis.tex
 \chapter{Giới thiệu}
 
-Chương này đặt nền móng cho toàn bộ báo cáo bằng việc giới thiệu bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài, phân tích những thách thức cốt lõi của các mô hình Sequence-to-Sequence hiện nay và trình bày giải pháp cải tiến HLK-ViT5 dựa trên kiến trúc ViT5-base.
+Chương này đặt nền móng cho toàn bộ báo cáo bằng việc giới thiệu bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài, phân tích những thách thức cốt lõi của các mô hình Sequence-to-Sequence hiện nay và trình bày giải pháp cải tiến HKL-ViT5 dựa trên kiến trúc ViT5-base.
 Mục~1.1 trình bày bối cảnh và động lực nghiên cứu; Mục~1.2 khảo sát các công trình liên quan và xác định khoảng trống nghiên cứu; Mục~1.3 nêu rõ mục tiêu và các đóng góp khoa học chính; Mục~1.4 mô tả cấu trúc tổng quan của báo cáo; và Mục~1.5 tổng kết chương.
 
 \section{Bối cảnh và động lực nghiên cứu}
@@ -17,7 +17,7 @@ Tuy nhiên, khi áp dụng mô hình ViT5-base vào bài toán tóm tắt tin t�
   \item \textbf{Hiện tượng ảo giác và mất nhất quán dữ kiện (Hallucination \& Factual Inconsistency):} Các mô hình trừu tượng hóa có xu hướng "bịa" ra thông tin hoặc làm sai lệch các thực thể (tên người, địa danh, tổ chức) và các con số thống kê so với văn bản gốc. Điều này làm giảm nghiêm trọng độ tin cậy của bản tóm tắt trong báo chí.
 \end{itemize}
 
-Động lực của đề tài này là xây dựng một pipeline cải tiến có tên **HLK-ViT5**, giúp mô hình ViT5-base vượt qua rào cản độ dài đầu vào bằng cơ chế chọn lọc ngữ cảnh thông minh (Selective Long-Context) và đảm bảo tính trung thực thông tin thông qua bộ lọc xếp hạng lại dữ kiện (Heuristic Factuality Reranking).
+Động lực của đề tài này là xây dựng một pipeline cải tiến có tên **HKL-ViT5**, giúp mô hình ViT5-base vượt qua rào cản độ dài đầu vào bằng cơ chế chọn lọc ngữ cảnh thông minh (Selective Long-Context) và đảm bảo tính trung thực thông tin thông qua bộ lọc xếp hạng lại dữ kiện (Heuristic Factuality Reranking).
 
 \section{Các công trình liên quan và khoảng trống nghiên cứu}
 
@@ -33,7 +33,7 @@ Từ khảo sát trên, đề tài xác định **khoảng trống nghiên cứu
 
 \section{Mục tiêu và đóng góp chính}
 
-Mục tiêu chính của đề tài là thiết kế, cài đặt và đánh giá mô hình **HLK-ViT5** cho bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài từ báo điện tử \textit{tienphong.vn}.
+Mục tiêu chính của đề tài là thiết kế, cài đặt và đánh giá mô hình **HKL-ViT5** cho bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài từ báo điện tử \textit{tienphong.vn}.
 
 Đề tài đóng góp bốn điểm mới về mặt kỹ thuật và thực nghiệm:
 
@@ -41,7 +41,7 @@ Mục tiêu chính của đề tài là thiết kế, cài đặt và đánh gi�
   \item \textbf{Cơ chế Selective Long-Context:} Thiết kế pipeline chia đoạn bảo toàn câu (\textit{Sentence-aware Chunking}), giao đè 1 câu (\textit{Overlapping}), chấm điểm nổi bật (\textit{Salience Scoring}) kết hợp thuật toán \textit{MMR} để chọn ra tối đa 4 đoạn ngữ cảnh quan trọng nhất từ toàn văn bài báo, cho phép mở rộng đầu vào ViT5 lên 1024 tokens mà không làm mất tính liên kết.
   \item \textbf{Kỹ thuật Keyword-conditioned Generation:} Trích xuất từ khóa chủ đề và nhúng trực tiếp vào đầu chuỗi prompt đầu vào của ViT5 để định hướng mô hình tập trung vào các nội dung trọng tâm.
   \item \textbf{Heuristic Factuality Reranker:} Xây dựng bộ lọc xếp hạng lại đa ứng viên sinh ra từ ViT5, ưu tiên các bản tóm tắt bảo toàn chính xác danh từ riêng và số liệu thực tế.
-  \item \textbf{Đánh giá đa chiều trên Corpus nội địa:} Thực nghiệm trên bộ dữ liệu 15.620 mẫu báo chí từ domain \textit{tienphong.vn}, so sánh toàn diện với hai baseline \texttt{Nishikyen} và \texttt{thnhan} trên 4 nhóm độ đo (Lexical Overlap, Semantic Quality, Factual Consistency, và Inference Time).
+  \item \textbf{Đánh giá đa chiều trên Corpus 300 mẫu:} Thực nghiệm trên tập kiểm thử 300 mẫu báo chí độc lập từ domain \textit{tienphong.vn}, so sánh toàn diện với hai baseline \texttt{Nishikyen} và \texttt{thnhan} trên 4 nhóm độ đo (Lexical Overlap, Semantic Quality, Factual Consistency, và Inference Time).
 \end{enumerate}
 
 \section{Cấu trúc báo cáo}
@@ -49,11 +49,11 @@ Mục tiêu chính của đề tài là thiết kế, cài đặt và đánh gi�
 Báo cáo được tổ chức theo cấu trúc IMRaD chuẩn gồm 6 chương:
 Chương~1 giới thiệu tổng quan đề tài, mục tiêu và đóng góp.
 Chương~2 xây dựng cơ sở lý thuyết về ViT5, kiến trúc Transformer, các thuật toán nén ngữ cảnh và hệ đo lường đánh giá.
-Chương~3 trình bày chi tiết phương pháp đề xuất HLK-ViT5, kiến trúc pipeline 13 bước và thiết lập thực nghiệm.
+Chương~3 trình bày chi tiết phương pháp đề xuất HKL-ViT5, kiến trúc pipeline 13 bước và thiết lập thực nghiệm.
 Chương~4 báo cáo kết quả thực nghiệm định lượng trên bộ dữ liệu kiểm thử.
 Chương~5 phân tích, bình luận ý nghĩa kết quả, phân tích lỗi và thảo luận hạn chế.
 Chương~6 kết luận và đề xuất các hướng phát triển tương lai.
 
 \section{Tổng kết chương}
 
-Chương này đã làm rõ động lực phát triển mô hình HLK-ViT5 nhằm khắc phục hai hạn chế lớn của ViT5-base: rào cản độ dài đầu vào và hiện tượng ảo giác dữ kiện. Chương cũng đã xác định khoảng trống nghiên cứu, phát biểu 4 đóng góp kỹ thuật chính và phác thảo cấu trúc báo cáo. Các nền tảng lý thuyết cần thiết sẽ được trình bày chi tiết trong Chương~2.
+Chương này đã làm rõ động lực phát triển mô hình HKL-ViT5 nhằm khắc phục hai hạn chế lớn của ViT5-base: rào cản độ dài đầu vào và hiện tượng ảo giác dữ kiện. Chương cũng đã xác định khoảng trống nghiên cứu, phát biểu 4 đóng góp kỹ thuật chính và phác thảo cấu trúc báo cáo. Các nền tảng lý thuyết cần thiết sẽ được trình bày chi tiết trong Chương~2.

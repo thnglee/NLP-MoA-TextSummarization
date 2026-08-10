@@ -13,32 +13,37 @@ Pipeline HLK-ViT5 được xây dựng nhằm giải quyết bài toán tóm t�
 
 \begin{figure}[H]
   \centering
-  \begin{tikzpicture}[node distance=1.2cm, auto, >=stealth',
-    block/.style={rectangle, draw, fill=blue!10, text width=9em, text centered, rounded corners, minimum height=2.2em, font=\small},
-    cloud/.style={draw, ellipse, fill=orange!15, minimum height=2em, font=\small},
+  \begin{tikzpicture}[
+    auto, >=stealth',
+    block/.style={rectangle, draw, fill=blue!10, text width=8em, text centered, rounded corners, inner sep=4pt, font=\small},
+    cloud/.style={draw, ellipse, fill=orange!15, inner sep=3pt, font=\small},
     line/.style={draw, ->, thick}]
 
-    % Nodes
+    % Column 1: Preprocessing
     \node [cloud] (input) {Văn bản gốc};
-    \node [block, below of=input] (norm) {1. Chuẩn hóa \& Xử lý khoảng trắng};
-    \node [block, below of=norm] (split) {2. Tách câu chuẩn};
-    \node [block, below of=split] (chunk) {3. Tạo Chunk $\le 256$ token (Overlap 1 câu)};
-    \node [block, right=2cm of norm] (score) {4. Chấm điểm: Coverage, Salience, Position};
-    \node [block, below of=score] (mmr) {5. Lọc MMR giảm trùng lặp};
-    \node [block, below of=mmr] (select) {6. Chọn Max 4 Chunk \& Khôi phục vị trí};
-    \node [block, right=2cm of score] (prompt) {7. Tạo Input (Keywords + Context $\le 1024$)};
-    \node [block, below of=prompt, fill=green!15] (vit5) {8. ViT5-base Model};
-    \node [block, below of=vit5] (rerank) {9. Sinh Candidate \& Factuality Reranker};
-    \node [cloud, below of=rerank, fill=red!15] (output) {Bản tóm tắt cuối cùng};
+    \node [block, below=0.5cm of input] (norm) {1. Chuẩn hóa \& Xử lý khoảng trắng};
+    \node [block, below=0.5cm of norm] (split) {2. Tách câu chuẩn};
+    \node [block, below=0.5cm of split] (chunk) {3. Tạo Chunk $\le 256$ token (Overlap 1 câu)};
 
-    % Lines
+    % Column 2: Context Filtering
+    \node [block, right=1.0cm of norm] (score) {4. Chấm điểm: Coverage, Salience, Position};
+    \node [block, below=0.5cm of score] (mmr) {5. Lọc MMR giảm trùng lặp};
+    \node [block, below=0.5cm of mmr] (select) {6. Chọn Max 4 Chunk \& Khôi phục vị trí};
+
+    % Column 3: Generation & Reranking
+    \node [block, right=1.0cm of score] (prompt) {7. Tạo Input (Keywords + Context $\le 1024$)};
+    \node [block, below=0.5cm of prompt, fill=green!15] (vit5) {8. ViT5-base Model};
+    \node [block, below=0.5cm of vit5] (rerank) {9. Sinh Candidate \& Factuality Reranker};
+    \node [cloud, below=0.5cm of rerank, fill=red!15] (output) {Bản tóm tắt cuối cùng};
+
+    % Paths & Arrows
     \path [line] (input) -- (norm);
     \path [line] (norm) -- (split);
     \path [line] (split) -- (chunk);
-    \path [line] (chunk.east) -- ++(0.5,0) |- (score.west);
+    \path [line] (chunk.east) -- ++(0.4,0) |- (score.west);
     \path [line] (score) -- (mmr);
     \path [line] (mmr) -- (select);
-    \path [line] (select.east) -- ++(0.5,0) |- (prompt.west);
+    \path [line] (select.east) -- ++(0.4,0) |- (prompt.west);
     \path [line] (prompt) -- (vit5);
     \path [line] (vit5) -- (rerank);
     \path [line] (rerank) -- (output);
