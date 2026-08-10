@@ -9,22 +9,23 @@
 
 ## 👥 Nhóm sinh viên thực hiện
 
-| STT | Họ và tên | Mã sinh viên | Vai trò & Nhiệm vụ chính |
-| :---: | :--- | :---: | :--- |
-| 1 | **Phạm Vân Anh** | 22028099 | Tiền xử lý dữ liệu, trích xuất thực thể & xây dựng bộ độ đo NLI/Factuality |
-| 2 | **Bùi Đức Duy** | 22021201 | Thu thập Corpus tienphong.vn, huấn luyện mô hình ViT5-base & SFT Baseline |
-| 3 | **Lê Văn Thắng** | 22028313 | Thiết kế Pipeline HLK-ViT5 (Selective Long-Context, MMR, Reranker) & Script Đánh giá |
-| 4 | **Nguyễn Tiến Mạnh** | 24020220 | Thực nghiệm đối chứng, phân tích thống kê & Soạn thảo Báo cáo LaTeX / Slide |
+| STT | Họ và tên            | Mã sinh viên | Vai trò & Nhiệm vụ chính                                           |
+| :-: | :------------------- | :----------: | :----------------------------------------------------------------- |
+|  1  | **Phạm Vân Anh**     |   22028099   | Xây dựng evaluation service, script đánh giá                       |
+|  2  | **Bùi Đức Duy**      |   22021201   | Phối hợp báo cáo & Thuyết trình                                    |
+|  3  | **Lê Văn Thắng**     |   22028313   | Thực nghiệm đối chứng & Thống kê và soạn thảo báo cáo              |
+|  4  | **Nguyễn Tiến Mạnh** |   24020220   | Thiết kế Pipeline HLK-ViT5 (Selective Long-Context, MMR, Reranker) |
 
 ---
 
 ## 📌 Tổng quan đề tài
 
 Tóm tắt văn bản tự động (Abstractive Text Summarization) cho tiếng Việt ngữ cảnh dài vẫn còn chịu hai rào cản lớn:
-1. **Giới hạn cửa sổ ngữ cảnh (Context Window Limitation):** Các mô hình `ViT5-base` chuẩn bị giới hạn đầu vào 256–512 tokens, dẫn đến hiện tượng trích đoạn đầu (*lead bias*) và bỏ sót dữ kiện quan trọng ở giữa/cuối bài báo.
+
+1. **Giới hạn cửa sổ ngữ cảnh (Context Window Limitation):** Các mô hình `ViT5-base` chuẩn bị giới hạn đầu vào 256–512 tokens, dẫn đến hiện tượng trích đoạn đầu (_lead bias_) và bỏ sót dữ kiện quan trọng ở giữa/cuối bài báo.
 2. **Ảo giác thông tin & Mất nhất quán thực thể (Hallucination & Factual Inconsistency):** Mô hình sinh câu có xu hướng bịa thêm thông tin hoặc nhầm lẫn giữa các con số, tên riêng so với bài gốc.
 
-Dự án đề xuất kiến trúc **HLK-ViT5**, một pipeline cải tiến 13 bước toàn diện giúp mở rộng đầu vào lên **1024 tokens** mà không bị dính dư thừa ngữ nghĩa, đồng thời tích hợp bộ lọc xếp hạng lại tính xác thực (*Heuristic Factuality Reranker*) để kéo giảm tối đa hiện tượng ảo giác.
+Dự án đề xuất kiến trúc **HLK-ViT5**, một pipeline cải tiến 13 bước toàn diện giúp mở rộng đầu vào lên **1024 tokens** mà không bị dính dư thừa ngữ nghĩa, đồng thời tích hợp bộ lọc xếp hạng lại tính xác thực (_Heuristic Factuality Reranker_) để kéo giảm tối đa hiện tượng ảo giác.
 
 ---
 
@@ -33,9 +34,9 @@ Dự án đề xuất kiến trúc **HLK-ViT5**, một pipeline cải tiến 13 
 - **Selective Long-Context (Input up to 1024 Tokens):**
   - **Sentence-aware Chunking:** Phân đoạn văn bản dựa trên ranh giới câu chuẩn xác.
   - **1-Sentence Overlapping:** Giữ 1 câu đè giữa các chunk kề nhau ($\le 256$ token) để bảo toàn tính liên kết.
-  - **Salience Scoring & MMR:** Chấm điểm nổi bật (Coverage + Salience + Position) và lọc qua thuật toán *Maximal Marginal Relevance (MMR)* chọn ra tối đa 4 chunk đại diện nhất từ toàn văn bài báo mà không trùng lặp.
+  - **Salience Scoring & MMR:** Chấm điểm nổi bật (Coverage + Salience + Position) và lọc qua thuật toán _Maximal Marginal Relevance (MMR)_ chọn ra tối đa 4 chunk đại diện nhất từ toàn văn bài báo mà không trùng lặp.
 - **Keyword-conditioned Generation:** Nhúng danh sách từ khóa chủ đề trực tiếp vào đầu chuỗi prompt ViT5 để định hướng cơ chế chú ý (Cross-Attention).
-- **Heuristic Factuality Reranking:** Sinh $N=5$ bản tóm tắt ứng viên và xếp hạng lại dựa trên độ chính xác danh từ riêng (*Entity Precision*) và tính nhất quán con số (*Number Consistency*).
+- **Heuristic Factuality Reranking:** Sinh $N=5$ bản tóm tắt ứng viên và xếp hạng lại dựa trên độ chính xác danh từ riêng (_Entity Precision_) và tính nhất quán con số (_Number Consistency_).
 
 ---
 
@@ -61,24 +62,25 @@ flowchart TD
 
 ## 📊 Kết quả thực nghiệm đối chứng (Benchmark Results)
 
-Được đánh giá độc lập trên **300 mẫu báo chí tiếng Việt** (từ domain *tienphong.vn*) đối chiếu với 2 mô hình baseline mã nguồn mở:
+Được đánh giá độc lập trên **300 mẫu báo chí tiếng Việt** (từ domain _tienphong.vn_) đối chiếu với 2 mô hình baseline mã nguồn mở:
+
 - **`Nishikyen/vit5-vietnamese-news`** (ViT5-base fine-tune chuẩn)
 - **`thnhan/sft_model`** (ViT5-base SFT)
 
 ### Bảng tổng hợp 4 nhóm chỉ số đánh giá (Evaluation Summary)
 
-| Nhóm chỉ số | Độ đo | HKL-ViT5 (Ours) | Nishikyen/vit5-news | thnhan/sft_model | Đánh giá / Ý nghĩa |
-| :--- | :--- | :---:| :---:| :---:| :--- |
-| **1. Lexical Overlap** | **ROUGE-1** | **0.5184** | 0.4707 | 0.4321 | **Dẫn đầu (+4.77% ROUGE-1)** nhờ bao quát ngữ cảnh toàn văn |
-| | **ROUGE-2** | **0.2932** | 0.2510 | 0.2227 | Khôi phục chính xác các cụm bigram quan trọng |
-| | **ROUGE-L** | **0.3434** | 0.3148 | 0.2773 | Chuỗi con chung dài nhất đạt độ bám từ cao nhất |
-| **2. Semantic Quality** | **BERTScore F1** | **0.9008** | 0.8934 | 0.8874 | Tương đồng ngữ nghĩa tốt nhất (PhoBERT / XLM-R) |
-| | **BERTScore Recall**| **0.9020** | 0.8896 | 0.8790 | Đảm bảo bao hàm đầy đủ các ý chính |
-| **3. Factuality** | **Entity Precision**| **81.81%** | 79.16% | 76.57% | Xác nhận chính xác 706/863 thực thể (UNDERTHESEA) |
-| | **Number Consistency**| **98.54%**| 96.46% | 97.55% | Tiệm cận tuyệt đối (472/479 con số chính xác) |
-| | **Contradiction Rate**| **2.11%**  | 2.90%  | 3.99%  | Mâu thuẫn logic cực thấp (mDeBERTa NLI) |
-| | **Hallucination Rate**| **39.04%** | 45.53% | 48.45% | **Kéo giảm ảo giác ~6.5%** nhờ bộ Reranker |
-| **4. Performance** | **Inference Time** | 8.0535 s | **3.5313 s** | 6.1358 s | Đánh đổi thời gian chạy 5 candidates để lấy chất lượng |
+| Nhóm chỉ số             | Độ đo                  | HKL-ViT5 (Ours) | Nishikyen/vit5-news | thnhan/sft_model | Đánh giá / Ý nghĩa                                          |
+| :---------------------- | :--------------------- | :-------------: | :-----------------: | :--------------: | :---------------------------------------------------------- |
+| **1. Lexical Overlap**  | **ROUGE-1**            |   **0.5184**    |       0.4707        |      0.4321      | **Dẫn đầu (+4.77% ROUGE-1)** nhờ bao quát ngữ cảnh toàn văn |
+|                         | **ROUGE-2**            |   **0.2932**    |       0.2510        |      0.2227      | Khôi phục chính xác các cụm bigram quan trọng               |
+|                         | **ROUGE-L**            |   **0.3434**    |       0.3148        |      0.2773      | Chuỗi con chung dài nhất đạt độ bám từ cao nhất             |
+| **2. Semantic Quality** | **BERTScore F1**       |   **0.9008**    |       0.8934        |      0.8874      | Tương đồng ngữ nghĩa tốt nhất (PhoBERT / XLM-R)             |
+|                         | **BERTScore Recall**   |   **0.9020**    |       0.8896        |      0.8790      | Đảm bảo bao hàm đầy đủ các ý chính                          |
+| **3. Factuality**       | **Entity Precision**   |   **81.81%**    |       79.16%        |      76.57%      | Xác nhận chính xác 706/863 thực thể (UNDERTHESEA)           |
+|                         | **Number Consistency** |   **98.54%**    |       96.46%        |      97.55%      | Tiệm cận tuyệt đối (472/479 con số chính xác)               |
+|                         | **Contradiction Rate** |    **2.11%**    |        2.90%        |      3.99%       | Mâu thuẫn logic cực thấp (mDeBERTa NLI)                     |
+|                         | **Hallucination Rate** |   **39.04%**    |       45.53%        |      48.45%      | **Kéo giảm ảo giác ~6.5%** nhờ bộ Reranker                  |
+| **4. Performance**      | **Inference Time**     |    8.0535 s     |    **3.5313 s**     |     6.1358 s     | Đánh đổi thời gian chạy 5 candidates để lấy chất lượng      |
 
 ---
 
@@ -150,6 +152,7 @@ python utils/evaluate_3_models.py \
 ```
 
 > **Mẹo chạy nhanh trên CPU (Bỏ qua BERTScore & NLI heavy models):**
+>
 > ```bash
 > python utils/evaluate_3_models.py --results-dir results --output-dir output/evaluation --skip-bertscore --skip-nli
 > ```
