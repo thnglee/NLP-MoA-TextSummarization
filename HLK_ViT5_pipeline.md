@@ -2,7 +2,7 @@
 
 ## Mục tiêu
 
-Giữ **ViT5-base** làm mô hình chính, nhưng cải thiện khả năng tóm tắt văn bản dài, bao phủ ý và giảm thông tin bịa trên `8Opt/vietnamese-summarization-dataset-0001`.
+Giữ **ViT5-base** làm mô hình chính, nhưng cải thiện khả năng tóm tắt văn bản dài, bao phủ ý và giảm thông tin bịa trên `LakoreAI/vietnamese-summarization-dataset-0001`.
 
 ## Pipeline
 

@@ -23,8 +23,7 @@
 
 ## 3. Dataset
 
-- **Nguồn:** Bộ dữ liệu corpus nội địa được xây dựng và tổng hợp trực tiếp từ domain **tienphong.vn**.
-- **Kích thước:** Tập train gồm 15620 mẫu.
+- **Nguồn:**LakoreAI/vietnamese-summarization-dataset-0001
 
 ## 4. Ý tưởng pipeline
 

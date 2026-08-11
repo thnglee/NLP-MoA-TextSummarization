@@ -91,7 +91,7 @@ flowchart TD
 ```text
 NLP-MoA-TextSummarization/
 ├── README.md                           # Thuyết minh dự án & Hướng dẫn sử dụng
-├── HLK_ViT5.ipynb                      # Jupyter Notebook huấn luyện fine-tune & thử nghiệm
+├── HLK_ViT5.ipynb                      # Jupyter Notebook huấn luyện fine-tune & thử nghiệm model
 ├── HLK-ViT5_Project_Overview.md        # Tổng quan thiết kế kỹ thuật HLK-ViT5
 ├── requirements.txt                    # Danh sách thư viện Python phụ thuộc
 │
