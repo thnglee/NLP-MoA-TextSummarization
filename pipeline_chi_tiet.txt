@@ -1,0 +1,83 @@
+                  VĂN BẢN GỐC
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │  TẦNG 1: SELECTION │
+              │ Chọn thông tin tốt │
+              └─────────────────────┘
+                         │
+                 Sentence splitting		Tách câu theo dấu ".", "?", "!", "\n" (Không tách theo kiểu hết 256 là chém ngang)
+                         ↓
+              Sentence-aware chunks		Gom các câu đến giới hạn khoảng, nếu câu có hơn 256 token thì cắt câu đó theo token
+                         ↓
+                 Overlap 1 câu			Cho các chunks giao nhau 1 câu
+                         ↓
+                  Extract keywords		Tìm chủ đề chính toàn bài: Tách từ -> Loại stop word -> Loại số -> Đếm tần suất -> Lấy từ xuất hiện nhiều nhất (Cố gắng lấy 8 từ)
+                         ↓
+         Keyword + Salience + Position score	Keyword-guided chunk selection: Tìm các đoạn có keyword xuất hiện nhiều (KeywordCoverage(Ci​) = Số keyword hiện trong chunk/Tổng keyword)
+						Salience: Xác định đoạn nổi bật: Một chunk chứa nhiều từ xuất hiện thường xuyên trong toàn bài thì có khả năng đang nói về chủ đề trung tâm.
+						Position score: Ưu tiên đoạn đầu bài (Thường đoạn đầu sẽ chứa nội dung tổng quát)
+						BaseScore = 0.45K + 0.35K + 0.20P
+                         ↓
+             MMR - Chọn tối đa 4 chunks		Chọn Top-4 nhưng không trùng lặp nội dung: MMR = BaseScore(Ci) - 0.2*Redundancy(Ci)
+						(Redundancy là Jaccard similarity lớn nhất giữa chunk đang xét và các chunk đã chọn)
+                         ↓
+              Sắp xếp lại thứ tự ban đầu
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │ TẦNG 2: GENERATION		  │
+              │      ViT5          		  │
+              └─────────────────────┘
+                         │
+    keywords + selected document chunks + luồng phụ	Dùng keywords chọn chunks, train model thêm luồng phụ để học thêm keyword
+                         ↓
+               tối đa 1024 tokens			Xác định 1024 tokens quan trọng trên toàn bộ chunks đã chọn (Không phải là lấy 1024 tokens đầu và cắt đi)
+                         ↓
+                       ViT5
+                         ↓
+                Sinh 4 candidates			NUM_BEAMS = 4, NUM_RETURN_SEQUENCES = 4
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │ TẦNG 3: RERANKING  │
+              │ Chọn summary tốt   │
+              └─────────────────────┘
+                         │
+         Source precision + Keyword coverage		Source precision: Từ trong summary có xuất hiện trong source không
+       + Number consistency + Entity consistency	Keyword coverage: Summary có bao phủ keyword không
+          + Length score + Anti-repetition		Number consistency: Số liệu sinh ra có trong source không
+							Entity consistency: Thực thể sinh ra có trong source không -> Chống bịa
+							Length score: Độ dài có hợp lý không
+							Anti-repetition: Có lặp n-gram quá nhiều không
+                         ↓				
+                    Tổng điểm				Heuristic factuality reranking: Score = 0.35*S + 0.25*K + 0.15*N + 0.1*E + 0.1*L + 0.05(1-R)
+                         ↓
+              Candidate tốt nhất
+                         ↓
+                 FINAL SUMMARY
+
+
+
+
+
+
+
+| Tầng                     | Kỹ thuật                       | Chức năng                               |
+| ------------------------ | ------------------------------ | --------------------------------------- |
+| **A. Context Selection** | Sentence-aware chunking        | Chia văn bản an toàn                    |
+|                          | Overlap                        | Không mất context biên                  |
+|                          | Keywords                       | Xác định chủ đề                         |
+|                          | Keyword-guided selection       | Ưu tiên đoạn đúng chủ đề                |
+|                          | Salience                       | Ưu tiên đoạn trung tâm                  |
+|                          | Position                       | Ưu tiên thông tin đầu bài               |
+|                          | MMR                            | Tránh chọn các đoạn giống nhau          |
+|                          | **Selective Long-Context**     | Tên chung cho chiến lược chọn lọc này   |
+| **B. Generation**        | 1024-token input               | Cho ViT5 nhận nhiều context đã chọn hơn |
+|                          | Keyword-conditioned generation | Điều hướng ViT5 về chủ đề chính         |
+|                          | ViT5 + beam search             | Sinh nhiều summary                      |
+| **C. Output Selection**  | Factuality reranking           | So sánh các summary                     |
+|                          | Entity consistency             | Phạt thực thể không có nguồn            |
+|                          | Number consistency             | Phạt số liệu không có nguồn             |
+|                          | Anti-repetition                | Phạt tóm tắt lặp                        |
+|                          | Final ranking                  | Chọn summary tốt nhất                   |
