@@ -3,7 +3,7 @@
 
 Chương này trình bày chi tiết thiết kế và hiện thực hóa kiến trúc pipeline HLK-ViT5.
 Mục~3.1 tổng quan luồng xử lý toàn hệ thống;
-Mục~3.2 mô tả bộ dữ liệu thực nghiệm 15.620 mẫu từ \textit{tienphong.vn};
+Mục~3.2 mô tả bộ dữ liệu thực nghiệm 15.620 mẫu từ \texttt{8Opt/vietnamese-summarization-dataset-0001};
 Mục~3.3 chi tiết hóa 5 module cải tiến cốt lõi;
 Mục~3.4 trình bày thiết lập siêu tham số huấn luyện; và Mục~3.5 tổng kết chương.
 
@@ -57,7 +57,7 @@ Luồng xử lý đi từ văn bản bài báo gốc, trải qua công đoạn t
 
 \section{Bộ dữ liệu thực nghiệm}
 
-Nghiên cứu xây dựng và sử dụng bộ dữ liệu corpus tin tức tiếng Việt được thu thập trực tiếp từ trang báo điện tử \textit{tienphong.vn}. Bộ dữ liệu bao gồm các đặc điểm chính:
+Nghiên cứu sử dụng bộ dữ liệu tóm tắt văn bản tiếng Việt \texttt{8Opt/vietnamese-summarization-dataset-0001} được công bố trên Hugging Face Hub. Bộ dữ liệu bao gồm các đặc điểm chính:
 
 \begin{itemize}
   \item \textbf{Quy mô tập huấn luyện:} 15.620 cặp văn bản gốc và bản tóm tắt tiêu chuẩn.
@@ -152,4 +152,4 @@ Hệ số MMR ($\lambda$) & 0,7 \\ \hline
 
 \section{Tổng kết chương}
 
-Chương này đã chi tiết hóa kiến trúc 13 bước của HLK-ViT5, kết hợp giữa chia đoạn bảo toàn câu, nén ngữ cảnh MMR, Keyword Conditioning và Heuristic Factuality Reranker. Toàn bộ thiết lập này được huấn luyện trên 15.620 mẫu dữ liệu \textit{tienphong.vn}. Chương~4 sẽ báo cáo kết quả thực nghiệm định lượng.
+Chương này đã chi tiết hóa kiến trúc 13 bước của HLK-ViT5, kết hợp giữa chia đoạn bảo toàn câu, nén ngữ cảnh MMR, Keyword Conditioning và Heuristic Factuality Reranker. Toàn bộ thiết lập này được huấn luyện trên 15.620 mẫu dữ liệu \texttt{8Opt/vietnamese-summarization-dataset-0001}. Chương~4 sẽ báo cáo kết quả thực nghiệm định lượng.
