@@ -33,7 +33,7 @@ Từ khảo sát trên, đề tài xác định khoảng trống nghiên cứu c
 
 \section{Mục tiêu và đóng góp chính}
 
-Mục tiêu chính của đề tài là thiết kế, cài đặt và đánh giá mô hình HKL-ViT5 cho bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài từ báo điện tử \textit{tienphong.vn}.
+Mục tiêu chính của đề tài là thiết kế, cài đặt và đánh giá mô hình HKL-ViT5 cho bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài sử dụng bộ dữ liệu \texttt{8Opt/vietnamese-summarization-dataset-0001}.
 
 Đề tài đóng góp bốn điểm mới về mặt kỹ thuật và thực nghiệm:
 
@@ -41,7 +41,7 @@ Mục tiêu chính của đề tài là thiết kế, cài đặt và đánh gi�
   \item \textbf{Cơ chế Selective Long-Context:} Thiết kế pipeline chia đoạn bảo toàn câu, giao đè 1 câu, chấm điểm nổi bật kết hợp thuật toán MMR để chọn ra tối đa 4 đoạn ngữ cảnh quan trọng nhất từ toàn văn bài báo, cho phép mở rộng đầu vào ViT5 lên 1024 tokens mà không làm mất tính liên kết.
   \item \textbf{Kỹ thuật Keyword-conditioned Generation:} Trích xuất từ khóa chủ đề và nhúng trực tiếp vào đầu chuỗi prompt đầu vào của ViT5 để định hướng mô hình tập trung vào các nội dung trọng tâm.
   \item \textbf{Heuristic Factuality Reranker:} Xây dựng bộ lọc xếp hạng lại đa ứng viên sinh ra từ ViT5, ưu tiên các bản tóm tắt bảo toàn chính xác danh từ riêng và số liệu thực tế.
-  \item \textbf{Đánh giá đa chiều trên Corpus 300 mẫu:} Thực nghiệm trên tập kiểm thử 300 mẫu báo chí độc lập từ domain \textit{tienphong.vn}, so sánh toàn diện với hai baseline \texttt{Nishikyen} và \texttt{thnhan} trên 4 nhóm độ đo.
+  \item \textbf{Đánh giá đa chiều trên Corpus 300 mẫu:} Thực nghiệm trên tập kiểm thử 300 mẫu báo chí độc lập từ bộ dữ liệu \texttt{8Opt/vietnamese-summarization-dataset-0001}, so sánh toàn diện với hai baseline \texttt{Nishikyen} và \texttt{thnhan} trên 4 nhóm độ đo.
 \end{enumerate}
 
 \section{Cấu trúc báo cáo}

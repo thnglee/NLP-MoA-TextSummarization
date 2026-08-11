@@ -6,9 +6,9 @@ Tóm tắt văn bản tự động cho tiếng Việt, đặc biệt đối vớ
 
 Báo cáo này đề xuất HKL-ViT5, một pipeline cải tiến toàn diện cho bài toán tóm tắt văn bản tiếng Việt ngữ cảnh dài dựa trên xương sống \texttt{VietAI/ViT5-base}. Hệ thống tích hợp hai kỹ thuật cốt lõi: (1) Selective Long-Context, kết hợp chia đoạn dựa trên câu với khoảng giao đè 1 câu, chấm điểm nổi bật và thuật toán Maximal Marginal Relevance (MMR) để lọc ra tối đa 4 đoạn ngữ cảnh đại diện nhất từ toàn văn bài báo mà không bị dư thừa thông tin, cho phép mở rộng cửa sổ ngữ cảnh đầu vào lên tới 1024 tokens; (2) Heuristic Factuality Reranking, sinh nhiều bản tóm tắt ứng viên và xếp hạng lại dựa trên độ chính xác thực thể và tính nhất quán số liệu nhằm giảm thiểu tối đa hiện tượng ảo giác.
 
-Thực nghiệm được triển khai trên tập kiểm thử độc lập gồm 300 bài báo thu thập từ domain \textit{tienphong.vn}. Kết quả được đối chiếu toàn diện với hai mô hình baseline mạnh \texttt{Nishikyen/vit5-vietnamese-news} và \texttt{thnhan/sft\_model}. HKL-ViT5 đạt điểm ROUGE-1 0.5184 (so với 0.4707 và 0.4321), BERTScore F1 0.9008 (so với 0.8934 và 0.8874), độ chính xác con số tiệm cận tuyệt đối 98.54\%, đồng thời kéo giảm tỷ lệ ảo giác xuống 39.04\% (so với 45.53\% và 48.45\%). Các kết quả khẳng định tính vượt trội của HKL-ViT5 trong việc bảo toàn ngữ cảnh toàn văn và giữ vững độ trung thực dữ kiện.
+Thực nghiệm được triển khai trên tập kiểm thử độc lập gồm 300 bài báo lấy từ bộ dữ liệu \texttt{8Opt/vietnamese-summarization-dataset-0001}. Kết quả được đối chiếu toàn diện với hai mô hình baseline mạnh \texttt{Nishikyen/vit5-vietnamese-news} và \texttt{thnhan/sft\_model}. HKL-ViT5 đạt điểm ROUGE-1 0.5184 (so với 0.4707 và 0.4321), BERTScore F1 0.9008 (so với 0.8934 và 0.8874), độ chính xác con số tiệm cận tuyệt đối 98.54\%, đồng thời kéo giảm tỷ lệ ảo giác xuống 39.04\% (so với 45.53\% và 48.45\%). Các kết quả khẳng định tính vượt trội của HKL-ViT5 trong việc bảo toàn ngữ cảnh toàn văn và giữ vững độ trung thực dữ kiện.
 
 \vspace{0.4em}
 
-Từ khoá: Tóm tắt văn bản tiếng Việt, ViT5, HKL-ViT5, Selective Long-Context, MMR, Factuality Reranking, tienphong.vn.
+Từ khoá: Tóm tắt văn bản tiếng Việt, ViT5, HKL-ViT5, Selective Long-Context, MMR, Factuality Reranking, 8Opt/vietnamese-summarization-dataset-0001.
 
