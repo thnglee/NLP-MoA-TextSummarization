@@ -60,6 +60,8 @@ flowchart TD
     L --> M[12. Xuất bản tóm tắt tối ưu cuối cùng]
 ```
 
+`Chi tiết pipeline hơn nữa:` [pipeline_chi_tiet.txt](/pipeline_chi_tiet.txt)
+
 ---
 
 ## 📊 Kết quả thực nghiệm đối chứng (Benchmark Results)

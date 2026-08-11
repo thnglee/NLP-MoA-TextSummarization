@@ -2,8 +2,8 @@
                          │
                          ▼
               ┌─────────────────────┐
-              │  TẦNG 1: SELECTION │
-              │ Chọn thông tin tốt │
+              │  TẦNG 1: SELECTION  │
+              │ Chọn thông tin tốt  │
               └─────────────────────┘
                          │
                  Sentence splitting		Tách câu theo dấu ".", "?", "!", "\n" (Không tách theo kiểu hết 256 là chém ngang)
@@ -26,8 +26,8 @@
                          │
                          ▼
               ┌─────────────────────┐
-              │ TẦNG 2: GENERATION		  │
-              │      ViT5          		  │
+              │ TẦNG 2: GENERATION  │
+              │      ViT5           │
               └─────────────────────┘
                          │
     keywords + selected document chunks + luồng phụ	Dùng keywords chọn chunks, train model thêm luồng phụ để học thêm keyword
@@ -40,8 +40,8 @@
                          │
                          ▼
               ┌─────────────────────┐
-              │ TẦNG 3: RERANKING  │
-              │ Chọn summary tốt   │
+              │ TẦNG 3: RERANKING   │
+              │ Chọn summary tốt    │
               └─────────────────────┘
                          │
          Source precision + Keyword coverage		Source precision: Từ trong summary có xuất hiện trong source không
