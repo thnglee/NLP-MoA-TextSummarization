@@ -66,7 +66,7 @@ flowchart TD
 
 ## 📊 Kết quả thực nghiệm đối chứng (Benchmark Results)
 
-Được đánh giá độc lập trên **300 mẫu báo chí tiếng Việt** (từ LakoreAI/vietnamese-summarization-dataset-0001) đối chiếu với 2 mô hình baseline mã nguồn mở:
+Được đánh giá độc lập trên **300 mẫu báo chí tiếng Việt** (từ `8Opt/vietnamese-summarization-dataset-0001`) đối chiếu với 2 mô hình baseline mã nguồn mở:
 
 - **`Nishikyen/vit5-vietnamese-news`** (ViT5-base fine-tune chuẩn)
 - **`thnhan/sft_model`** (ViT5-base SFT)
