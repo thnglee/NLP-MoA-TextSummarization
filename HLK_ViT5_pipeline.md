@@ -47,16 +47,16 @@ Tóm tắt cuối
 
 ## Cấu hình chính
 
-| Tham số | Giá trị |
-|---|---:|
-| `MAX_INPUT_LENGTH` | 1024 |
-| `MAX_TARGET_LENGTH` | 256 |
-| `CHUNK_TOKEN_LENGTH` | 256 |
-| `CHUNK_OVERLAP_SENTENCES` | 1 |
-| `MAX_SELECTED_CHUNKS` | 4 |
-| Batch train | 1 |
-| Gradient accumulation | 15 |
-| Checkpoint | mỗi 100 step |
+| Tham số                   |      Giá trị |
+| ------------------------- | -----------: |
+| `MAX_INPUT_LENGTH`        |         1024 |
+| `MAX_TARGET_LENGTH`       |          256 |
+| `CHUNK_TOKEN_LENGTH`      |          256 |
+| `CHUNK_OVERLAP_SENTENCES` |            1 |
+| `MAX_SELECTED_CHUNKS`     |            4 |
+| Batch train               |            1 |
+| Gradient accumulation     |           15 |
+| Checkpoint                | mỗi 100 step |
 
 ## So sánh thực nghiệm
 
